@@ -7,7 +7,7 @@
     <v-row>
       <h1>Hello, World!</h1>
       <h6>This is a test</h6>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, laudantium.</p>
+      <p>Rusel poogiii dolor sit amet, consectetur adipisicing elit. Iusto, laudantium.</p>
     </v-row>
   </v-container>
 </template>
