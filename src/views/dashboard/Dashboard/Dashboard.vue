@@ -10,4 +10,4 @@
   </v-container>
 </template>
 
-<script src="./Dashboard.js"></script>
+<script lang="ts" src="./Dashboard.ts"></script>
