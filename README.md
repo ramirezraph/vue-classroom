@@ -154,7 +154,7 @@ vuetify-material-dashboard-pro
 │   │   ├── overrides.sass
 │   │   └── vuetify-material
 │   │       └── _sidebar.sass
-│   ├── store.js
+│   ├── index.ts
 │   └── views
 │       ├── dashboard
 │       │   ├── Calendar.vue
