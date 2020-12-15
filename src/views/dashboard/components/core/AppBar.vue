@@ -18,7 +18,7 @@
         mdi-view-quilt
       </v-icon>
       <v-icon v-else>
-        mdi-bell
+        mdi-dots-vertical
       </v-icon>
     </v-btn>
 
@@ -30,11 +30,10 @@
     <v-spacer />
 
     <v-btn
-      class="ma-1"
-      color="error"
-      elevation="1"
+      text
+      class="ml-2"
     >
-      Sign out
+      Sign Out
     </v-btn>
 
     <v-menu
@@ -45,7 +44,6 @@
       origin="top right"
       transition="scale-transition"
     >
-
       <v-list
         :tile="false"
         flat
