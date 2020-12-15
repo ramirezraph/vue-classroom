@@ -20,7 +20,5 @@ export default new Vuex.Store({
       state.barColor = payload
     },
   },
-  actions: {
-
-  },
+  actions: {},
 })
