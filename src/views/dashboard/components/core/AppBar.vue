@@ -70,15 +70,15 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   // Components
   import { VHover, VListItem } from 'vuetify/lib'
 
   // Utilities
-  import { mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
 
-  export default {
+  export default Vue.extend({
     name: 'DashboardCoreAppBar',
-
     components: {
       AppBarItem: {
         render (h) {
@@ -129,7 +129,7 @@
     }),
 
     computed: {
-      ...mapState(['drawer']),
+      ...mapGetters(['drawer']),
     },
 
     methods: {
@@ -137,5 +137,5 @@
         setDrawer: 'SET_DRAWER',
       }),
     },
-  }
+  })
 </script>
