@@ -5,7 +5,22 @@
     tag="section"
   >
     <v-row>
-      <h1>Hello, World!</h1>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <!-- Stats -->
+        <dashboard-stats />
+        <!-- Todos -->
+        <dashboard-todos />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <!-- Announcements -->
+        <dashboard-announcements />
+      </v-col>
     </v-row>
   </v-container>
 </template>
