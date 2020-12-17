@@ -19,14 +19,32 @@
       />
     </template>
 
-    <v-list-item two-line>
-      <v-list-item-content>
-        <v-list-item-title class="text-uppercase font-weight-regular display-2">
-          <span class="logo-mini">{{ $t('ct') }}</span>
-          <span class="logo-normal">{{ $t('tim') }}</span>
-        </v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
+    <template>
+      <v-list
+        expand
+        nav
+      >
+        <template v-if="!expandOnHover">
+          <v-btn
+            rounded
+            color="primary"
+            class="mt-3 text-none text-h5"
+          >
+            BulSu Classroom
+          </v-btn>
+        </template>
+        <template v-else>
+          <v-btn
+            rounded
+            small
+            color="primary"
+            class="mt-3 text-none text-h5 pa-3"
+          >
+            B
+          </v-btn>
+        </template>
+      </v-list>
+    </template>
 
     <v-divider class="mb-1" />
 
@@ -43,11 +61,7 @@
       expand
       nav
     >
-      <!-- Style cascading bug  -->
-      <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
-      <div />
-
-      <template v-for="(item, i) in computedItems">
+      <template v-for="(item, i) in moduleLinks">
         <base-item-group
           v-if="item.children"
           :key="`group-${i}`"
@@ -62,10 +76,22 @@
           :item="item"
         />
       </template>
+      <v-divider class="mb-2" />
+      <template v-for="(item, i) in subjectsLinks">
+        <base-item-group
+          v-if="item.children"
+          :key="`group-${i}`"
+          :item="item"
+        >
+          <!--  -->
+        </base-item-group>
 
-      <!-- Style cascading bug  -->
-      <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
-      <div />
+        <base-item
+          v-else
+          :key="`item-${i}`"
+          :item="item"
+        />
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -94,156 +120,36 @@
           to: '/',
         },
         {
-          group: '/pages',
-          icon: 'mdi-image',
-          title: 'pages',
-          children: [
-            {
-              title: 'pricing',
-              to: 'pricing',
-            },
-            {
-              title: 'rtl',
-              to: 'rtl',
-            },
-            {
-              title: 'timeline',
-              to: 'timeline',
-            },
-            {
-              title: 'login',
-              to: 'login',
-            },
-            {
-              title: 'register',
-              to: 'pricing',
-            },
-            {
-              title: 'lock',
-              to: 'lock',
-            },
-            {
-              title: 'user',
-              to: 'user',
-            },
-            {
-              title: 'error',
-              to: '404',
-            },
-          ],
+          icon: 'mdi-google-classroom',
+          title: 'Classes',
+          to: '/classes',
         },
         {
-          group: '/components',
-          icon: 'mdi-view-comfy',
-          title: 'components',
-          children: [
-            {
-              title: 'multi',
-              group: '',
-              children: [
-                {
-                  title: 'example',
-                  href: '#',
-                },
-              ],
-            },
-            {
-              title: 'buttons',
-              to: 'buttons',
-            },
-            {
-              title: 'grid',
-              to: 'grid-system',
-            },
-            {
-              title: 'tabs',
-              to: 'tabs',
-            },
-            {
-              title: 'notifications',
-              to: 'notifications',
-            },
-            {
-              title: 'icons',
-              to: 'icons',
-            },
-            {
-              title: 'typography',
-              to: 'typography',
-            },
-          ],
-        },
-        {
-          group: '/forms',
-          icon: 'mdi-clipboard-outline',
-          title: 'forms',
-          children: [
-            {
-              title: 'rforms',
-              to: 'regular',
-            },
-            {
-              title: 'eforms',
-              to: 'extended',
-            },
-            {
-              title: 'vforms',
-              to: 'validation',
-            },
-            {
-              title: 'wizard',
-              to: 'wizard',
-            },
-          ],
-        },
-        {
-          group: '/tables',
-          icon: 'mdi-grid',
-          title: 'tables',
-          children: [
-            {
-              title: 'rtables',
-              to: 'regular-tables',
-            },
-            {
-              title: 'etables',
-              to: 'extended-tables',
-            },
-            {
-              title: 'dtables',
-              to: 'data-tables',
-            },
-          ],
-        },
-        {
-          group: '/maps',
-          icon: 'mdi-map-marker',
-          title: 'maps',
-          children: [
-            {
-              title: 'google',
-              to: 'google-maps',
-            },
-            {
-              title: 'fullscreen',
-              to: 'full-screen-map',
-            },
-          ],
-        },
-        {
-          icon: 'mdi-widgets',
-          title: 'widgets',
-          to: '/widgets',
-        },
-        {
-          icon: 'mdi-chart-timeline-variant',
-          title: 'charts',
-          to: '/charts',
-        },
-        {
-          icon: 'mdi-calendar-range',
-          title: 'calendar',
+          icon: 'mdi-calendar-month',
+          title: 'Calendar',
           to: '/calendar',
+        },
+      ],
+      subjectsLinks: [
+        {
+          icon: 'mdi-notebook',
+          title: 'CPE 301',
+          to: '/cpe301',
+        },
+        {
+          icon: 'mdi-notebook',
+          title: 'CPE 301L',
+          to: '/cpe301l',
+        },
+        {
+          icon: 'mdi-notebook',
+          title: 'CPE 303',
+          to: '/cpe300',
+        },
+        {
+          icon: 'mdi-notebook',
+          title: 'CPE 300',
+          to: '/cpe300',
         },
       ],
     }),
@@ -258,8 +164,8 @@
           this.$store.commit('SET_DRAWER', val)
         },
       },
-      computedItems () {
-        return this.items.map(this.mapItem)
+      moduleLinks () {
+        return this.items.map(this.mapItemLinks)
       },
       profile () {
         return {
@@ -277,7 +183,7 @@
             },
             {
               to: '',
-              title: this.$t('settings'),
+              title: this.$t('Sign Out'),
             },
           ],
         }
@@ -291,11 +197,11 @@
     },
 
     methods: {
-      mapItem (item) {
+      mapItemLinks (link) {
         return {
-          ...item,
-          children: item.children ? item.children.map(this.mapItem) : undefined,
-          title: this.$t(item.title),
+          ...link,
+          children: link.children ? link.children.map(this.mapItemLinks) : undefined,
+          title: this.$t(link.title),
         }
       },
     },

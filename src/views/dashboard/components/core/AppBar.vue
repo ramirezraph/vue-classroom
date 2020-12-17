@@ -17,7 +17,6 @@
       <v-icon v-if="value">
         mdi-view-quilt
       </v-icon>
-
       <v-icon v-else>
         mdi-dots-vertical
       </v-icon>
@@ -30,80 +29,12 @@
 
     <v-spacer />
 
-    <v-text-field
-      :label="$t('search')"
-      color="secondary"
-      hide-details
-      style="max-width: 165px;"
-    >
-      <template
-        v-if="$vuetify.breakpoint.mdAndUp"
-        v-slot:append-outer
-      >
-        <v-btn
-          class="mt-n2"
-          elevation="1"
-          fab
-          small
-        >
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </template>
-    </v-text-field>
-
-    <div class="mx-3" />
-
     <v-btn
-      class="ml-2"
-      min-width="0"
       text
+      class="ml-2"
     >
-      <v-icon>mdi-view-dashboard</v-icon>
+      Sign Out
     </v-btn>
-
-    <v-menu
-      bottom
-      left
-      offset-y
-      origin="top right"
-      transition="scale-transition"
-    >
-      <template v-slot:activator="{ attrs, on }">
-        <v-btn
-          class="ml-2"
-          min-width="0"
-          text
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-badge
-            color="red"
-            overlap
-            bordered
-          >
-            <template v-slot:badge>
-              <span>5</span>
-            </template>
-
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
-        </v-btn>
-      </template>
-
-      <v-list
-        :tile="false"
-        nav
-      >
-        <div>
-          <app-bar-item
-            v-for="(n, i) in notifications"
-            :key="`item-${i}`"
-          >
-            <v-list-item-title v-text="n" />
-          </app-bar-item>
-        </div>
-      </v-list>
-    </v-menu>
 
     <v-menu
       bottom
@@ -113,18 +44,6 @@
       origin="top right"
       transition="scale-transition"
     >
-      <template v-slot:activator="{ attrs, on }">
-        <v-btn
-          class="ml-2"
-          min-width="0"
-          text
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon>mdi-account</v-icon>
-        </v-btn>
-      </template>
-
       <v-list
         :tile="false"
         flat
@@ -151,15 +70,15 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   // Components
   import { VHover, VListItem } from 'vuetify/lib'
 
   // Utilities
-  import { mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
 
-  export default {
+  export default Vue.extend({
     name: 'DashboardCoreAppBar',
-
     components: {
       AppBarItem: {
         render (h) {
@@ -210,7 +129,7 @@
     }),
 
     computed: {
-      ...mapState(['drawer']),
+      ...mapGetters(['drawer']),
     },
 
     methods: {
@@ -218,5 +137,5 @@
         setDrawer: 'SET_DRAWER',
       }),
     },
-  }
+  })
 </script>

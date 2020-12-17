@@ -6,8 +6,8 @@ import '@/sass/overrides.sass'
 Vue.use(Vuetify)
 
 const theme = {
-  primary: '#E91E63',
-  secondary: '#9C27b0',
+  primary: '#B71C1C',
+  secondary: '#E53935',
   accent: '#9C27b0',
   info: '#00CAE3',
 }
