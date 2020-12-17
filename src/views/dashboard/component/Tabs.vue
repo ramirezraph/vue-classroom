@@ -21,7 +21,7 @@
               text="Horizontal Tabs"
             />
 
-            <base-material-tabs color="warning">
+            <base-material-tabs color="error">
               <v-tab
                 v-for="(tab, i) in tabs"
                 :key="i"
@@ -36,7 +36,25 @@
                 >
                   <v-card-text>
                     <p>
-                      Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits.
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      Collaboratively administrate empowered
+                      markets via plug-and-play networks. Dynamically
+                      procrastinate B2C users after installed base benefits. Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus velit esse facilis non sunt natus fuga! Libero, numquam rem! Est provident blanditiis odio beatae molestias.
                     </p>
 
                     <p>

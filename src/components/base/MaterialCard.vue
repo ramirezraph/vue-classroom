@@ -35,10 +35,10 @@
           v-else-if="$slots.image"
           name="image"
         />
-
+        <!-- class="text-center display-1 font-weight-light mb-6" -->
         <div
           v-else-if="title && !icon"
-          class="display-1 font-weight-light"
+          class="text-center display-1 font-weight-light"
           v-text="title"
         />
 
@@ -162,6 +162,7 @@
       top: -40px
       transition: .3s ease
       z-index: 1
+      border-radius: 24px
 
     &.v-card--material--hover-reveal:hover
       .v-card--material__heading
