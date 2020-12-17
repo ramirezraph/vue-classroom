@@ -10,6 +10,7 @@ const theme = {
   secondary: '#E53935',
   accent: '#9C27b0',
   info: '#00CAE3',
+  lightRed: '#FF8A80',
 }
 
 export default new Vuetify({
