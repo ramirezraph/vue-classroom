@@ -49,7 +49,10 @@
         class="white--text"
         color="grey darken-2"
         min-width="125"
-        @click="$emit('click:prev')"
+        @click="
+          {/* eslint-disable-next-line vue/custom-event-name-casing */}
+          {/* eslint-disable-next-line vue/custom-event-name-casing */}
+          $emit('click:prev')"
       >
         Previous
       </v-btn>
@@ -83,10 +86,12 @@
     props: {
       availableSteps: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([]),
       },
       items: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([]),
       },
     },
