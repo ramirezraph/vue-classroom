@@ -6,7 +6,7 @@
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
     :src="barImage"
-    mobile-break-point="960"
+    mobile-breakpoint="960"
     app
     mini-variant-width="80"
     width="260"
@@ -76,7 +76,14 @@
           :item="item"
         />
       </template>
-      <v-divider class="mb-2" />
+    </v-list>
+
+    <v-divider class="mb-2" />
+
+    <v-list
+      expand
+      nav
+    >
       <template v-for="(item, i) in subjectsLinks">
         <base-item-group
           v-if="item.children"
