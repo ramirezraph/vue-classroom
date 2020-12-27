@@ -1,8 +1,8 @@
 <template>
   <v-card
-    min-width="700"
+    min-width="530"
     min-height="257"
-    max-width="700"
+    max-width="530"
     max-height="257"
     class="classes mr-4 mb-0"
     :color="color"
@@ -19,7 +19,10 @@
         class="classes-title white--text headline"
       >
         <v-row dense>
-          <v-col cols="10">
+          <v-col
+            cols="10"
+            class="pr-6"
+          >
             {{ title }}
           </v-col>
           <v-spacer />
@@ -44,7 +47,8 @@
         <p>{{ description }}</p>
       </v-card-text>
       <v-card-text
-        class="white--text caption mt-12 pa-6"
+        class="white--text caption pa-6"
+        :class="title.length > 29 ? 'mt-4' : 'mt-12'"
       >
         <v-row>
           <h2 class="text-h2">
