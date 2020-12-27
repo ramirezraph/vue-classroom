@@ -43,6 +43,11 @@ export default new Router({
           path: '',
           component: () => import('@/views/dashboard/Dashboard/Dashboard.vue'),
         },
+        {
+          name: 'Classes',
+          path: 'classes',
+          component: () => import('@/views/dashboard/Classes/Classes.vue'),
+        },
       ],
     },
     {
