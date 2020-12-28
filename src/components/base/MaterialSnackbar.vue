@@ -41,6 +41,7 @@
     },
 
     computed: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       classes () {
         return {
           ...VSnackbar.options.computed.classes.call(this),

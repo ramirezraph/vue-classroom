@@ -5,7 +5,7 @@
     offset-y
     v-bind="$attrs"
   >
-    <template v-slot:activator="{ attrs, on }">
+    <template #activator="{ attrs, on }">
       <v-btn
         :color="color"
         default
@@ -54,6 +54,7 @@
       },
       items: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([
           {
             id: undefined,

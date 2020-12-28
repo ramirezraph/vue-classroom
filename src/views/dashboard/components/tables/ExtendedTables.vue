@@ -169,7 +169,7 @@
         hide-default-footer
         show-select
       >
-        <template v-slot:footer>
+        <template #footer>
           <v-card-text>
             <v-row
               align="center"
@@ -198,7 +198,7 @@
         :items="products"
         hide-default-footer
       >
-        <template v-slot:item="{ item }">
+        <template #item="{ item }">
           <tr>
             <td>
               <v-img
@@ -230,7 +230,7 @@
           </tr>
         </template>
 
-        <template v-slot:footer>
+        <template #footer>
           <v-divider />
 
           <v-card-text>
@@ -265,8 +265,10 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+
+  export default Vue.extend({
     name: 'DashboardExtendedTables',
 
     data: () => ({
@@ -421,5 +423,5 @@
         },
       ],
     }),
-  }
+  })
 </script>

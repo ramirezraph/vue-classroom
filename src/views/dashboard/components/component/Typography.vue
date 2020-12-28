@@ -17,7 +17,7 @@
         <base-material-card
           color="green"
         >
-          <template v-slot:heading>
+          <template #heading>
             <div class="display-2 font-weight-light">
               Material Dashboard Heading
             </div>
@@ -83,6 +83,7 @@
   const small = 'Header with small subtitle'
 
   export default {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: () => ({
       typography: {
         'display-4': ['Display 4', material, 'h1'],

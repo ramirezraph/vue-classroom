@@ -117,6 +117,7 @@
       },
     },
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: () => ({
       items: [
         {
@@ -162,16 +163,20 @@
     computed: {
       ...mapState(['barColor', 'barImage']),
       drawer: {
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         get () {
           return this.$store.state.drawer
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         set (val) {
           this.$store.commit('SET_DRAWER', val)
         },
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       moduleLinks () {
         return this.items.map(this.mapItemLinks)
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       profile () {
         return {
           avatar: true,
@@ -196,12 +201,14 @@
     },
 
     watch: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       '$vuetify.breakpoint.smAndDown' (val) {
         this.$emit('update:expandOnHover', !val)
       },
     },
 
     methods: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       mapItemLinks (link) {
         return {
           ...link,

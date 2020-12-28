@@ -23,10 +23,10 @@
 
             <base-material-tabs color="warning">
               <v-tab
-                v-for="(tab, i) in tabs"
+                v-for="(item, i) in tabs"
                 :key="i"
               >
-                {{ tab }}
+                {{ item }}
               </v-tab>
 
               <v-tab-item>
@@ -210,12 +210,12 @@
               vertical
             >
               <v-tab
-                v-for="(tab, i) in tabs2"
+                v-for="(item, i) in tabs2"
                 :key="i"
                 class="mb-5"
               >
-                {{ tab.text }}
-                <v-icon v-text="tab.icon" />
+                {{ item.text }}
+                <v-icon v-text="item.icon" />
               </v-tab>
 
               <v-tab-item>
@@ -378,6 +378,7 @@
   export default {
     name: 'DashboardPanels',
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: () => ({
       tab: 0,
       tabs: [

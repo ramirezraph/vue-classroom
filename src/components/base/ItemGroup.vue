@@ -6,7 +6,7 @@
     append-icon="mdi-menu-down"
     :color="barColor !== 'rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.7)' ? 'white' : 'grey darken-1'"
   >
-    <template v-slot:activator>
+    <template #activator>
       <v-list-item-icon
         v-if="text"
         class="v-list-item__icon--text"
@@ -56,6 +56,7 @@
     props: {
       item: {
         type: Object,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ({
           avatar: undefined,
           group: undefined,
@@ -75,12 +76,14 @@
 
     computed: {
       ...mapState(['barColor']),
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       children () {
         return this.item.children.map(item => ({
           ...item,
           to: !item.to ? undefined : `${this.item.group}/${item.to}`,
         }))
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       computedText () {
         if (!this.item || !this.item.title) return ''
 
@@ -92,12 +95,14 @@
 
         return text
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       group () {
         return this.genGroup(this.item.children)
       },
     },
 
     methods: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       genGroup (children) {
         return children
           .filter(item => item.to)

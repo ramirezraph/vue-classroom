@@ -14,7 +14,7 @@
       inline
       class="px-5 py-3"
     >
-      <template v-slot:after-heading>
+      <template #after-heading>
         <div class="display-2 font-weight-light">
           DataTables
         </div>
@@ -44,8 +44,10 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+
+  export default Vue.extend({
     name: 'DashboardDataTables',
 
     data: () => ({
@@ -115,5 +117,5 @@
       ],
       search: undefined,
     }),
-  }
+  })
 </script>

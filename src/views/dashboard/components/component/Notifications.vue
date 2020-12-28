@@ -368,6 +368,7 @@
   export default {
     name: 'DashboardNotifications',
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: () => ({
       color: 'info',
       colors: [
@@ -392,12 +393,14 @@
     }),
 
     computed: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       parsedDirection () {
         return this.direction.split(' ')
       },
     },
 
     methods: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       randomColor () {
         this.color = this.colors[Math.floor(Math.random() * this.colors.length)]
       },

@@ -34,13 +34,13 @@
         <v-card-text>
           <strong class="mb-3 d-inline-block">SIDEBAR FILTERS</strong>
 
-          <v-item-group v-model="color">
+          <v-item-group v-model="colorValue">
             <v-item
               v-for="color in colors"
               :key="color"
               :value="color"
             >
-              <template v-slot="{ active, toggle }">
+              <template #default="{ active, toggle }">
                 <v-avatar
                   :class="active && 'v-settings__item--active'"
                   :color="color"
@@ -56,14 +56,14 @@
 
           <strong class="mb-3 d-inline-block">SIDEBAR BACKGROUND</strong>
 
-          <v-item-group v-model="scrim">
+          <v-item-group v-model="scrimValue">
             <v-item
               v-for="scrim in scrims"
               :key="scrim"
               :value="scrim"
               class="mx-1"
             >
-              <template v-slot="{ active, toggle }">
+              <template #default="{ active, toggle }">
                 <v-avatar
                   :class="active && 'v-settings__item--active'"
                   :color="scrim"
@@ -146,7 +146,7 @@
           <strong class="mb-3 d-inline-block">IMAGES</strong>
 
           <v-item-group
-            v-model="image"
+            v-model="imageValue"
             class="d-flex justify-space-between mb-3"
           >
             <v-item
@@ -155,7 +155,7 @@
               :value="image"
               class="mx-1"
             >
-              <template v-slot="{ active, toggle }">
+              <template #default="{ active, toggle }">
                 <v-sheet
                   :class="active && 'v-settings__item--active'"
                   class="d-inline-block v-settings__item"
@@ -250,8 +250,9 @@
 
     mixins: [Proxyable],
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: () => ({
-      color: '#E91E63',
+      colorValue: '#E91E63',
       colors: [
         '#9C27b0',
         '#00CAE3',
@@ -260,7 +261,7 @@
         '#E91E63',
         '#FF5252',
       ],
-      image: 'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
+      imageValue: 'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
       images: [
         'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
         'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-2.jpg',
@@ -269,7 +270,7 @@
       ],
       menu: false,
       saveImage: '',
-      scrim: 'rgba(0, 0, 0, .7), rgba(0, 0, 0, .7)',
+      scrimValue: 'rgba(0, 0, 0, .7), rgba(0, 0, 0, .7)',
       scrims: [
         'rgba(0, 0, 0, .7), rgba(0, 0, 0, .7)',
         'rgba(228, 226, 226, 1), rgba(255, 255, 255, 0.7)',
@@ -283,9 +284,11 @@
     },
 
     watch: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       color (val) {
         this.$vuetify.theme.themes[this.isDark ? 'dark' : 'light'].primary = val
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       showImg (val) {
         if (!val) {
           this.saveImage = this.barImage
@@ -297,9 +300,11 @@
           this.setBarImage(val)
         }
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       image (val) {
         this.setBarImage(val)
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       scrim (val) {
         this.$store.commit('SET_SCRIM', val)
       },
