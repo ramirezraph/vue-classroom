@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ar from 'vuetify/lib/locale/ar'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import en from 'vuetify/lib/locale/en'
 
 Vue.use(VueI18n)

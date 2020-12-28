@@ -13,7 +13,7 @@
           width="400"
           class="px-5 py-3"
         >
-          <template v-slot:heading>
+          <template #heading>
             <div class="text-center">
               <h1 class="display-2 font-weight-bold mb-2">
                 Login
