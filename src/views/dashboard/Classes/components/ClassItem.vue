@@ -7,6 +7,7 @@
     class="classes mr-4 mb-0"
     :color="color"
     hover
+    @click="classOnClicked"
   >
     <v-img
       :lazy-src="imageSource"
@@ -70,7 +71,8 @@
 </template>
 
 <script lang="ts">
-  export default {
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'ClassItem',
     props: {
       id: {
@@ -105,7 +107,17 @@
         default: 'grey',
       },
     },
-  }
+    data () {
+      return {
+
+      }
+    },
+    methods: {
+      classOnClicked () {
+        this.$router.push(`classes/${this.id}`)
+      },
+    },
+  })
 </script>
 
 <style scoped>

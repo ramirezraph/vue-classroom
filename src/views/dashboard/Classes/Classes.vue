@@ -63,7 +63,6 @@
         :teacher-name="item.teacherName"
         :image-source="item.imageSource"
         :color="item.color"
-        @click="classClicked(item.id)"
       />
     </v-card>
   </v-container>
