@@ -48,6 +48,12 @@ export default new Router({
           path: 'classes',
           component: () => import('@/views/dashboard/Classes/Classes.vue'),
         },
+        {
+          name: 'Class',
+          path: 'classes/:id',
+          component: () => import('@/views/dashboard/Class/Class.vue'),
+          props: true,
+        },
       ],
     },
     {

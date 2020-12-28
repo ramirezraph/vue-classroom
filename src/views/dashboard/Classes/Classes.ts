@@ -53,4 +53,9 @@ export default Vue.extend({
       ],
     }
   },
+  methods: {
+    classClicked (id: number) {
+      console.log(id)
+    },
+  },
 })
