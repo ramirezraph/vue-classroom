@@ -12,7 +12,7 @@
     <v-row>
       <v-col cols="12">
         <base-material-card color="green">
-          <template v-slot:heading>
+          <template #heading>
             <div class="display-2 font-weight-light">
               Material Design Icons
             </div>
@@ -42,7 +42,7 @@
                 content-class="top"
                 top
               >
-                <template v-slot:activator="{ attrs, on }">
+                <template #activator="{ attrs, on }">
                   <v-icon
                     v-bind="attrs"
                     v-on="on"

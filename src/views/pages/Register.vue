@@ -98,7 +98,7 @@
                     :input-value="true"
                     color="secondary"
                   >
-                    <template v-slot:label>
+                    <template #label>
                       <span class="text-no-wrap">I agree to the&nbsp;</span>
 
                       <a

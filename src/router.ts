@@ -9,33 +9,33 @@ export default new Router({
   routes: [
     {
       path: '/pages',
-      component: () => import('@/views/pages/Index'),
+      component: () => import('@/views/pages/Index.vue'),
       children: [
         {
           name: 'Lock',
           path: 'lock',
-          component: () => import('@/views/pages/Lock'),
+          component: () => import('@/views/pages/Lock.vue'),
         },
         {
           name: 'Login',
           path: 'login',
-          component: () => import('@/views/pages/Login'),
+          component: () => import('@/views/pages/Login.vue'),
         },
         {
           name: 'Pricing',
           path: 'pricing',
-          component: () => import('@/views/pages/Pricing'),
+          component: () => import('@/views/pages/Pricing.vue'),
         },
         {
           name: 'Register',
           path: 'register',
-          component: () => import('@/views/pages/Register'),
+          component: () => import('@/views/pages/Register.vue'),
         },
       ],
     },
     {
       path: '/',
-      component: () => import('@/views/dashboard/Index'),
+      component: () => import('@/views/dashboard/Index.vue'),
       children: [
         // Main Container
         {
@@ -58,12 +58,12 @@ export default new Router({
     },
     {
       path: '*',
-      component: () => import('@/views/pages/Index'),
+      component: () => import('@/views/pages/Index.vue'),
       children: [
         {
           name: '404 Error',
           path: '',
-          component: () => import('@/views/pages/Error'),
+          component: () => import('@/views/pages/Error.vue'),
         },
       ],
     },
