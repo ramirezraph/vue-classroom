@@ -353,6 +353,7 @@
   export default {
     name: 'DashboardButtons',
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: () => ({
       colors: [
         'default',

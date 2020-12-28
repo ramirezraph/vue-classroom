@@ -4,7 +4,7 @@
     v-bind="$attrs"
     v-on="$listeners"
   >
-    <template v-slot:heading>
+    <template #heading>
       <chartist
         :data="data"
         :event-handlers="eventHandlers"
@@ -39,14 +39,17 @@
     props: {
       data: {
         type: Object,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ({}),
       },
       eventHandlers: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([]),
       },
       options: {
         type: Object,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ({}),
       },
       ratio: {
@@ -55,11 +58,13 @@
       },
       responsiveOptions: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([]),
       },
       type: {
         type: String,
         required: true,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         validator: v => ['Bar', 'Line', 'Pie'].includes(v),
       },
     },

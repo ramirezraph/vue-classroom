@@ -50,6 +50,7 @@
     },
 
     computed: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       computedText () {
         if (!this.item || !this.item.title) return ''
 
@@ -61,6 +62,7 @@
 
         return text
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       href () {
         return this.item.href || (!this.item.to ? '#' : undefined)
       },

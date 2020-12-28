@@ -289,6 +289,7 @@
 
     components: {
       ParagraphHeading: {
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         render (h) {
           return h('div', {
             class: 'headline font-weight-light col cols-12',

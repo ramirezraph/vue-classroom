@@ -134,15 +134,18 @@
     },
 
     computed: {
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       classes () {
         return {
           'v-card--material--has-heading': this.hasHeading,
           'v-card--material--hover-reveal': this.hoverReveal,
         }
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       hasHeading () {
         return Boolean(this.$slots.heading || this.title || this.icon)
       },
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       hasAltHeading () {
         return Boolean(this.$slots.heading || (this.title && this.icon))
       },

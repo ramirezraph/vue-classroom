@@ -10,19 +10,18 @@
   </v-app>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'DashboardIndex',
-
     components: {
-      DashboardCoreAppBar: () => import('./components/core/AppBar'),
-      DashboardCoreDrawer: () => import('./components/core/Drawer'),
-      DashboardCoreSettings: () => import('./components/core/Settings'),
-      DashboardCoreView: () => import('./components/core/View'),
+      DashboardCoreAppBar: () => import('./components/core/AppBar.vue'),
+      DashboardCoreDrawer: () => import('./components/core/Drawer.vue'),
+      DashboardCoreSettings: () => import('./components/core/Settings.vue'),
+      DashboardCoreView: () => import('./components/core/View.vue'),
     },
-
     data: () => ({
       expandOnHover: false,
     }),
-  }
+  })
 </script>
