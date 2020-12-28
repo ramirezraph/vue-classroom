@@ -84,10 +84,12 @@
     props: {
       availableSteps: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([]),
       },
       items: {
         type: Array,
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ([]),
       },
     },
