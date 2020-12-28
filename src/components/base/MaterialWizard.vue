@@ -51,7 +51,6 @@
         min-width="125"
         @click="
           {/* eslint-disable-next-line vue/custom-event-name-casing */}
-          {/* eslint-disable-next-line vue/custom-event-name-casing */}
           $emit('click:prev')"
       >
         Previous
@@ -64,7 +63,6 @@
         color="success"
         min-width="100"
         @click="
-          {/* eslint-disable-next-line vue/custom-event-name-casing */}
           {/* eslint-disable-next-line vue/custom-event-name-casing */}
           $emit('click:next')"
       >

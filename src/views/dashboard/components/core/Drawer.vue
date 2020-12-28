@@ -12,39 +12,37 @@
     width="260"
     v-bind="$attrs"
   >
-    <template v-slot:img="props">
+    <template #img="props">
       <v-img
         :gradient="`to bottom, ${barColor}`"
         v-bind="props"
       />
     </template>
 
-    <template>
-      <v-list
-        expand
-        nav
-      >
-        <template v-if="!expandOnHover">
-          <v-btn
-            rounded
-            color="primary"
-            class="mt-3 text-none text-h5"
-          >
-            BulSu Classroom
-          </v-btn>
-        </template>
-        <template v-else>
-          <v-btn
-            rounded
-            small
-            color="primary"
-            class="mt-3 text-none text-h5 pa-3"
-          >
-            B
-          </v-btn>
-        </template>
-      </v-list>
-    </template>
+    <v-list
+      expand
+      nav
+    >
+      <template v-if="!expandOnHover">
+        <v-btn
+          rounded
+          color="primary"
+          class="mt-3 text-none text-h5"
+        >
+          BulSu Classroom
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-btn
+          rounded
+          small
+          color="primary"
+          class="mt-3 text-none text-h5 pa-3"
+        >
+          B
+        </v-btn>
+      </template>
+    </v-list>
 
     <v-divider class="mb-1" />
 
@@ -64,7 +62,7 @@
       <template v-for="(item, i) in moduleLinks">
         <base-item-group
           v-if="item.children"
-          :key="`group-${i}`"
+          :key="i"
           :item="item"
         >
           <!--  -->
@@ -72,7 +70,7 @@
 
         <base-item
           v-else
-          :key="`item-${i}`"
+          :key="i"
           :item="item"
         />
       </template>
