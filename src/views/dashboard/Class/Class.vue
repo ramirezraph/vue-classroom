@@ -77,7 +77,7 @@
                         class="mt-4"
                       >
                         <v-expansion-panel
-                          v-for="(item,i) in 5"
+                          v-for="(item,i) in 3"
                           :key="i"
                         >
                           <v-expansion-panel-header color="#686868">
@@ -107,8 +107,14 @@
                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nobis fugiat beatae quos, minus, commodi quo, placeat sed ipsa sequi debitis architecto facere unde est!</p>
                               </div>
                               <div class="d-flex px-6 mb-4">
-                                <span>
-                                  <v-icon left>
+                                <span
+                                  class="blue--text"
+                                  style="cursor: pointer;"
+                                >
+                                  <v-icon
+                                    left
+                                    color="blue"
+                                  >
                                     mdi-video
                                   </v-icon>
                                   Introduction.mp4
@@ -209,13 +215,62 @@
                     <v-card
                       flat
                     >
-                      <v-btn color="blue">
+                      <v-btn
+                        color="blue"
+                        @click="toggleAddNewLesson"
+                      >
                         <v-icon left>
                           mdi-card-plus
                         </v-icon>
                         <span>Add New Lesson</span>
                       </v-btn>
                     </v-card>
+                    <v-expand-transition>
+                      <v-card
+                        v-if="showHideAddLesson"
+                        elevation="6"
+                        class="pa-2"
+                        outlined
+                      >
+                        <v-card-title class="text-h4">
+                          Add Lesson
+                        </v-card-title>
+                        <v-card-text>
+                          <v-form
+                            class="mt-4"
+                            @submit.prevent=""
+                          >
+                            <v-text-field
+                              label="Name"
+                              color="blue"
+                              outlined
+                              rounded
+                              dense
+                              prepend-inner-icon="mdi-pencil-outline"
+                            />
+                            <v-textarea
+                              label="Description"
+                              color="blue"
+                              outlined
+                              rounded
+                              optional
+                              rows="3"
+                              prepend-inner-icon="mdi-card-text-outline"
+                            />
+                            <v-btn class="green mr-2">
+                              Save Lesson
+                            </v-btn>
+                            <v-btn
+                              text
+                              outlined
+                              @click="toggleAddNewLesson"
+                            >
+                              Cancel
+                            </v-btn>
+                          </v-form>
+                        </v-card-text>
+                      </v-card>
+                    </v-expand-transition>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>

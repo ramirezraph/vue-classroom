@@ -16,7 +16,9 @@ export default Vue.extend({
     },
   },
   data () {
-    return {}
+    return {
+      showHideAddLesson: false,
+    }
   },
   computed: {
     selectedClass (): Class {
@@ -30,5 +32,9 @@ export default Vue.extend({
       )
     },
   },
-  methods: {},
+  methods: {
+    toggleAddNewLesson (): void {
+      this.showHideAddLesson = !this.showHideAddLesson
+    },
+  },
 })

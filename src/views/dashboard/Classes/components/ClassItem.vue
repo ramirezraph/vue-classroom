@@ -1,10 +1,10 @@
 <template>
   <v-card
-    min-width="530"
+    :min-width="minMaxWidth"
     min-height="257"
-    max-width="530"
+    :max-width="minMaxWidth"
     max-height="257"
-    class="classes mr-4 mb-0"
+    class="class-item classes mr-4 mb-0"
     :color="color"
     hover
     @click="classOnClicked"
@@ -49,7 +49,7 @@
       </v-card-text>
       <v-card-text
         class="white--text caption pa-6"
-        :class="title.length > 29 ? 'mt-4' : 'mt-12'"
+        :class="title.length > 24 ? 'mt-4' : 'mt-12'"
       >
         <v-row>
           <h2 class="text-h2">
@@ -112,6 +112,18 @@
 
       }
     },
+    computed: {
+      // eslint-disable-next-line vue/return-in-computed-property
+      minMaxWidth (): number {
+        switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return 460
+          case 'sm': return 520
+          case 'md': return 520
+          case 'lg': return 520
+          case 'xl': return 620
+        }
+      },
+    },
     methods: {
       classOnClicked () {
         this.$router.push(`classes/${this.id}`)
@@ -119,7 +131,3 @@
     },
   })
 </script>
-
-<style scoped>
-
-</style>
