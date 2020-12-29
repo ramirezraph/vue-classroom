@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Classes from '@/store/modules/Classes'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: {},
+  modules: {
+    classes: Classes,
+  },
   state: {
     barColor: 'rgba(0, 0, 0, .8), rgba(0, 0, 0, .8)',
     barImage: 'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
     drawer: null,
+
   },
   getters: {
     drawer (state) {

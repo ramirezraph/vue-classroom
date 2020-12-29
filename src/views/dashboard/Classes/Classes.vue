@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-card
-      class="d-inline-flex justify-start align-start ma-0"
+      class="d-inline-flex flex-wrap justify-start align-start ma-0"
       flat
     >
       <v-btn
@@ -50,7 +50,7 @@
       </v-btn>
     </v-card>
     <v-card
-      class="d-flex flex-wrap justify-start pl-6 ma-0 pb-12"
+      class="d-flex flex-wrap justify-start pl-sm-6 ma-0 pb-12"
       flat
     >
       <class-item
@@ -63,7 +63,6 @@
         :teacher-name="item.teacherName"
         :image-source="item.imageSource"
         :color="item.color"
-        @click="classClicked(item.id)"
       />
     </v-card>
   </v-container>
