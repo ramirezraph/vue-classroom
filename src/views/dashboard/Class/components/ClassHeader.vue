@@ -5,11 +5,11 @@
     max-width="100%"
     max-height="257"
     class="classes mr-4 mb-n4"
-    :color="value._color"
+    :color="value.color"
   >
     <v-img
-      :lazy-src="value._imageSource"
-      :src="value._imageSource"
+      :lazy-src="value.imageSource"
+      :src="value.imageSource"
       max-height="257"
       position="center center"
       class="pa-6"
@@ -22,22 +22,22 @@
             cols="10"
             class="pr-6"
           >
-            {{ value._title }}
+            {{ value.title }}
           </v-col>
         </v-row>
       </v-card-title>
       <v-card-text
         class="white--text caption"
       >
-        <p>{{ value._description }}</p>
+        <p>{{ value.description }}</p>
       </v-card-text>
       <v-card-text
         class="white--text caption pa-6"
-        :class="value._title.length > 29 ? 'mt-4' : 'mt-12'"
+        :class="value.title.length > 29 ? 'mt-4' : 'mt-12'"
       >
         <v-row>
           <h2 class="text-h2">
-            {{ value._code }}
+            {{ value.code }}
           </h2>
           <v-spacer />
           <v-chip
@@ -46,7 +46,7 @@
             <v-avatar left>
               <v-icon>mdi-teach</v-icon>
             </v-avatar>
-            {{ value._teacherName }}
+            {{ value.teacherName }}
           </v-chip>
         </v-row>
       </v-card-text>

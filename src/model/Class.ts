@@ -1,11 +1,11 @@
 export class Class {
   // eslint-disable-next-line no-useless-constructor
   constructor (
-    public _title: string,
-    public _description: string,
-    public _code: string,
-    public _teacherName: string,
-    public _imageSource: string,
-    public _color: string,
+    public title: string,
+    public description: string,
+    public code: string,
+    public teacherName: string,
+    public imageSource: string,
+    public color: string,
   ) {}
 }

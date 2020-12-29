@@ -30,9 +30,61 @@
           <v-card
             min-width="100%"
             min-height="500"
-            color="red"
+            color="white"
+            elevation="4"
+            outlined
           >
-            <h1>Flip Class</h1>
+            <v-card-title>
+              <span>Flip Class</span>
+            </v-card-title>
+            <v-expansion-panels
+              popout
+              focusable
+              class="mt-2"
+            >
+              <v-expansion-panel
+                v-for="(item,i) in 3"
+                :key="i"
+              >
+                <v-expansion-panel-header
+                  color="#404040"
+                  class="white--text"
+                >
+                  <v-card
+                    flat
+                    class="ma-0 white--text"
+                    color="transparent"
+                  >
+                    <div class="text-h3 font-weight-regular">
+                      <p>Unit: Introduction / Orientation</p>
+                    </div>
+                    <div class="text-caption mt-n4">
+                      <span>Lorem ipsum dolor sit amet.</span>
+                    </div>
+                  </v-card>
+                  <template #actions>
+                    <v-icon color="white">
+                      $expand
+                    </v-icon>
+                  </template>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content class="py-4">
+                  <v-expansion-panels>
+                    <v-expansion-panel
+                      v-for="(item,i) in 5"
+                      :key="i"
+                    >
+                      <v-expansion-panel-header>
+                        Item
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-card>
         </v-row>
       </v-col>
