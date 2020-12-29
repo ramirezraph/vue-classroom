@@ -29,10 +29,10 @@
         <v-row>
           <v-card
             min-width="100%"
-            min-height="500"
             color="white"
             elevation="4"
             outlined
+            class="pb-6"
           >
             <v-card-title>
               <span>Flip Class</span>

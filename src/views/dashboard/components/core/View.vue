@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-main style="background-color: #eee;">
     <router-view />
 
     <dashboard-core-footer />
