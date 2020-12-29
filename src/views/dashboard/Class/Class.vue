@@ -68,20 +68,154 @@
                     </template>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
-                    <v-expansion-panels
-                      accordion
-                      class="mt-3"
+                    <v-card
+                      elevation="3"
                     >
-                      <v-expansion-panel
-                        v-for="(item,i) in 5"
-                        :key="i"
+                      <v-expansion-panels
+                        accordion
+                        focusable
+                        class="mt-4"
                       >
-                        <v-expansion-panel-header>Item</v-expansion-panel-header>
-                        <v-expansion-panel-content>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-expansion-panels>
+                        <v-expansion-panel
+                          v-for="(item,i) in 5"
+                          :key="i"
+                        >
+                          <v-expansion-panel-header color="#686868">
+                            <v-card
+                              flat
+                              tile
+                              class="ma-0 white--text"
+                              color="transparent"
+                            >
+                              <p class="text-h4 ma-0">
+                                Lesson: Introduction
+                              </p>
+                            </v-card>
+                            <template #actions>
+                              <v-icon color="white">
+                                $expand
+                              </v-icon>
+                            </template>
+                          </v-expansion-panel-header>
+                          <v-expansion-panel-content>
+                            <v-card
+                              flat
+                              min-width="100%"
+                              class="mt-3"
+                            >
+                              <div id="description">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nobis fugiat beatae quos, minus, commodi quo, placeat sed ipsa sequi debitis architecto facere unde est!</p>
+                              </div>
+                              <div class="d-flex px-6 mb-4">
+                                <span>
+                                  <v-icon left>
+                                    mdi-video
+                                  </v-icon>
+                                  Introduction.mp4
+                                </span>
+                                <v-spacer />
+                                <v-btn
+                                  icon
+                                  small
+                                >
+                                  <v-icon class="blue--text">
+                                    mdi-download
+                                  </v-icon>
+                                </v-btn>
+                                <v-btn
+                                  icon
+                                  small
+                                >
+                                  <v-icon>
+                                    mdi-delete
+                                  </v-icon>
+                                </v-btn>
+                                <v-btn
+                                  icon
+                                  small
+                                >
+                                  <v-icon>
+                                    mdi-arrow-up-down
+                                  </v-icon>
+                                </v-btn>
+                              </div>
+                              <div class="d-flex mt-10">
+                                <v-btn
+                                  icon
+                                  outlined
+                                  depressed
+                                  tile
+                                  class="mr-2"
+                                  color="black"
+                                >
+                                  <v-icon>
+                                    mdi-file-pdf
+                                  </v-icon>
+                                </v-btn>
+                                <v-btn
+                                  icon
+                                  outlined
+                                  depressed
+                                  tile
+                                  class="mr-2"
+                                  color="black"
+                                >
+                                  <v-icon>
+                                    mdi-file-powerpoint
+                                  </v-icon>
+                                </v-btn>
+                                <v-btn
+                                  icon
+                                  outlined
+                                  depressed
+                                  tile
+                                  class="mr-2"
+                                  color="black"
+                                >
+                                  <v-icon>
+                                    mdi-file-video
+                                  </v-icon>
+                                </v-btn>
+                                <v-btn
+                                  icon
+                                  outlined
+                                  depressed
+                                  tile
+                                  class="mr-2"
+                                  color="black"
+                                >
+                                  <v-icon>
+                                    mdi-video
+                                  </v-icon>
+                                </v-btn>
+                                <v-btn
+                                  icon
+                                  outlined
+                                  depressed
+                                  tile
+                                  class="mr-2"
+                                  color="black"
+                                >
+                                  <v-icon>
+                                    mdi-format-text
+                                  </v-icon>
+                                </v-btn>
+                              </div>
+                            </v-card>
+                          </v-expansion-panel-content>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
+                    </v-card>
+                    <v-card
+                      flat
+                    >
+                      <v-btn color="blue">
+                        <v-icon left>
+                          mdi-card-plus
+                        </v-icon>
+                        <span>Add New Lesson</span>
+                      </v-btn>
+                    </v-card>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
