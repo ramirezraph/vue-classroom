@@ -1,7 +1,8 @@
 <template>
   <v-container fluid>
     <v-card
-      class="d-inline-flex flex-wrap justify-start align-start ma-0"
+      id="controls-card"
+      class="d-inline-flex flex-wrap justify-start align-start ma-0 mt-md-6 px-sm-0 px-md-6"
       flat
     >
       <v-btn
@@ -50,6 +51,7 @@
       </v-btn>
     </v-card>
     <v-card
+      id="class-card"
       class="d-flex flex-wrap justify-start pl-sm-6 ma-0 pb-12"
       flat
     >
@@ -68,3 +70,12 @@
   </v-container>
 </template>
 <script src="./Classes.ts" lang="ts"></script>
+<style lang="scss">
+  #class-card, #controls-card {
+    background-color: transparent;
+  }
+  #controls-card button {
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+</style>

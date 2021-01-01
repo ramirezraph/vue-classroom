@@ -3,6 +3,7 @@
     id="dashboard"
     fluid
     tag="section"
+    class="pa-6"
   >
     <v-row>
       <v-col
