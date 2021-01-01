@@ -4,7 +4,7 @@
     min-height="257"
     :max-width="minMaxWidth"
     max-height="257"
-    class="class-item classes mr-4 mb-0"
+    class="class-item classes mr-4 mb-n3"
     :color="color"
     hover
     @click="classOnClicked"

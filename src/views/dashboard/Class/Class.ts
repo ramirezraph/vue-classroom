@@ -18,6 +18,7 @@ export default Vue.extend({
   data () {
     return {
       showHideAddLesson: false,
+      tabs: null,
     }
   },
   computed: {
@@ -28,7 +29,7 @@ export default Vue.extend({
         'CPE301',
         'John Doe',
         'https://blog.planview.com/wp-content/uploads/2020/01/Top-6-Software-Development-Methodologies.jpg',
-        'blue lighten-1',
+        'blue',
       )
     },
   },
