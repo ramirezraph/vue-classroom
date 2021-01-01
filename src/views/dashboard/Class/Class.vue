@@ -44,8 +44,8 @@
                 focusable
               >
                 <v-expansion-panel
-                  v-for="(item,i) in 5"
-                  :key="i"
+                  v-for="(itemUnit, unitIndex) in 5"
+                  :key="unitIndex"
                 >
                   <v-expansion-panel-header color="#404040">
                     <v-card
@@ -77,8 +77,8 @@
                         class="mt-4"
                       >
                         <v-expansion-panel
-                          v-for="(item,i) in 3"
-                          :key="i"
+                          v-for="(itemLesson, lessonIndex) in 3"
+                          :key="lessonIndex"
                         >
                           <v-expansion-panel-header color="#686868">
                             <v-card
