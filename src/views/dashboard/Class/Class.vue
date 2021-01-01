@@ -44,8 +44,8 @@
                 focusable
               >
                 <v-expansion-panel
-                  v-for="(item,i) in 5"
-                  :key="i"
+                  v-for="(itemUnit, unitIndex) in 5"
+                  :key="unitIndex"
                 >
                   <v-expansion-panel-header color="#404040">
                     <v-card
@@ -77,8 +77,8 @@
                         class="mt-4"
                       >
                         <v-expansion-panel
-                          v-for="(item,i) in 3"
-                          :key="i"
+                          v-for="(itemLesson, lessonIndex) in 3"
+                          :key="lessonIndex"
                         >
                           <v-expansion-panel-header color="#686868">
                             <v-card
@@ -285,9 +285,130 @@
       >
         <v-card
           min-height="770"
-          color="white"
         >
-          <span>Discussion</span>
+          <v-tabs
+            id="class-tabs"
+            v-model="tabs"
+            fixed-tabs
+          >
+            <v-tabs-slider :color="selectedClass.color" />
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-tab
+                  href="#discussion"
+                  class="text-none"
+                  :class="`${selectedClass.color}--text`"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-forum-outline
+                  </v-icon>
+                </v-tab>
+              </template>
+              <span>
+                Discussion
+              </span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-tab
+                  href="#classwork"
+                  class="text-none"
+                  :class="`${selectedClass.color}--text`"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-calendar-text-outline
+                  </v-icon>
+                </v-tab>
+              </template>
+              <span>Classwork</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-tab
+                  href="#people"
+                  class="text-none"
+                  :class="`${selectedClass.color}--text`"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-account-group-outline
+                  </v-icon>
+                </v-tab>
+              </template>
+              <span>People</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-tab
+                  href="#livelecture"
+                  class="text-none"
+                  :class="`${selectedClass.color}--text`"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>
+                    mdi-video-outline
+                  </v-icon>
+                </v-tab>
+              </template>
+              <span>Live Lecture</span>
+            </v-tooltip>
+          </v-tabs>
+          <v-tabs-items v-model="tabs">
+            <v-tab-item
+              value="discussion"
+            >
+              <v-card flat>
+                <v-card-title>
+                  <span>Hello, Discussion</span>
+                </v-card-title>
+                <v-card-text>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+            <v-tab-item
+              value="classwork"
+            >
+              <v-card flat>
+                <v-card-title>
+                  <span>Hello, Classwork</span>
+                </v-card-title>
+                <v-card-text>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+            <v-tab-item
+              value="people"
+            >
+              <v-card flat>
+                <v-card-title>
+                  <span>Hello, People</span>
+                </v-card-title>
+                <v-card-text>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+            <v-tab-item
+              value="livelecture"
+            >
+              <v-card flat>
+                <v-card-title>
+                  <span>Hello, Live Lecture</span>
+                </v-card-title>
+                <v-card-text>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs-items>
         </v-card>
       </v-col>
     </v-row>
