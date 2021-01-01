@@ -1,7 +1,7 @@
 <template>
   <v-container
     fluid
-    class="pa-6"
+    class="px-6 px-md-8"
   >
     <v-row>
       <v-btn
@@ -281,10 +281,9 @@
       <v-col
         cols="12"
         md="6"
-        class="pa-0 mt-n10 mt-sm-0 pa-md-3"
+        class="pa-0 mt-n10 mt-sm-0 py-md-3 pl-md-3"
       >
         <v-card
-          min-width="100%"
           min-height="770"
           color="white"
         >
