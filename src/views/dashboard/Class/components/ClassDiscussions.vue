@@ -15,53 +15,67 @@
         </v-card-title>
         <v-divider />
         <v-card-text>
-          <v-textarea
-            label="Type your message here"
-            outlined
-            color="blue"
-          />
-          <v-tooltip bottom>
-            <template #activator="{ on, attrs }">
+          <v-row class="px-6">
+            <v-textarea
+              label="Type your message here"
+              outlined
+              color="blue"
+            />
+          </v-row>
+          <v-row class="px-3">
+            <v-col cols="8">
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    outlined
+                    depressed
+                    tile
+                    class="mr-2"
+                    color="black"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon>
+                      mdi-file-plus
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>
+                  Insert a file
+                </span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    outlined
+                    depressed
+                    tile
+                    class="mr-2"
+                    color="black"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <v-icon>
+                      mdi-link-plus
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>
+                  Insert a link
+                </span>
+              </v-tooltip>
+            </v-col>
+            <v-spacer />
+            <v-col>
               <v-btn
-                icon
-                outlined
-                depressed
-                tile
-                class="mr-2"
-                color="black"
-                v-bind="attrs"
-                v-on="on"
+                color="blue"
               >
-                <v-icon>
-                  mdi-file-plus
-                </v-icon>
+                Post
               </v-btn>
-            </template>
-            <span>
-              Insert a file
-            </span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template #activator="{ on, attrs }">
-              <v-btn
-                icon
-                outlined
-                depressed
-                tile
-                class="mr-2"
-                color="black"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon>
-                  mdi-link-plus
-                </v-icon>
-              </v-btn>
-            </template>
-            <span>
-              Insert a link
-            </span>
-          </v-tooltip>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-card>
