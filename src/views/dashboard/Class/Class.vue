@@ -103,12 +103,15 @@
                               min-width="100%"
                               class="mt-3"
                             >
-                              <div id="description">
+                              <div
+                                id="description"
+                                class="body-1"
+                              >
                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nobis fugiat beatae quos, minus, commodi quo, placeat sed ipsa sequi debitis architecto facere unde est!</p>
                               </div>
                               <div class="d-flex px-6 mb-4">
                                 <span
-                                  class="blue--text"
+                                  class="blue--text body-1"
                                   style="cursor: pointer;"
                                 >
                                   <v-icon
@@ -284,7 +287,8 @@
         class="pa-0 mt-n10 mt-sm-0 py-md-3 pl-md-3"
       >
         <v-card
-          min-height="770"
+          flat
+          color="transparent"
         >
           <v-tabs
             id="class-tabs"
@@ -359,18 +363,13 @@
               <span>Live Lecture</span>
             </v-tooltip>
           </v-tabs>
-          <v-tabs-items v-model="tabs">
+          <v-tabs-items
+            v-model="tabs"
+          >
             <v-tab-item
               value="discussion"
             >
-              <v-card flat>
-                <v-card-title>
-                  <span>Hello, Discussion</span>
-                </v-card-title>
-                <v-card-text>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
-                </v-card-text>
-              </v-card>
+              <class-discussions />
             </v-tab-item>
             <v-tab-item
               value="classwork"
