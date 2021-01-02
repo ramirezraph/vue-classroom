@@ -10,7 +10,7 @@
       <v-card
         outlined
       >
-        <v-card-title class="caption pa-2 pl-4">
+        <v-card-title class="body-1 pa-2 pl-4 grey--text">
           Post a message
         </v-card-title>
         <v-divider />
@@ -76,14 +76,59 @@
         </v-icon>
         Recent Discussions
       </v-card-title>
+      <v-card-text>
+        <v-timeline
+          align-top
+          dense
+        >
+          <v-timeline-item
+            v-for="(post, i) in posts"
+            :key="i"
+            color="green"
+            icon="mdi-forum"
+            fill-dot
+            medium
+          >
+            <post-item :post="post" />
+          </v-timeline-item>
+        </v-timeline>
+      </v-card-text>
     </v-card>
   </div>
 </template>
 
-<script>
-  export default {
+<script long="ts">
+  import Vue from 'vue'
+  import PostItem from './PostItem.vue'
 
-  }
+  export default Vue.extend({
+    components: {
+      PostItem,
+    },
+    data () {
+      return {
+        posts: [
+          {
+            name: 'John Doe',
+            time: '9:23 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consectetur reprehenderit cum quos mollitia tempora?',
+            comments: [],
+          },
+          {
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
+        ],
+      }
+    },
+    methods: {
+      postComment (id) {
+        console.log(id, 'send button clicked')
+      },
+    },
+  })
 </script>
 
 <style lang="scss" scoped>

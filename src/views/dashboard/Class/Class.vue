@@ -103,12 +103,15 @@
                               min-width="100%"
                               class="mt-3"
                             >
-                              <div id="description">
+                              <div
+                                id="description"
+                                class="body-1"
+                              >
                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nobis fugiat beatae quos, minus, commodi quo, placeat sed ipsa sequi debitis architecto facere unde est!</p>
                               </div>
                               <div class="d-flex px-6 mb-4">
                                 <span
-                                  class="blue--text"
+                                  class="blue--text body-1"
                                   style="cursor: pointer;"
                                 >
                                   <v-icon
