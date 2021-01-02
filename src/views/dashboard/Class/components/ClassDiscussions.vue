@@ -84,6 +84,7 @@
           <v-timeline-item
             v-for="(post, i) in posts"
             :key="i"
+            class="ml-n6"
             color="green"
             icon="mdi-forum"
             fill-dot
@@ -109,12 +110,14 @@
       return {
         posts: [
           {
+            id: 1,
             name: 'John Doe',
             time: '9:23 PM',
             message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consectetur reprehenderit cum quos mollitia tempora?',
             comments: [],
           },
           {
+            id: 2,
             name: 'John Doe',
             time: '9:02 PM',
             message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
@@ -122,11 +125,6 @@
           },
         ],
       }
-    },
-    methods: {
-      postComment (id) {
-        console.log(id, 'send button clicked')
-      },
     },
   })
 </script>

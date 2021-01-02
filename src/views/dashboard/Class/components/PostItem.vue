@@ -1,18 +1,34 @@
 <template>
-  <v-card class="px-6 pt-6">
+  <v-card
+    class="px-6 pt-6"
+    min-width="102%"
+  >
     <v-card-title>
-      <div>
-        <div
-          class="d-block subtitle-2 font-weight-medium"
-          color="grey"
-        >
-          {{ post.name }}
+      <div class="d-flex">
+        <div>
+          <v-avatar>
+            <img
+              src="https://cdn.vuetifyjs.com/images/john.jpg"
+              alt="John"
+            >
+          </v-avatar>
         </div>
-        <div class="d-block caption text-center justify-content">
-          <v-icon small>
-            mdi-clock-time-eight-outline
-          </v-icon>
-          {{ post.time }}
+        <div class="ml-3">
+          <div
+            class="d-block subtitle-2 font-weight-medium"
+            color="grey"
+          >
+            {{ post.name }}
+          </div>
+          <div class="d-block caption grey--text">
+            <v-icon
+              small
+              color="grey"
+            >
+              mdi-clock-time-eight-outline
+            </v-icon>
+            {{ post.time }}
+          </div>
         </div>
       </div>
     </v-card-title>
@@ -54,7 +70,7 @@
               label="Write a comment"
               append-icon="mdi-send"
               color="blue"
-              @click:append="postComment(i)"
+              @click:append="postComment(post.id)"
             />
           </v-col>
         </v-row>
@@ -64,12 +80,12 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import Vue, { PropType } from 'vue'
   import { Post } from '@/model/Post.ts'
   export default Vue.extend({
     props: {
       post: {
-        type: Post,
+        type: Object as PropType<Post>,
         required: true,
       },
     },
@@ -77,6 +93,12 @@
       return {
         commentToggle: false,
       }
+    },
+    computed: {},
+    methods: {
+      postComment (id: number): void {
+        console.log(id, 'send button clicked')
+      },
     },
   })
 </script>
