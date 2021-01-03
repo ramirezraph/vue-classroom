@@ -3,6 +3,7 @@ import { Class } from '@/model/Class'
 import ClassItem from '@/views/dashboard/Classes/components/ClassItem.vue'
 import ClassHeader from './components/ClassHeader.vue'
 import ClassDiscussions from './components/ClassDiscussions.vue'
+import ClassClasswork from './components/ClassClasswork.vue'
 
 export default Vue.extend({
   name: 'Class',
@@ -10,6 +11,7 @@ export default Vue.extend({
     ClassItem,
     ClassHeader,
     ClassDiscussions,
+    ClassClasswork,
   },
   props: {
     id: { // from router params

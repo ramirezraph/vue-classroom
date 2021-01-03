@@ -51,30 +51,32 @@
           Comment
         </v-btn>
       </div>
-      <div v-if="commentToggle">
-        <v-divider />
-        <v-row>
-          <v-col cols="2">
-            <v-avatar class="ml-n3 ml-sm-3">
-              <img
-                src="https://cdn.vuetifyjs.com/images/john.jpg"
-                alt="John"
-              >
-            </v-avatar>
-          </v-col>
-          <v-col cols="10">
-            <v-textarea
-              rows="1"
-              outlined
-              clearable
-              label="Write a comment"
-              append-icon="mdi-send"
-              color="blue"
-              @click:append="postComment(post.id)"
-            />
-          </v-col>
-        </v-row>
-      </div>
+      <v-expand-transition>
+        <div v-show="commentToggle">
+          <v-divider />
+          <v-row>
+            <v-col cols="2">
+              <v-avatar class="ml-n3 ml-sm-3">
+                <img
+                  src="https://cdn.vuetifyjs.com/images/john.jpg"
+                  alt="John"
+                >
+              </v-avatar>
+            </v-col>
+            <v-col cols="10">
+              <v-textarea
+                rows="1"
+                outlined
+                clearable
+                label="Write a comment"
+                append-icon="mdi-send"
+                color="blue"
+                @click:append="postComment(post.id)"
+              />
+            </v-col>
+          </v-row>
+        </div>
+      </v-expand-transition>
     </v-card-text>
   </v-card>
 </template>

@@ -20,7 +20,7 @@
     <v-row class="mt-n6">
       <v-col
         cols="12"
-        md="6"
+        md="5"
         xl="5"
       >
         <v-row>
@@ -42,6 +42,7 @@
                 accordion
                 popout
                 focusable
+                multiple
               >
                 <v-expansion-panel
                   v-for="(itemUnit, unitIndex) in 5"
@@ -74,6 +75,7 @@
                       <v-expansion-panels
                         accordion
                         focusable
+                        multiple
                         class="mt-4"
                       >
                         <v-expansion-panel
@@ -283,7 +285,7 @@
       </v-col>
       <v-col
         cols="12"
-        md="6"
+        md="7"
         class="pa-0 mt-n10 mt-sm-0 py-md-3 pl-md-3"
       >
         <v-card
@@ -374,14 +376,7 @@
             <v-tab-item
               value="classwork"
             >
-              <v-card flat>
-                <v-card-title>
-                  <span>Hello, Classwork</span>
-                </v-card-title>
-                <v-card-text>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
-                </v-card-text>
-              </v-card>
+              <class-classwork />
             </v-tab-item>
             <v-tab-item
               value="people"
