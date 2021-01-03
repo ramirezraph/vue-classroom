@@ -51,6 +51,7 @@
             <v-card-text class="pt-0">
               <v-expansion-panels
                 accordion
+                multiple
                 class="mt-4"
               >
                 <v-expansion-panel
@@ -82,6 +83,7 @@
                     >
                       <v-expansion-panels
                         accordion
+                        multiple
                         class="mt-4"
                       >
                         <!-- Form Type -->
@@ -99,7 +101,7 @@
                               >
                                 <v-col
                                   cols="12"
-                                  md="7"
+                                  md="8"
                                 >
                                   <v-icon
                                     left
@@ -114,7 +116,7 @@
                                 <v-spacer />
                                 <v-col
                                   cols="12"
-                                  md="5"
+                                  md="4"
                                 >
                                   <span class="caption grey--text">
                                     Due Tomorrow, 11:59 PM
@@ -131,23 +133,34 @@
                           <v-expansion-panel-content>
                             <v-card
                               flat
-                              min-width="100%"
                               class="mt-3"
                             >
                               <v-row>
-                                <v-col>
-                                  <p class="caption">
+                                <v-col
+                                  cols="12"
+                                  sm="12"
+                                  md="6"
+                                  lg="7"
+                                >
+                                  <p class="caption grey--text">
                                     Posted Dec 17 (Edited 4:20 PM)
                                   </p>
                                   <div class="subtitle-1">
                                     Lorem ipsum dolor sit amet.
+                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sed, id enim. Quam temporibus distinctio incidunt nemo dolor saepe vel fugit!
                                   </div>
                                 </v-col>
-                                <v-col>
+                                <v-spacer />
+                                <v-col
+                                  sm="12"
+                                  md="6"
+                                  lg="5"
+                                >
                                   <v-row
                                     align="center"
                                     justify="center"
                                     class="text-center"
+                                    no-gutters
                                   >
                                     <v-col>
                                       <div class="d-block">
@@ -161,7 +174,7 @@
                                         </v-avatar>
                                       </div>
                                       <div class="d-block">
-                                        <span class="caption">Assigned</span>
+                                        <span class="caption grey--text">Assigned</span>
                                       </div>
                                     </v-col>
                                     <v-col>
@@ -176,7 +189,7 @@
                                         </v-avatar>
                                       </div>
                                       <div class="d-block">
-                                        <span class="caption">Turned In</span>
+                                        <span class="caption grey--text">Turned In</span>
                                       </div>
                                     </v-col>
                                     <v-col>
@@ -191,7 +204,7 @@
                                         </v-avatar>
                                       </div>
                                       <div class="d-block">
-                                        <span class="caption">Graded</span>
+                                        <span class="caption grey--text">Graded</span>
                                       </div>
                                     </v-col>
                                   </v-row>

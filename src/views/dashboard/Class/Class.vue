@@ -42,6 +42,7 @@
                 accordion
                 popout
                 focusable
+                multiple
               >
                 <v-expansion-panel
                   v-for="(itemUnit, unitIndex) in 5"
@@ -74,6 +75,7 @@
                       <v-expansion-panels
                         accordion
                         focusable
+                        multiple
                         class="mt-4"
                       >
                         <v-expansion-panel
