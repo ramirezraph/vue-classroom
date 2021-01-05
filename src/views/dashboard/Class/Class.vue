@@ -3,20 +3,6 @@
     fluid
     class="px-6 px-md-8"
   >
-    <v-row>
-      <v-btn
-        text
-        rounded
-        @click="$router.back()"
-      >
-        <v-icon
-          left
-        >
-          mdi-arrow-left
-        </v-icon>
-        Back to List
-      </v-btn>
-    </v-row>
     <v-row class="mt-n6">
       <v-col
         cols="12"
