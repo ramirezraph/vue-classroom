@@ -1,4 +1,8 @@
+import { Unit } from './Unit'
+
 export class Class {
+    public units?: Unit[] = []
+
   // eslint-disable-next-line no-useless-constructor
   constructor (
     public title: string,

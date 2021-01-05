@@ -4,6 +4,8 @@ import ClassItem from '@/views/dashboard/Classes/components/ClassItem.vue'
 import ClassHeader from './components/ClassHeader.vue'
 import ClassDiscussions from './components/ClassDiscussions.vue'
 import ClassClasswork from './components/ClassClasswork.vue'
+import AccordionUnitItem from './components/AccordionUnitItem.vue'
+import { Unit } from '@/model/Unit'
 
 export default Vue.extend({
   name: 'Class',
@@ -12,6 +14,7 @@ export default Vue.extend({
     ClassHeader,
     ClassDiscussions,
     ClassClasswork,
+    AccordionUnitItem,
   },
   props: {
     id: { // from router params
@@ -21,7 +24,6 @@ export default Vue.extend({
   },
   data () {
     return {
-      showHideAddLesson: false,
       tabs: null,
     }
   },
@@ -36,10 +38,47 @@ export default Vue.extend({
         'blue',
       )
     },
-  },
-  methods: {
-    toggleAddNewLesson (): void {
-      this.showHideAddLesson = !this.showHideAddLesson
+    units (): Unit[] {
+      return this.selectedClass.units || []
     },
   },
+  created (): void {
+    this.selectedClass.units = [
+      {
+        unitNumber: 0,
+        title: 'Introduction / Orientation',
+        shortDescription: 'Lorem ipsum dolor sit amet.',
+        lessons: [
+          {
+            title: 'Discussion of Vision, Mission, etc.',
+            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+          },
+          {
+            title: 'Brief History',
+            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+          },
+          {
+            title: 'Course Syllabus & Policy',
+            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+          },
+        ],
+      },
+      {
+        unitNumber: 1,
+        title: 'Introduction to Software Design',
+        shortDescription: 'Lorem ipsum dolor sit amet.',
+        lessons: [
+          {
+            title: 'History and Overview',
+            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+          },
+          {
+            title: 'Software Design / Engineering Concept',
+            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+          },
+        ],
+      },
+    ]
+  },
+  methods: {},
 })
