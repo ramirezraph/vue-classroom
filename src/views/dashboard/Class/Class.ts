@@ -48,6 +48,7 @@ export default Vue.extend({
         unitNumber: 0,
         title: 'Introduction / Orientation',
         shortDescription: 'Lorem ipsum dolor sit amet.',
+        isLive: false,
         lessons: [
           {
             title: 'Discussion of Vision, Mission, etc.',
@@ -67,6 +68,7 @@ export default Vue.extend({
         unitNumber: 1,
         title: 'Introduction to Software Design',
         shortDescription: 'Lorem ipsum dolor sit amet.',
+        isLive: false,
         lessons: [
           {
             title: 'History and Overview',

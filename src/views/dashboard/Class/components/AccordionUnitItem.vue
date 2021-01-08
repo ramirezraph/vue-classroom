@@ -21,8 +21,49 @@
       </template>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
+      <div class="d-inline-flex mt-3 align-center">
+        <div class="mr-6">
+          <v-btn
+            depressed
+            small
+            color="red"
+            class="px-6"
+          >
+            <v-icon
+              small
+              left
+            >
+              mdi-delete
+            </v-icon>
+            Delete
+          </v-btn>
+        </div>
+        <div class="mr-6">
+          <v-btn
+            depressed
+            small
+            :color="liveDraftColor"
+            rounded
+            width="120"
+          >
+            <v-switch
+              v-model="isUnitLive"
+              dense
+              inset
+              color="white"
+              class="liveDraft"
+            >
+              <template #label>
+                <span class="input__label ml-n4 white--text">{{ liveDraftLabel }}</span>
+              </template>
+            </v-switch>
+          </v-btn>
+        </div>
+        <v-spacer />
+      </div>
       <v-card
         elevation="3"
+        class="mt-n2"
       >
         <v-expansion-panels
           accordion
@@ -118,6 +159,7 @@
     data () {
       return {
         showHideAddLesson: false,
+        isUnitLive: false,
       }
     },
     computed: {
@@ -126,6 +168,15 @@
       },
       lessons (): Lesson[] {
         return this.unitItem.lessons || []
+      },
+      liveDraftLabel (): string {
+        return this.isUnitLive ? 'Live' : 'Draft'
+      },
+      liveDraftColor (): string {
+        return this.isUnitLive ? 'green' : 'orange'
+      },
+      liveDraftColorSwitch (): string {
+        return this.isUnitLive ? 'white' : 'white'
       },
     },
     methods: {
