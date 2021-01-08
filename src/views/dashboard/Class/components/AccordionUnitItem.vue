@@ -48,13 +48,13 @@
           >
             <v-switch
               v-model="isUnitLive"
-              inset
               dense
+              inset
               color="white"
               class="liveDraft"
             >
               <template #label>
-                <span class="input__label ml-n4 white--text font-weight-medium">{{ liveDraftLabel }}</span>
+                <span class="input__label ml-n4 white--text">{{ liveDraftLabel }}</span>
               </template>
             </v-switch>
           </v-btn>
