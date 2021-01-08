@@ -8,5 +8,6 @@ export class Unit {
     public unitNumber: number,
     public title: string,
     public shortDescription: string,
+    public isLive: boolean,
   ) {}
 }
