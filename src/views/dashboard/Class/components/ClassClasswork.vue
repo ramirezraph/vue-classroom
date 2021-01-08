@@ -214,7 +214,6 @@
                               <v-row>
                                 <v-btn
                                   text
-                                  flat
                                   depressed
                                   color="blue"
                                 >
