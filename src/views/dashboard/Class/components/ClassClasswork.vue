@@ -137,10 +137,9 @@
                             >
                               <v-row>
                                 <v-col
-                                  cols="12"
                                   sm="12"
-                                  md="6"
-                                  lg="7"
+                                  md="12"
+                                  xl="8"
                                 >
                                   <p class="caption grey--text">
                                     Posted Dec 17 (Edited 4:20 PM)
@@ -153,14 +152,13 @@
                                 <v-spacer />
                                 <v-col
                                   sm="12"
-                                  md="6"
-                                  lg="5"
+                                  md="12"
+                                  xl="4"
+                                  class="px-0 px-sm-16 px-md-0 px-lg-0 px-xl-0"
                                 >
                                   <v-row
-                                    align="center"
-                                    justify="center"
-                                    class="text-center"
                                     no-gutters
+                                    class="d-flex text-center"
                                   >
                                     <v-col>
                                       <div class="d-block">

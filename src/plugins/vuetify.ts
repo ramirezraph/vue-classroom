@@ -20,4 +20,13 @@ export default new Vuetify({
       light: theme,
     },
   },
+  breakpoint: {
+    thresholds: {
+      xs: 500,
+      sm: 1280,
+      md: 1440,
+      lg: 1680,
+    },
+    scrollBarWidth: 24,
+  },
 })
