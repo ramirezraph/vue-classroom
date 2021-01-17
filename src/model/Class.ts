@@ -1,7 +1,9 @@
 import { Unit } from './Unit'
+import { Post } from '@/model/Post'
 
 export class Class {
     public units?: Unit[] = []
+    public discussions?: Post[] = []
 
   // eslint-disable-next-line no-useless-constructor
   constructor (

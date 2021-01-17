@@ -51,6 +51,43 @@ export default {
             ],
           },
         ],
+        discussions: [
+          {
+            id: 1,
+            name: 'John Doe',
+            time: '9:23 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consectetur reprehenderit cum quos mollitia tempora?',
+            comments: [],
+          },
+          {
+            id: 2,
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
+          {
+            id: 3,
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
+          {
+            id: 4,
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
+          {
+            id: 5,
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
+        ],
       },
       {
         id: '2',

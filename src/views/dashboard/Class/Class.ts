@@ -6,6 +6,7 @@ import ClassDiscussions from './components/ClassDiscussions.vue'
 import ClassClasswork from './components/ClassClasswork.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
+import { Post } from '@/model/Post'
 
 export default Vue.extend({
   name: 'Class',
@@ -33,6 +34,9 @@ export default Vue.extend({
     },
     units (): Unit[] {
       return this.selectedClass.units || []
+    },
+    discussions (): Post[] {
+      return this.selectedClass.discussions || []
     },
   },
   methods: {},

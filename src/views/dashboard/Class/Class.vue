@@ -45,7 +45,9 @@
               v-else
               class="ma-6"
             >
-              <p>No unit found.</p>
+              <p class="grey--text">
+                No unit found.
+              </p>
             </div>
           </v-card>
         </v-row>
@@ -135,7 +137,7 @@
             <v-tab-item
               value="discussion"
             >
-              <class-discussions />
+              <class-discussions :discussions="discussions" />
             </v-tab-item>
             <v-tab-item
               value="classwork"
@@ -175,9 +177,11 @@
 <script lang="ts" src="./Class.ts"></script>
 
 <style lang="scss" scoped>
+
   .tab-items {
     overflow-y: auto;
-    height: 1000px;
+    max-height: 950px;
+    background-color: #eeeeee;
   }
   /* width */
   ::-webkit-scrollbar {
