@@ -75,7 +75,7 @@
         </div>
         <v-row
           no-gutters
-          class="mt-6"
+          class="mt-12"
         >
           <div
             class="d-flex lesson-controls"

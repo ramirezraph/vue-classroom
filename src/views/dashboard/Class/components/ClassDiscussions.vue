@@ -137,6 +137,20 @@
             message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
             comments: [],
           },
+          {
+            id: 3,
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
+          {
+            id: 4,
+            name: 'John Doe',
+            time: '9:02 PM',
+            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
+            comments: [],
+          },
         ],
       }
     },
