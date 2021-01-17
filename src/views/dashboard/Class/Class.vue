@@ -171,8 +171,8 @@
 
 <style lang="scss" scoped>
   .tab-items {
-    height: 700px;
     overflow-y: auto;
+    height: 1000px;
   }
   /* width */
   ::-webkit-scrollbar {
