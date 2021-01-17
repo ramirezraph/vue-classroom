@@ -8,6 +8,7 @@
         cols="12"
         md="5"
         xl="5"
+        class="fixed"
       >
         <v-row>
           <class-header :value="selectedClass" />
@@ -124,6 +125,7 @@
           </v-tabs>
           <v-tabs-items
             v-model="tabs"
+            class="tab-items"
           >
             <v-tab-item
               value="discussion"
@@ -166,3 +168,29 @@
   </v-container>
 </template>
 <script lang="ts" src="./Class.ts"></script>
+
+<style lang="scss" scoped>
+  .tab-items {
+    overflow-y: auto;
+    height: 1000px;
+  }
+  /* width */
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+</style>

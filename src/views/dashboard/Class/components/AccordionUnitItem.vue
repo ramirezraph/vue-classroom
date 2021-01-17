@@ -21,46 +21,6 @@
       </template>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
-      <div class="d-inline-flex mt-3 align-center">
-        <div class="mr-6">
-          <v-btn
-            depressed
-            small
-            color="red"
-            class="px-6"
-          >
-            <v-icon
-              small
-              left
-            >
-              mdi-delete
-            </v-icon>
-            Delete
-          </v-btn>
-        </div>
-        <div class="mr-6">
-          <v-btn
-            depressed
-            small
-            :color="liveDraftColor"
-            rounded
-            width="120"
-          >
-            <v-switch
-              v-model="isUnitLive"
-              dense
-              inset
-              color="white"
-              class="liveDraft"
-            >
-              <template #label>
-                <span class="input__label ml-n4 white--text">{{ liveDraftLabel }}</span>
-              </template>
-            </v-switch>
-          </v-btn>
-        </div>
-        <v-spacer />
-      </div>
       <v-card
         elevation="3"
         class="mt-n2"
@@ -81,15 +41,37 @@
       <v-card
         flat
       >
-        <v-btn
-          color="blue"
-          @click="toggleAddNewLesson"
+        <v-row
+          no-gutters
         >
-          <v-icon left>
-            mdi-card-plus
-          </v-icon>
-          <span>Add New Lesson</span>
-        </v-btn>
+          <v-btn
+            color="blue"
+            @click="toggleAddNewLesson"
+          >
+            <v-icon left>
+              mdi-card-plus
+            </v-icon>
+            <span>Add New Lesson</span>
+          </v-btn>
+          <v-spacer />
+          <v-tooltip left>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                icon
+                color="error"
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon size="25">
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>
+              Remove Unit
+            </span>
+          </v-tooltip>
+        </v-row>
       </v-card>
       <v-expand-transition>
         <v-card
@@ -171,9 +153,6 @@
       },
       liveDraftLabel (): string {
         return this.isUnitLive ? 'Live' : 'Draft'
-      },
-      liveDraftColor (): string {
-        return this.isUnitLive ? 'green' : 'orange'
       },
       liveDraftColorSwitch (): string {
         return this.isUnitLive ? 'white' : 'white'
