@@ -24,7 +24,10 @@
             <v-card-title>
               <span>Flip Class</span>
             </v-card-title>
-            <div class="mt-2">
+            <div
+              v-if="selectedClass.units"
+              class="mt-2"
+            >
               <v-expansion-panels
                 accordion
                 popout
@@ -37,6 +40,12 @@
                   :unit="unitItem"
                 />
               </v-expansion-panels>
+            </div>
+            <div
+              v-else
+              class="ma-6"
+            >
+              <p>No unit found.</p>
             </div>
           </v-card>
         </v-row>
@@ -55,13 +64,12 @@
             v-model="tabs"
             fixed-tabs
           >
-            <v-tabs-slider :color="selectedClass.color" />
+            <v-tabs-slider color="blue" />
             <v-tooltip bottom>
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#discussion"
-                  class="text-none"
-                  :class="`${selectedClass.color}--text`"
+                  class="text-none blue--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -78,8 +86,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#classwork"
-                  class="text-none"
-                  :class="`${selectedClass.color}--text`"
+                  class="text-none blue--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -94,8 +101,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#people"
-                  class="text-none"
-                  :class="`${selectedClass.color}--text`"
+                  class="text-none blue--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -110,8 +116,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#livelecture"
-                  class="text-none"
-                  :class="`${selectedClass.color}--text`"
+                  class="text-none blue--text"
                   v-bind="attrs"
                   v-on="on"
                 >

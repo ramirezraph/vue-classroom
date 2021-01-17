@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 
+import { Class } from '@/model/Class'
+
 export default {
   namespaced: true,
   state: {
@@ -11,7 +13,44 @@ export default {
         code: 'CPE 301',
         teacherName: 'Marjorie R. Stahl',
         imageSource: 'https://blog.planview.com/wp-content/uploads/2020/01/Top-6-Software-Development-Methodologies.jpg',
-        color: 'green lighten-1',
+        units: [
+          {
+            unitNumber: 0,
+            title: 'Introduction / Orientation',
+            shortDescription: 'Lorem ipsum dolor sit amet.',
+            isLive: false,
+            lessons: [
+              {
+                title: 'Discussion of Vision, Mission, etc.',
+                shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+              },
+              {
+                title: 'Brief History',
+                shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+              },
+              {
+                title: 'Course Syllabus & Policy',
+                shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+              },
+            ],
+          },
+          {
+            unitNumber: 1,
+            title: 'Introduction to Software Design',
+            shortDescription: 'Lorem ipsum dolor sit amet.',
+            isLive: false,
+            lessons: [
+              {
+                title: 'History and Overview',
+                shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+              },
+              {
+                title: 'Software Design / Engineering Concept',
+                shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
+              },
+            ],
+          },
+        ],
       },
       {
         id: '2',
@@ -19,7 +58,7 @@ export default {
         description: 'Lorem ipsum donor alter ale',
         code: 'CPE 302',
         teacherName: 'Alicia D. Clayton',
-        color: 'green lighten-1',
+        color: 'green lighten-2',
       },
       {
         id: '3',
@@ -49,8 +88,7 @@ export default {
     ],
   },
   getters: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    classes (state: { classes: unknown; }) {
+    classes (state: { classes: Class[]; }): Class[] {
       return state.classes
     },
   },

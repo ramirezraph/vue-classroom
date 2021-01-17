@@ -5,6 +5,7 @@ export class Class {
 
   // eslint-disable-next-line no-useless-constructor
   constructor (
+    public id: string,
     public title: string,
     public description: string,
     public code: string,

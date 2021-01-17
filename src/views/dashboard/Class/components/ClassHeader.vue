@@ -56,13 +56,13 @@
 
 <script lang="ts">
   import { Class } from '@/model/Class'
-  import Vue from 'vue'
+  import Vue, { PropType } from 'vue'
 
   export default Vue.extend({
     name: 'ClassHeader',
     props: {
       value: {
-        type: Class,
+        type: Object as PropType<Class>,
         required: true,
       },
     },

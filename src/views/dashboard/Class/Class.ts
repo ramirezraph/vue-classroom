@@ -29,58 +29,11 @@ export default Vue.extend({
   },
   computed: {
     selectedClass (): Class {
-      return new Class(
-        'Software Design',
-        'Lorem ipsum dolor aret',
-        'CPE301',
-        'John Doe',
-        'https://blog.planview.com/wp-content/uploads/2020/01/Top-6-Software-Development-Methodologies.jpg',
-        'blue',
-      )
+      return this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
     },
     units (): Unit[] {
       return this.selectedClass.units || []
     },
-  },
-  created (): void {
-    this.selectedClass.units = [
-      {
-        unitNumber: 0,
-        title: 'Introduction / Orientation',
-        shortDescription: 'Lorem ipsum dolor sit amet.',
-        isLive: false,
-        lessons: [
-          {
-            title: 'Discussion of Vision, Mission, etc.',
-            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
-          },
-          {
-            title: 'Brief History',
-            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
-          },
-          {
-            title: 'Course Syllabus & Policy',
-            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
-          },
-        ],
-      },
-      {
-        unitNumber: 1,
-        title: 'Introduction to Software Design',
-        shortDescription: 'Lorem ipsum dolor sit amet.',
-        isLive: false,
-        lessons: [
-          {
-            title: 'History and Overview',
-            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
-          },
-          {
-            title: 'Software Design / Engineering Concept',
-            shortDescription: 'Lorem ipsum dolor sit amet. inter description.',
-          },
-        ],
-      },
-    ]
   },
   methods: {},
 })
