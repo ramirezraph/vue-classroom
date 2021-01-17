@@ -8,6 +8,11 @@
         color="transparent"
       >
         <p class="text-h4 ma-0">
+          <v-icon
+            :color="liveDraftColor"
+          >
+            mdi-circle-medium
+          </v-icon>
           Lesson: {{ lessonItem.title }}
         </p>
       </v-card>
@@ -68,68 +73,114 @@
             </v-icon>
           </v-btn>
         </div>
-        <div class="d-flex mt-10">
-          <v-btn
-            icon
-            outlined
-            depressed
-            tile
-            class="mr-2"
-            color="black"
+        <v-row
+          no-gutters
+          class="mt-6"
+        >
+          <div
+            class="d-flex lesson-controls"
           >
-            <v-icon>
-              mdi-file-pdf
-            </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            outlined
-            depressed
-            tile
-            class="mr-2"
-            color="black"
-          >
-            <v-icon>
-              mdi-file-powerpoint
-            </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            outlined
-            depressed
-            tile
-            class="mr-2"
-            color="black"
-          >
-            <v-icon>
-              mdi-file-video
-            </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            outlined
-            depressed
-            tile
-            class="mr-2"
-            color="black"
-          >
-            <v-icon>
-              mdi-video
-            </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            outlined
-            depressed
-            tile
-            class="mr-2"
-            color="black"
-          >
-            <v-icon>
-              mdi-format-text
-            </v-icon>
-          </v-btn>
-        </div>
+            <v-btn
+              icon
+              outlined
+              depressed
+              tile
+              class="mr-2"
+              color="black"
+            >
+              <v-icon>
+                mdi-file-pdf
+              </v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              outlined
+              depressed
+              tile
+              class="mr-2"
+              color="black"
+            >
+              <v-icon>
+                mdi-file-powerpoint
+              </v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              outlined
+              depressed
+              tile
+              class="mr-2"
+              color="black"
+            >
+              <v-icon>
+                mdi-file-video
+              </v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              outlined
+              depressed
+              tile
+              class="mr-2"
+              color="black"
+            >
+              <v-icon>
+                mdi-video
+              </v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              outlined
+              depressed
+              tile
+              class="mr-2"
+              color="black"
+            >
+              <v-icon>
+                mdi-format-text
+              </v-icon>
+            </v-btn>
+          </div>
+          <v-spacer />
+          <div>
+            <v-btn
+              depressed
+              small
+              :color="liveDraftColor"
+              rounded
+              width="120"
+            >
+              <v-switch
+                v-model="isUnitLive"
+                dense
+                inset
+                color="white"
+                class="liveDraft"
+              >
+                <template #label>
+                  <span class="input__label ml-n4 white--text">{{ liveDraftLabel }}</span>
+                </template>
+              </v-switch>
+            </v-btn>
+            <v-tooltip top>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  color="error"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon size="25">
+                    mdi-delete
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>
+                Remove Lesson
+              </span>
+            </v-tooltip>
+          </div>
+        </v-row>
       </v-card>
     </v-expansion-panel-content>
   </v-expansion-panel>
@@ -147,17 +198,28 @@
     },
     data () {
       return {
-
+        isUnitLive: false,
       }
     },
     computed: {
       lessonItem (): Lesson {
         return this.lesson
       },
+      liveDraftLabel (): string {
+        return this.isUnitLive ? 'Live' : 'Draft'
+      },
+      liveDraftColor (): string {
+        return this.isUnitLive ? 'green' : 'orange'
+      },
+    },
+    methods: {
+
     },
   })
 </script>
 
 <style scoped>
-
+  .lesson-controls {
+    height: 60px;
+  }
 </style>
