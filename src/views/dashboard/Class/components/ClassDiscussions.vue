@@ -84,13 +84,21 @@
       flat
       class="mt-6"
     >
-      <v-card-title class="caption">
+      <v-card-title
+        class="caption"
+      >
         <v-icon left>
           mdi-clock-time-four-outline
         </v-icon>
         Recent Discussions
       </v-card-title>
       <v-card-text>
+        <div
+          v-if="discussions.length === 0"
+          class="ma-6"
+        >
+          <p class="grey--text">No discussion yet.</p>
+        </div>
         <v-timeline
           align-top
           dense
@@ -112,47 +120,30 @@
   </div>
 </template>
 
-<script long="ts">
-  import Vue from 'vue'
+<script lang="ts">
+  import Vue, { PropType } from 'vue'
   import PostItem from './PostItem.vue'
+  import { Post } from '@/model/Post'
 
   export default Vue.extend({
     components: {
       PostItem,
     },
+    props: {
+      discussions: {
+        type: Array as PropType<Post[]>,
+        required: true,
+      },
+    },
     data () {
       return {
-        posts: [
-          {
-            id: 1,
-            name: 'John Doe',
-            time: '9:23 PM',
-            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consectetur reprehenderit cum quos mollitia tempora?',
-            comments: [],
-          },
-          {
-            id: 2,
-            name: 'John Doe',
-            time: '9:02 PM',
-            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
-            comments: [],
-          },
-          {
-            id: 3,
-            name: 'John Doe',
-            time: '9:02 PM',
-            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
-            comments: [],
-          },
-          {
-            id: 4,
-            name: 'John Doe',
-            time: '9:02 PM',
-            message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis ad quas possimus fugiat veniam consecter.',
-            comments: [],
-          },
-        ],
+
       }
+    },
+    computed: {
+      posts (): Post[] {
+        return this.discussions || []
+      },
     },
   })
 </script>
