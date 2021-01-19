@@ -5,7 +5,7 @@
     max-width="100%"
     max-height="257"
     :color="color"
-    class="classes mr-4 mb-n4"
+    class="mr-4 mb-n4"
   >
     <v-img
       :lazy-src="imageSource"
