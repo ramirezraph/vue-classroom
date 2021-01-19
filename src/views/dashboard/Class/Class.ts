@@ -35,9 +35,7 @@ export default Vue.extend({
   },
   computed: {
     selectedClass (): Class {
-      const test = this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
-      console.log(test)
-      return test
+      return this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
     },
     discussionsList (): Post[] {
       return this.discussions

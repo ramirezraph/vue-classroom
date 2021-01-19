@@ -1,18 +1,20 @@
 import { Class } from '@/model/Class'
-import { db, classesCollection } from '@/fb'
+import { classesCollection } from '@/fb'
+import createPersistedState from 'vuex-persistedstate'
 
 export default {
   namespaced: true,
   state: {
     classes: [] as Class[],
   },
+  plugins: [createPersistedState()],
   getters: {
     classes (state: { classes: Class[]; }): Class[] {
       return state.classes
     },
   },
   mutations: {
-    setClasses (state: { classes: Class[]; }, payload: Class[]): void {
+    SET_CLASSES (state: { classes: Class[]; }, payload: Class[]): void {
       state.classes = payload
     },
   },
@@ -39,7 +41,7 @@ export default {
           console.log('Error getting documents: ', error)
         })
 
-      context.commit('setClasses', classes)
+      context.commit('SET_CLASSES', classes)
     },
   },
 }
