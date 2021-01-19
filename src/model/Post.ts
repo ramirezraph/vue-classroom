@@ -1,3 +1,6 @@
+import firebase from 'firebase'
+import Timestamp = firebase.firestore.Timestamp;
+
 interface Comment {
   name: string;
   time: string;
@@ -10,7 +13,7 @@ export class Post {
     public id: string,
     public userId: string,
     public userName: string,
-    public time: string,
+    public time: Timestamp,
     public message: string,
   ) {}
 }

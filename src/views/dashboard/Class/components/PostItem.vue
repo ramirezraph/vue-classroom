@@ -27,7 +27,7 @@
             >
               mdi-clock-time-eight-outline
             </v-icon>
-            {{ postItem.time }}
+            {{ convertedDate }}
           </div>
         </div>
       </div>
@@ -84,6 +84,7 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { Post } from '@/model/Post.ts'
+
   export default Vue.extend({
     props: {
       post: {
@@ -99,6 +100,11 @@
     computed: {
       postItem (): Post {
         return this.post
+      },
+      convertedDate (): string {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
+        const theDate = this.postItem.time.toDate()
+        return theDate.toLocaleDateString('en-US', options)
       },
     },
     methods: {
