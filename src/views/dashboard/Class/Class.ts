@@ -7,7 +7,7 @@ import ClassClasswork from './components/ClassClasswork.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
-import db from '@/fb'
+import { classesCollection } from '@/fb'
 
 export default Vue.extend({
   name: 'Class',
@@ -29,11 +29,15 @@ export default Vue.extend({
       tabs: null,
       units: [] as Unit[],
       discussions: [] as Post[],
+
+      dbRef: classesCollection.doc(this.id),
   }
   },
   computed: {
     selectedClass (): Class {
-      return this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
+      const test = this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
+      console.log(test)
+      return test
     },
     discussionsList (): Post[] {
       return this.discussions
@@ -42,14 +46,14 @@ export default Vue.extend({
       return this.units
     },
   },
-  created () {
+  mounted () {
     this.units = this.fetchUnits()
     this.discussions = this.fetchDiscussions()
   },
   methods: {
-    fetchUnits (): Unit[] {
+     fetchUnits (): Unit[] {
       const fetchUnit: Unit[] = []
-      db.collection('classes').doc(this.id).collection('units')
+      this.dbRef.collection('units')
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
@@ -61,11 +65,12 @@ export default Vue.extend({
         .catch(function (error) {
           console.log('Error getting documents: ', error)
         })
-      return fetchUnit
-    },
+
+       return fetchUnit
+     },
     fetchDiscussions (): Post[] {
       const fetchDiscussions: Post[] = []
-      db.collection('classes').doc(this.id).collection('discussions')
+      this.dbRef.collection('discussions')
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {

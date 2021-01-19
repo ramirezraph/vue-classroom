@@ -1,5 +1,5 @@
 import { Class } from '@/model/Class'
-import db from '@/fb'
+import { db, classesCollection } from '@/fb'
 
 export default {
   namespaced: true,
@@ -19,13 +19,19 @@ export default {
   actions: {
      fetchClasses (context: { commit: (arg0: string, arg1: Class[]) => void }) {
       const classes: Class[] = []
-      db.collection('classes')
-        .get()
-        .then(function (querySnapshot) {
+      classesCollection.get().then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            // doc.data() is never undefined for query doc snapshots
             if (doc.exists) {
-              classes.push(<Class>doc.data())
+              const generatedClass = new Class(
+                doc.id,
+                doc.data().title,
+                doc.data().description,
+                doc.data().code,
+                doc.data().teacherName,
+                doc.data().imageSource,
+                doc.data().color
+              )
+              classes.push(generatedClass)
             }
           })
         })

@@ -11,7 +11,14 @@
         class="fixed"
       >
         <v-row>
-          <class-header :value="selectedClass" />
+          <class-header
+            :color="selectedClass.color"
+            :image="selectedClass.imageSource"
+            :title="selectedClass.title"
+            :description="selectedClass.description"
+            :code="selectedClass.code"
+            :teacher="selectedClass.teacherName"
+          />
         </v-row>
         <v-row>
           <v-card

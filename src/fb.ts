@@ -18,4 +18,10 @@ firebase.initializeApp(firebaseConfig)
 
 const db = firebase.firestore()
 
-export default db
+// collection references
+const classesCollection = db.collection('classes')
+
+export {
+  db,
+  classesCollection,
+}
