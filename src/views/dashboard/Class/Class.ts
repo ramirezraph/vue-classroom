@@ -53,10 +53,17 @@ export default Vue.extend({
       const fetchUnit: Unit[] = []
       this.dbRef.collection('units')
         .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
             if (doc.exists) {
-              fetchUnit.push(<Unit>doc.data())
+              const unit = new Unit(
+                doc.id,
+                doc.data().number,
+                doc.data().title,
+                doc.data().shortDescription,
+                doc.data().isLive,
+              )
+              fetchUnit.push(unit)
             }
           })
         })
@@ -70,10 +77,18 @@ export default Vue.extend({
       const fetchDiscussions: Post[] = []
       this.dbRef.collection('discussions')
         .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
             if (doc.exists) {
-              fetchDiscussions.push(<Post>doc.data())
+              const post = new Post(
+                doc.id,
+                doc.data().userId,
+                doc.data().userName,
+                doc.data().time,
+                doc.data().message,
+              )
+              post.comments = doc.data().comments
+              fetchDiscussions.push(post)
             }
           })
         })
