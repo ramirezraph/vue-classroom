@@ -11,7 +11,14 @@
         class="fixed"
       >
         <v-row>
-          <class-header :value="selectedClass" />
+          <class-header
+            :color="selectedClass.color"
+            :image="selectedClass.imageSource"
+            :title="selectedClass.title"
+            :description="selectedClass.description"
+            :code="selectedClass.code"
+            :teacher="selectedClass.teacherName"
+          />
         </v-row>
         <v-row>
           <v-card
@@ -25,7 +32,7 @@
               <span>Flip Class</span>
             </v-card-title>
             <div
-              v-if="selectedClass.units"
+              v-if="unitsList.length > 0"
               class="mt-2"
             >
               <v-expansion-panels
@@ -35,7 +42,7 @@
                 multiple
               >
                 <accordion-unit-item
-                  v-for="(unitItem) in units"
+                  v-for="unitItem in unitsList"
                   :key="unitItem.unitNumber"
                   :unit="unitItem"
                 />
@@ -137,7 +144,7 @@
             <v-tab-item
               value="discussion"
             >
-              <class-discussions :discussions="discussions" />
+              <class-discussions :discussions="discussionsList" />
             </v-tab-item>
             <v-tab-item
               value="classwork"

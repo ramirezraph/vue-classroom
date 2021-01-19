@@ -7,12 +7,12 @@
 </template>
 
 <script>
-  export default {
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'DashboardCoreView',
 
     components: {
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       DashboardCoreFooter: () => import('./Footer'),
     },
-  }
+  })
 </script>

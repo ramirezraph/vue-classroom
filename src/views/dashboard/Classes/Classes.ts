@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { Class } from '@/model/Class'
 
 export default Vue.extend({
   name: 'Classes',
@@ -11,7 +12,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    classes () {
+    classes (): Class[] {
       return this.$store.getters['classes/classes']
     },
   },
