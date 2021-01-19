@@ -27,6 +27,9 @@ export default Vue.extend({
   data () {
     return {
       tabs: null,
+      showHideAddUnit: false,
+      unitDataLoading: false,
+
       units: [] as Unit[],
       discussions: [] as Post[],
 
@@ -50,6 +53,7 @@ export default Vue.extend({
   },
   methods: {
      fetchUnits (): Unit[] {
+       this.unitDataLoading = true
       const fetchUnit: Unit[] = []
       this.dbRef.collection('units')
         .get()
@@ -69,8 +73,9 @@ export default Vue.extend({
         })
         .catch(function (error) {
           console.log('Error getting documents: ', error)
-        })
-
+        }).finally(() => {
+          this.unitDataLoading = false
+      })
        return fetchUnit
      },
     fetchDiscussions (): Post[] {
@@ -96,6 +101,9 @@ export default Vue.extend({
           console.log('Error getting documents: ', error)
         })
       return fetchDiscussions
+    },
+    toggleAddNewUnit (): void {
+       this.showHideAddUnit = !this.showHideAddUnit
     },
   },
 })

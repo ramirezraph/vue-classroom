@@ -31,31 +31,98 @@
             <v-card-title>
               <span>Flip Class</span>
             </v-card-title>
-            <div
-              v-if="unitsList.length > 0"
-              class="mt-2"
+            <v-skeleton-loader
+              :loading="unitDataLoading"
+              transition="fade-transition"
+              class="mx-auto"
+              max-width="92%"
+              type="card"
             >
-              <v-expansion-panels
-                accordion
-                popout
-                focusable
-                multiple
+              <div>
+                <div
+                  v-if="unitsList.length > 0"
+                  class="mt-2"
+                >
+                  <v-expansion-panels
+                    accordion
+                    popout
+                    focusable
+                    multiple
+                  >
+                    <accordion-unit-item
+                      v-for="unitItem in unitsList"
+                      :key="unitItem.unitNumber"
+                      :unit="unitItem"
+                    />
+                  </v-expansion-panels>
+                </div>
+                <div
+                  v-else
+                  class="ma-6"
+                >
+                  <p class="grey--text">
+                    No unit found.
+                  </p>
+                </div>
+                <div class="pa-4">
+                  <v-btn
+                    color="grey"
+                    @click="toggleAddNewUnit"
+                  >
+                    <v-icon left>
+                      mdi-card-plus
+                    </v-icon>
+                    <span>Add New Unit</span>
+                  </v-btn>
+                </div>
+              </div>
+            </v-skeleton-loader>
+            <v-expand-transition>
+              <v-card
+                v-if="showHideAddUnit"
+                elevation="6"
+                class="pa-2 ma-4"
+                outlined
               >
-                <accordion-unit-item
-                  v-for="unitItem in unitsList"
-                  :key="unitItem.unitNumber"
-                  :unit="unitItem"
-                />
-              </v-expansion-panels>
-            </div>
-            <div
-              v-else
-              class="ma-6"
-            >
-              <p class="grey--text">
-                No unit found.
-              </p>
-            </div>
+                <v-card-title class="text-h4">
+                  Add Unit
+                </v-card-title>
+                <v-card-text>
+                  <v-form
+                    class="mt-4"
+                    @submit.prevent=""
+                  >
+                    <v-text-field
+                      label="Title"
+                      color="blue"
+                      outlined
+                      rounded
+                      dense
+                      prepend-inner-icon="mdi-pencil-outline"
+                    />
+                    <v-textarea
+                      label="Short Description"
+                      color="blue"
+                      outlined
+                      rounded
+                      optional
+                      rows="3"
+                      prepend-inner-icon="mdi-card-text-outline"
+                    />
+                    <v-btn class="green mr-2">
+                      Submit
+                    </v-btn>
+                    <v-btn
+                      text
+                      outlined
+                      @click="toggleAddNewUnit"
+                    >
+                      Cancel
+                    </v-btn>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-expand-transition>
           </v-card>
         </v-row>
       </v-col>
