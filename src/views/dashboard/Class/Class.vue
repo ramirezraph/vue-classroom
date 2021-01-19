@@ -25,7 +25,7 @@
               <span>Flip Class</span>
             </v-card-title>
             <div
-              v-if="selectedClass.units"
+              v-if="unitsList"
               class="mt-2"
             >
               <v-expansion-panels
@@ -35,7 +35,7 @@
                 multiple
               >
                 <accordion-unit-item
-                  v-for="(unitItem) in units"
+                  v-for="unitItem in unitsList"
                   :key="unitItem.unitNumber"
                   :unit="unitItem"
                 />
@@ -137,7 +137,7 @@
             <v-tab-item
               value="discussion"
             >
-              <class-discussions :discussions="discussions" />
+              <class-discussions :discussions="discussionsList" />
             </v-tab-item>
             <v-tab-item
               value="classwork"

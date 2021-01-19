@@ -18,7 +18,7 @@
             class="d-block subtitle-2 font-weight-medium"
             color="grey"
           >
-            {{ post.name }}
+            {{ postItem.userName }}
           </div>
           <div class="d-block caption grey--text">
             <v-icon
@@ -27,14 +27,14 @@
             >
               mdi-clock-time-eight-outline
             </v-icon>
-            {{ post.time }}
+            {{ postItem.time }}
           </div>
         </div>
       </div>
     </v-card-title>
     <v-card-text class="pt-3 body-1">
       <div class="pb-6">
-        {{ post.message }}
+        {{ postItem.message }}
       </div>
       <div class="pb-3">
         <v-btn
@@ -71,7 +71,7 @@
                 label="Write a comment"
                 append-icon="mdi-send"
                 color="blue"
-                @click:append="postComment(post.id)"
+                @click:append="postComment(postItem.id)"
               />
             </v-col>
           </v-row>
@@ -96,9 +96,13 @@
         commentToggle: false,
       }
     },
-    computed: {},
+    computed: {
+      postItem (): Post {
+        return this.post
+      },
+    },
     methods: {
-      postComment (id: number): void {
+      postComment (id: string): void {
         console.log(id, 'send button clicked')
       },
     },

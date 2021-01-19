@@ -12,6 +12,8 @@
 
 <script lang="ts">
   import Vue from 'vue'
+  import db from '@/fb'
+  import { Class } from '@/model/Class'
   export default Vue.extend({
     name: 'DashboardIndex',
     components: {

@@ -7,8 +7,9 @@ export class Post {
    comments?: Comment[] = []
   // eslint-disable-next-line no-useless-constructor
   constructor (
-    public id: number,
-    public name: string,
+    public id: string,
+    public userId: string,
+    public userName: string,
     public time: string,
     public message: string,
   ) {}
