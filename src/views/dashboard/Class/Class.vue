@@ -32,7 +32,7 @@
               <span>Flip Class</span>
             </v-card-title>
             <div
-              v-if="unitsList"
+              v-if="unitsList.length > 0"
               class="mt-2"
             >
               <v-expansion-panels
