@@ -29,6 +29,9 @@ export default Vue.extend({
       tabs: null,
       showHideAddUnit: false,
       unitDataLoading: false,
+      unitNotification: false,
+      unitNotificationType: 'success',
+      unitNotificationMessage: '',
 
       units: [] as Unit[],
       discussions: [] as Post[],
@@ -40,71 +43,70 @@ export default Vue.extend({
     selectedClass (): Class {
       return this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
     },
-    discussionsList (): Post[] {
-      return this.discussions
-    },
-    unitsList (): Unit[] {
-      return this.units
-    },
   },
-  mounted () {
-    this.units = this.fetchUnits()
-    this.discussions = this.fetchDiscussions()
+  created () {
+    this.fetchUnits()
+    this.fetchDiscussions()
   },
   methods: {
-     fetchUnits (): Unit[] {
+     fetchUnits (): void {
        this.unitDataLoading = true
-      const fetchUnit: Unit[] = []
-      this.dbRef.collection('units').orderBy('number')
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            if (doc.exists) {
-              const unit = new Unit(
-                doc.id,
-                doc.data().number,
-                doc.data().title,
-                doc.data().shortDescription,
-                doc.data().isLive,
-              )
-              fetchUnit.push(unit)
-            }
-          })
-        })
-        .catch(function (error) {
-          console.log('Error getting documents: ', error)
-        }).finally(() => {
-          this.unitDataLoading = false
-      })
-       return fetchUnit
+       try {
+         let fetchUnit: Unit[] = []
+         this.dbRef.collection('units').orderBy('number')
+           .onSnapshot(snapshot => {
+             fetchUnit = []
+             snapshot.forEach(doc => {
+               const unit = new Unit(
+                 doc.id,
+                 doc.data().number,
+                 doc.data().title,
+                 doc.data().shortDescription,
+                 doc.data().isLive,
+               )
+               fetchUnit.push(unit)
+             })
+             this.units = fetchUnit
+           })
+       } finally {
+         this.unitDataLoading = false
+       }
      },
-    fetchDiscussions (): Post[] {
-      const fetchDiscussions: Post[] = []
-      this.dbRef.collection('discussions')
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            if (doc.exists) {
-              const post = new Post(
-                doc.id,
-                doc.data().userId,
-                doc.data().userName,
-                doc.data().time,
-                doc.data().message,
-              )
-              post.comments = doc.data().comments
-              fetchDiscussions.push(post)
-            }
+    fetchDiscussions (): void {
+      try {
+        let fetchDiscussions: Post[] = []
+        this.dbRef.collection('discussions')
+          .onSnapshot(snapshot => {
+            fetchDiscussions = []
+            snapshot.forEach(doc => {
+              if (doc.exists) {
+                const post = new Post(
+                  doc.id,
+                  doc.data().userId,
+                  doc.data().userName,
+                  doc.data().time,
+                  doc.data().message,
+                )
+                post.comments = doc.data().comments
+                fetchDiscussions.push(post)
+              }
+            })
+            this.discussions = fetchDiscussions
           })
-        })
-        .catch(function (error) {
-          console.log('Error getting documents: ', error)
-        })
-      return fetchDiscussions
+      } finally {
+        this.unitDataLoading = false
+      }
     },
     toggleAddNewUnit (): void {
        // NOTE: confirm first
        this.showHideAddUnit = !this.showHideAddUnit
+    },
+    submitAddUnitForm (): void {
+      this.unitNotificationType = 'success'
+      this.unitNotificationMessage = 'Unit added successfully.'
+      this.unitNotification = true
+      this.toggleAddNewUnit()
+      console.log('add unit submitted')
     },
   },
 })

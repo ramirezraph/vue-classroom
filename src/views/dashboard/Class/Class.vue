@@ -40,7 +40,7 @@
             >
               <div>
                 <div
-                  v-if="unitsList.length > 0"
+                  v-if="units.length > 0"
                   class="mt-2"
                 >
                   <v-expansion-panels
@@ -50,7 +50,7 @@
                     multiple
                   >
                     <accordion-unit-item
-                      v-for="unitItem in unitsList"
+                      v-for="unitItem in units"
                       :key="unitItem.unitNumber"
                       :unit="unitItem"
                     />
@@ -90,8 +90,17 @@
                 <v-card-text>
                   <v-form
                     class="mt-4"
-                    @submit.prevent=""
+                    @submit.prevent="submitAddUnitForm"
                   >
+                    <v-text-field
+                      label="Unit Number"
+                      type="number"
+                      color="blue"
+                      outlined
+                      rounded
+                      dense
+                      prepend-inner-icon="mdi-order-numeric-ascending"
+                    />
                     <v-text-field
                       label="Unit Title"
                       color="blue"
@@ -109,7 +118,10 @@
                       rows="3"
                       prepend-inner-icon="mdi-card-text-outline"
                     />
-                    <v-btn class="green mr-2">
+                    <v-btn
+                      type="submit"
+                      class="green mr-2"
+                    >
                       Submit
                     </v-btn>
                     <v-btn
@@ -211,7 +223,7 @@
             <v-tab-item
               value="discussion"
             >
-              <class-discussions :discussions="discussionsList" />
+              <class-discussions :discussions="discussions" />
             </v-tab-item>
             <v-tab-item
               value="classwork"
@@ -246,6 +258,18 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!--  Dialogs & Notifications -->
+    <base-material-snackbar
+      v-model="unitNotification"
+      :type="unitNotificationType"
+      v-bind="{
+        'top': true,
+        'center': true
+      }"
+    >
+      {{ unitNotificationMessage }}
+    </base-material-snackbar>
   </v-container>
 </template>
 <script lang="ts" src="./Class.ts"></script>
