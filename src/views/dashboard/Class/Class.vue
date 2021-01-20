@@ -67,6 +67,7 @@
                 <div class="pa-4">
                   <v-btn
                     color="grey"
+                    :disabled="showHideAddUnit"
                     @click="toggleAddNewUnit"
                   >
                     <v-icon left>
@@ -88,53 +89,80 @@
                   Add Unit
                 </v-card-title>
                 <v-card-text>
-                  <v-form
-                    class="mt-4"
-                    @submit.prevent="submitAddUnitForm"
+                  <validation-observer
+                    ref="observer"
+                    v-slot="{ invalid }"
                   >
-                    <v-text-field
-                      v-model="unitNumber"
-                      label="Unit Number"
-                      type="number"
-                      color="blue"
-                      outlined
-                      rounded
-                      dense
-                      prepend-inner-icon="mdi-order-numeric-ascending"
-                    />
-                    <v-text-field
-                      v-model="unitTitle"
-                      label="Unit Title"
-                      color="blue"
-                      outlined
-                      rounded
-                      dense
-                      prepend-inner-icon="mdi-pencil-outline"
-                    />
-                    <v-textarea
-                      v-model="unitShortDescription"
-                      label="Short Description"
-                      color="blue"
-                      outlined
-                      rounded
-                      optional
-                      rows="3"
-                      prepend-inner-icon="mdi-card-text-outline"
-                    />
-                    <v-btn
-                      type="submit"
-                      class="green mr-2"
+                    <v-form
+                      class="mt-4"
+                      @submit.prevent="dialogConfirm = true"
                     >
-                      Submit
-                    </v-btn>
-                    <v-btn
-                      text
-                      outlined
-                      @click="toggleAddNewUnit"
-                    >
-                      Cancel
-                    </v-btn>
-                  </v-form>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Unit Number"
+                        :rules="`required|${unitNumberAlreadyExistsRule}`"
+                      >
+                        <v-text-field
+                          v-model="unitNumber"
+                          label="Unit Number"
+                          type="number"
+                          :error-messages="errors"
+                          color="blue"
+                          outlined
+                          rounded
+                          dense
+                          prepend-inner-icon="mdi-order-numeric-ascending"
+                        />
+                      </validation-provider>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Unit Title"
+                        rules="required"
+                      >
+                        <v-text-field
+                          v-model="unitTitle"
+                          label="Unit Title"
+                          color="blue"
+                          :error-messages="errors"
+                          outlined
+                          rounded
+                          dense
+                          prepend-inner-icon="mdi-pencil-outline"
+                        />
+                      </validation-provider>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Unit Description"
+                      >
+                        <v-textarea
+                          v-model="unitShortDescription"
+                          label="Short Description"
+                          color="blue"
+                          :error-messages="errors"
+                          outlined
+                          rounded
+                          optional
+                          rows="3"
+                          prepend-inner-icon="mdi-card-text-outline"
+                          hint="Optional"
+                        />
+                      </validation-provider>
+                      <v-btn
+                        type="submit"
+                        class="green mr-2"
+                        :disabled="invalid"
+                      >
+                        Submit
+                      </v-btn>
+                      <v-btn
+                        text
+                        outlined
+                        @click="toggleAddNewUnit"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-form>
+                  </validation-observer>
                 </v-card-text>
               </v-card>
             </v-expand-transition>
@@ -273,6 +301,45 @@
     >
       {{ unitNotificationMessage }}
     </base-material-snackbar>
+
+    <v-dialog
+      v-model="dialogConfirm"
+      max-width="450"
+    >
+      <v-card>
+        <v-card-title>
+          <p><strong>Unit {{ unitNumber }}: {{ unitTitle }}</strong></p>
+          Are you sure you want to add?
+
+          <v-spacer />
+
+          <v-icon
+            aria-label="Close"
+            @click="dialogConfirm = false"
+          >
+            mdi-close
+          </v-icon>
+        </v-card-title>
+
+        <v-card-text class="pb-6 pt-12 text-center">
+          <v-btn
+            class="mr-3"
+            text
+            @click="dialogConfirm = false"
+          >
+            Nevermind
+          </v-btn>
+
+          <v-btn
+            color="success"
+            text
+            @click="submitAddUnitForm"
+          >
+            Yes
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script lang="ts" src="./Class.ts"></script>
