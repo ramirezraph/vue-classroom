@@ -37,7 +37,13 @@ export default Vue.extend({
       discussions: [] as Post[],
 
       dbRef: classesCollection.doc(this.id),
-  }
+
+      // Add Unit
+      unitNumber: null,
+      unitTitle: '',
+      unitShortDescription: '',
+      unitIsLive: false,
+    }
   },
   computed: {
     selectedClass (): Class {
@@ -49,29 +55,29 @@ export default Vue.extend({
     this.fetchDiscussions()
   },
   methods: {
-     fetchUnits (): void {
-       this.unitDataLoading = true
-       try {
-         let fetchUnit: Unit[] = []
-         this.dbRef.collection('units').orderBy('number')
-           .onSnapshot(snapshot => {
-             fetchUnit = []
-             snapshot.forEach(doc => {
-               const unit = new Unit(
-                 doc.id,
-                 doc.data().number,
-                 doc.data().title,
-                 doc.data().shortDescription,
-                 doc.data().isLive,
-               )
-               fetchUnit.push(unit)
-             })
-             this.units = fetchUnit
-           })
-       } finally {
-         this.unitDataLoading = false
-       }
-     },
+    fetchUnits (): void {
+      this.unitDataLoading = true
+      try {
+        let fetchUnit: Unit[] = []
+        this.dbRef.collection('units').orderBy('number')
+          .onSnapshot(snapshot => {
+            fetchUnit = []
+            snapshot.forEach(doc => {
+              const unit = new Unit(
+                doc.id,
+                doc.data().number,
+                doc.data().title,
+                doc.data().shortDescription,
+                doc.data().isLive,
+              )
+              fetchUnit.push(unit)
+            })
+            this.units = fetchUnit
+          })
+      } finally {
+        this.unitDataLoading = false
+      }
+    },
     fetchDiscussions (): void {
       try {
         let fetchDiscussions: Post[] = []
@@ -98,15 +104,33 @@ export default Vue.extend({
       }
     },
     toggleAddNewUnit (): void {
-       // NOTE: confirm first
-       this.showHideAddUnit = !this.showHideAddUnit
+      // NOTE: confirm first
+      this.unitNumber = null
+      this.unitTitle = ''
+      this.unitShortDescription = ''
+      this.unitIsLive = false
+      this.showHideAddUnit = !this.showHideAddUnit
     },
     submitAddUnitForm (): void {
-      this.unitNotificationType = 'success'
-      this.unitNotificationMessage = 'Unit added successfully.'
-      this.unitNotification = true
+      const newUnit = {
+        number: this.unitNumber,
+        title: this.unitTitle,
+        shortDescription: this.unitShortDescription,
+        isLive: this.unitIsLive,
+      }
+
+      this.dbRef.collection('units').add(newUnit)
+        .then(() => {
+          this.unitNotificationType = 'success'
+          this.unitNotificationMessage = 'Unit added successfully.'
+          this.unitNotification = true
+        })
+        .catch(error => {
+          this.unitNotificationType = 'error'
+          this.unitNotificationMessage = 'Unit added failed: ' + error
+          this.unitNotification = true
+        })
       this.toggleAddNewUnit()
-      console.log('add unit submitted')
     },
   },
 })

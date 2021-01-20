@@ -93,6 +93,7 @@
                     @submit.prevent="submitAddUnitForm"
                   >
                     <v-text-field
+                      v-model="unitNumber"
                       label="Unit Number"
                       type="number"
                       color="blue"
@@ -102,6 +103,7 @@
                       prepend-inner-icon="mdi-order-numeric-ascending"
                     />
                     <v-text-field
+                      v-model="unitTitle"
                       label="Unit Title"
                       color="blue"
                       outlined
@@ -110,6 +112,7 @@
                       prepend-inner-icon="mdi-pencil-outline"
                     />
                     <v-textarea
+                      v-model="unitShortDescription"
                       label="Short Description"
                       color="blue"
                       outlined
