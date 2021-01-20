@@ -45,7 +45,7 @@
           no-gutters
         >
           <v-btn
-            color="blue"
+            color="blue lighten-1"
             @click="toggleAddNewLesson"
           >
             <v-icon left>

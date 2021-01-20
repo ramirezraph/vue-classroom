@@ -31,31 +31,141 @@
             <v-card-title>
               <span>Flip Class</span>
             </v-card-title>
-            <div
-              v-if="unitsList.length > 0"
-              class="mt-2"
+            <v-skeleton-loader
+              :loading="unitDataLoading"
+              transition="fade-transition"
+              class="mx-auto"
+              max-width="92%"
+              type="card"
             >
-              <v-expansion-panels
-                accordion
-                popout
-                focusable
-                multiple
+              <div>
+                <div
+                  v-if="units.length > 0"
+                  class="mt-2"
+                >
+                  <v-expansion-panels
+                    accordion
+                    popout
+                    focusable
+                    multiple
+                  >
+                    <accordion-unit-item
+                      v-for="unitItem in units"
+                      :key="unitItem.unitNumber"
+                      :unit="unitItem"
+                    />
+                  </v-expansion-panels>
+                </div>
+                <div
+                  v-else
+                  class="ma-6"
+                >
+                  <p class="grey--text">
+                    No unit found.
+                  </p>
+                </div>
+                <div class="pa-4">
+                  <v-btn
+                    color="grey"
+                    :disabled="showHideAddUnit"
+                    @click="toggleAddNewUnit"
+                  >
+                    <v-icon left>
+                      mdi-card-plus
+                    </v-icon>
+                    <span>Add New Unit</span>
+                  </v-btn>
+                </div>
+              </div>
+            </v-skeleton-loader>
+            <v-expand-transition>
+              <v-card
+                v-if="showHideAddUnit"
+                elevation="6"
+                class="pa-2 ma-4"
+                outlined
               >
-                <accordion-unit-item
-                  v-for="unitItem in unitsList"
-                  :key="unitItem.unitNumber"
-                  :unit="unitItem"
-                />
-              </v-expansion-panels>
-            </div>
-            <div
-              v-else
-              class="ma-6"
-            >
-              <p class="grey--text">
-                No unit found.
-              </p>
-            </div>
+                <v-card-title class="text-h4">
+                  Add Unit
+                </v-card-title>
+                <v-card-text>
+                  <validation-observer
+                    ref="observer"
+                    v-slot="{ invalid }"
+                  >
+                    <v-form
+                      class="mt-4"
+                      @submit.prevent="dialogConfirm = true"
+                    >
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Unit Number"
+                        :rules="`required|${unitNumberAlreadyExistsRule}`"
+                      >
+                        <v-text-field
+                          v-model="unitNumber"
+                          label="Unit Number"
+                          type="number"
+                          :error-messages="errors"
+                          color="blue"
+                          outlined
+                          rounded
+                          dense
+                          prepend-inner-icon="mdi-order-numeric-ascending"
+                        />
+                      </validation-provider>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Unit Title"
+                        rules="required"
+                      >
+                        <v-text-field
+                          v-model="unitTitle"
+                          label="Unit Title"
+                          color="blue"
+                          :error-messages="errors"
+                          outlined
+                          rounded
+                          dense
+                          prepend-inner-icon="mdi-pencil-outline"
+                        />
+                      </validation-provider>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Unit Description"
+                      >
+                        <v-textarea
+                          v-model="unitShortDescription"
+                          label="Short Description"
+                          color="blue"
+                          :error-messages="errors"
+                          outlined
+                          rounded
+                          optional
+                          rows="3"
+                          prepend-inner-icon="mdi-card-text-outline"
+                          hint="Optional"
+                        />
+                      </validation-provider>
+                      <v-btn
+                        type="submit"
+                        class="green mr-2"
+                        :disabled="invalid"
+                      >
+                        Submit
+                      </v-btn>
+                      <v-btn
+                        text
+                        outlined
+                        @click="toggleAddNewUnit"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-form>
+                  </validation-observer>
+                </v-card-text>
+              </v-card>
+            </v-expand-transition>
           </v-card>
         </v-row>
       </v-col>
@@ -144,7 +254,7 @@
             <v-tab-item
               value="discussion"
             >
-              <class-discussions :discussions="discussionsList" />
+              <class-discussions :discussions="discussions" />
             </v-tab-item>
             <v-tab-item
               value="classwork"
@@ -179,6 +289,57 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!--  Dialogs & Notifications -->
+    <base-material-snackbar
+      v-model="unitNotification"
+      :type="unitNotificationType"
+      v-bind="{
+        'top': true,
+        'center': true
+      }"
+    >
+      {{ unitNotificationMessage }}
+    </base-material-snackbar>
+
+    <v-dialog
+      v-model="dialogConfirm"
+      max-width="450"
+    >
+      <v-card>
+        <v-card-title>
+          <p><strong>Unit {{ unitNumber }}: {{ unitTitle }}</strong></p>
+          Are you sure you want to add?
+
+          <v-spacer />
+
+          <v-icon
+            aria-label="Close"
+            @click="dialogConfirm = false"
+          >
+            mdi-close
+          </v-icon>
+        </v-card-title>
+
+        <v-card-text class="pb-6 pt-12 text-center">
+          <v-btn
+            class="mr-3"
+            text
+            @click="dialogConfirm = false"
+          >
+            Nevermind
+          </v-btn>
+
+          <v-btn
+            color="success"
+            text
+            @click="submitAddUnitForm"
+          >
+            Yes
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script lang="ts" src="./Class.ts"></script>

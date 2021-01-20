@@ -8,6 +8,18 @@ import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
 import { classesCollection } from '@/fb'
+import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
+import { excluded, required } from 'vee-validate/dist/rules'
+
+extend('required', {
+  ...required,
+  message: '{_field_} can not be empty',
+})
+
+extend('excluded', {
+  ...excluded,
+  message: '{_field_} already in used.',
+})
 
 export default Vue.extend({
   name: 'Class',
@@ -17,6 +29,8 @@ export default Vue.extend({
     ClassDiscussions,
     ClassClasswork,
     AccordionUnitItem,
+    ValidationProvider,
+    ValidationObserver,
   },
   props: {
     id: { // from router params
@@ -27,60 +41,121 @@ export default Vue.extend({
   data () {
     return {
       tabs: null,
+      showHideAddUnit: false,
+      unitDataLoading: false,
+      unitNotification: false,
+      unitNotificationType: 'success',
+      unitNotificationMessage: '',
+      dialogConfirm: false,
+
       units: [] as Unit[],
       discussions: [] as Post[],
 
       dbRef: classesCollection.doc(this.id),
-  }
+
+      // Add Unit
+      unitNumber: null,
+      unitTitle: '',
+      unitShortDescription: '',
+      unitIsLive: false,
+    }
   },
   computed: {
     selectedClass (): Class {
       return this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
     },
-    discussionsList (): Post[] {
-      return this.discussions
-    },
-    unitsList (): Unit[] {
-      return this.units
+    unitNumberAlreadyExistsRule (): string {
+      let unitNumbers = ''
+      this.units.forEach(unit => {
+        unitNumbers += unit.unitNumber + ','
+      })
+      unitNumbers = unitNumbers.substring(0, unitNumbers.length - 1)
+      return `excluded:${unitNumbers}`
     },
   },
-  mounted () {
-    this.units = this.fetchUnits()
-    this.discussions = this.fetchDiscussions()
+  created () {
+    this.fetchUnits()
+    this.fetchDiscussions()
   },
   methods: {
-     fetchUnits (): Unit[] {
-      const fetchUnit: Unit[] = []
-      this.dbRef.collection('units')
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            if (doc.exists) {
-              fetchUnit.push(<Unit>doc.data())
-            }
+    fetchUnits (): void {
+      this.unitDataLoading = true
+      try {
+        let fetchUnit: Unit[] = []
+        this.dbRef.collection('units').orderBy('number')
+          .onSnapshot(snapshot => {
+            fetchUnit = []
+            snapshot.forEach(doc => {
+              const unit = new Unit(
+                doc.id,
+                doc.data().number,
+                doc.data().title,
+                doc.data().shortDescription,
+                doc.data().isLive,
+              )
+              fetchUnit.push(unit)
+            })
+            this.units = fetchUnit
           })
+      } finally {
+        this.unitDataLoading = false
+      }
+    },
+    fetchDiscussions (): void {
+      try {
+        let fetchDiscussions: Post[] = []
+        this.dbRef.collection('discussions')
+          .onSnapshot(snapshot => {
+            fetchDiscussions = []
+            snapshot.forEach(doc => {
+              if (doc.exists) {
+                const post = new Post(
+                  doc.id,
+                  doc.data().userId,
+                  doc.data().userName,
+                  doc.data().time,
+                  doc.data().message,
+                )
+                post.comments = doc.data().comments
+                fetchDiscussions.push(post)
+              }
+            })
+            this.discussions = fetchDiscussions
+          })
+      } finally {
+        this.unitDataLoading = false
+      }
+    },
+    toggleAddNewUnit (): void {
+      // NOTE: confirm first
+      this.unitNumber = null
+      this.unitTitle = ''
+      this.unitShortDescription = ''
+      this.unitIsLive = false
+      this.showHideAddUnit = !this.showHideAddUnit
+    },
+    submitAddUnitForm (): void {
+      const newUnit = {
+        number: this.unitNumber,
+        title: this.unitTitle,
+        shortDescription: this.unitShortDescription,
+        isLive: this.unitIsLive,
+      }
+
+      this.dbRef.collection('units').add(newUnit)
+        .then(() => {
+          this.unitNotificationType = 'success'
+          this.unitNotificationMessage = 'Unit added successfully.'
+          this.unitNotification = true
         })
-        .catch(function (error) {
-          console.log('Error getting documents: ', error)
+        .catch(error => {
+          this.unitNotificationType = 'error'
+          this.unitNotificationMessage = 'Unit added failed: ' + error
+          this.unitNotification = true
         })
 
-       return fetchUnit
-     },
-    fetchDiscussions (): Post[] {
-      const fetchDiscussions: Post[] = []
-      this.dbRef.collection('discussions')
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            if (doc.exists) {
-              fetchDiscussions.push(<Post>doc.data())
-            }
-          })
-        })
-        .catch(function (error) {
-          console.log('Error getting documents: ', error)
-        })
-      return fetchDiscussions
+      this.dialogConfirm = false
+      this.toggleAddNewUnit()
     },
   },
 })
