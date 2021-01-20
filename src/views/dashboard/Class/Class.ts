@@ -55,7 +55,7 @@ export default Vue.extend({
      fetchUnits (): Unit[] {
        this.unitDataLoading = true
       const fetchUnit: Unit[] = []
-      this.dbRef.collection('units')
+      this.dbRef.collection('units').orderBy('number')
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
@@ -103,6 +103,7 @@ export default Vue.extend({
       return fetchDiscussions
     },
     toggleAddNewUnit (): void {
+       // NOTE: confirm first
        this.showHideAddUnit = !this.showHideAddUnit
     },
   },
