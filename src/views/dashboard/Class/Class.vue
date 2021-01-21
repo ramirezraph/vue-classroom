@@ -309,10 +309,9 @@
       text="Are you sure you want to add?"
       @goto-response="submitAddUnitForm"
     />
-    <confirm-dialog
+    <delete-unit-confirm-dialog
       :model="dialogConfirmDeleteUnit"
       :title="`Unit ${delete_unitNumber}: ${delete_unitTitle}`"
-      text="Are you sure you want to delete?"
       @goto-response="confirmRemoveUnit"
     />
   </v-container>

@@ -11,6 +11,7 @@ import { classesCollection, db } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 import { excluded, required } from 'vee-validate/dist/rules'
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
+import DeleteUnitConfirmDialog from '@/views/dashboard/components/dialogs/DeleteUnitConfirmDialog.vue'
 
 extend('required', {
   ...required,
@@ -33,6 +34,7 @@ export default Vue.extend({
     ValidationProvider,
     ValidationObserver,
     ConfirmDialog,
+    DeleteUnitConfirmDialog,
   },
   props: {
     id: { // from router params
