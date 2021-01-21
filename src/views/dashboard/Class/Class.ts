@@ -7,9 +7,10 @@ import ClassClasswork from './components/ClassClasswork.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
-import { classesCollection } from '@/fb'
+import { classesCollection, db } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 import { excluded, required } from 'vee-validate/dist/rules'
+import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
 
 extend('required', {
   ...required,
@@ -31,6 +32,7 @@ export default Vue.extend({
     AccordionUnitItem,
     ValidationProvider,
     ValidationObserver,
+    ConfirmDialog,
   },
   props: {
     id: { // from router params
@@ -46,7 +48,6 @@ export default Vue.extend({
       unitNotification: false,
       unitNotificationType: 'success',
       unitNotificationMessage: '',
-      dialogConfirm: false,
 
       units: [] as Unit[],
       discussions: [] as Post[],
@@ -54,10 +55,18 @@ export default Vue.extend({
       dbRef: classesCollection.doc(this.id),
 
       // Add Unit
-      unitNumber: null,
-      unitTitle: '',
-      unitShortDescription: '',
-      unitIsLive: false,
+      dialogConfirmAddUnit: false,
+      add_unitNumber: null,
+      add_unitTitle: '',
+      add_unitShortDescription: '',
+      add_unitIsLive: false,
+
+      // Delete Unit
+      dialogConfirmDeleteUnit: false,
+      delete_unitId: '',
+      delete_unitNumber: -1,
+      delete_unitTitle: '',
+
     }
   },
   computed: {
@@ -128,34 +137,62 @@ export default Vue.extend({
     },
     toggleAddNewUnit (): void {
       // NOTE: confirm first
-      this.unitNumber = null
-      this.unitTitle = ''
-      this.unitShortDescription = ''
-      this.unitIsLive = false
+      this.add_unitNumber = null
+      this.add_unitTitle = ''
+      this.add_unitShortDescription = ''
+      this.add_unitIsLive = false
       this.showHideAddUnit = !this.showHideAddUnit
     },
-    submitAddUnitForm (): void {
-      const newUnit = {
-        number: this.unitNumber,
-        title: this.unitTitle,
-        shortDescription: this.unitShortDescription,
-        isLive: this.unitIsLive,
+    submitAddUnitForm (dialogResponse: boolean): void {
+      if (dialogResponse) {
+        const newUnit = {
+          number: this.add_unitNumber,
+          title: this.add_unitTitle,
+          shortDescription: this.add_unitShortDescription,
+          isLive: this.add_unitIsLive,
+        }
+
+        this.dbRef.collection('units').add(newUnit)
+          .then(() => {
+            this.unitNotificationType = 'success'
+            this.unitNotificationMessage = 'Unit added successfully.'
+            this.unitNotification = true
+          })
+          .catch(error => {
+            this.unitNotificationType = 'error'
+            this.unitNotificationMessage = 'Adding Unit failed: ' + error
+            this.unitNotification = true
+          })
+        this.toggleAddNewUnit()
       }
+      this.dialogConfirmAddUnit = false
+    },
+    removeUnit (unit: Unit): void {
+      this.delete_unitId = unit.id
+      this.delete_unitNumber = unit.unitNumber
+      this.delete_unitTitle = unit.title
+      this.dialogConfirmDeleteUnit = true
+    },
+    confirmRemoveUnit (response: boolean): void {
+      if (response) {
+        this.dbRef.collection('units').doc(this.delete_unitId).delete()
+          .then(() => {
+            this.unitNotificationType = 'success'
+            this.unitNotificationMessage = 'Unit deleted successfully.'
+            this.unitNotification = true
+          })
+          .catch(error => {
+            this.unitNotificationType = 'error'
+            this.unitNotificationMessage = 'Deleting Unit failed: ' + error
+            this.unitNotification = true
+          })
 
-      this.dbRef.collection('units').add(newUnit)
-        .then(() => {
-          this.unitNotificationType = 'success'
-          this.unitNotificationMessage = 'Unit added successfully.'
-          this.unitNotification = true
-        })
-        .catch(error => {
-          this.unitNotificationType = 'error'
-          this.unitNotificationMessage = 'Unit added failed: ' + error
-          this.unitNotification = true
-        })
-
-      this.dialogConfirm = false
-      this.toggleAddNewUnit()
+        // reset
+        this.delete_unitId = ''
+        this.delete_unitNumber = -1
+        this.delete_unitTitle = ''
+      }
+      this.dialogConfirmDeleteUnit = false
     },
   },
 })

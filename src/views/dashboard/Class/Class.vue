@@ -51,8 +51,9 @@
                   >
                     <accordion-unit-item
                       v-for="unitItem in units"
-                      :key="unitItem.unitNumber"
+                      :key="unitItem.add_unitNumber"
                       :unit="unitItem"
+                      @remove-unit="removeUnit"
                     />
                   </v-expansion-panels>
                 </div>
@@ -95,7 +96,7 @@
                   >
                     <v-form
                       class="mt-4"
-                      @submit.prevent="dialogConfirm = true"
+                      @submit.prevent="dialogConfirmAddUnit = true"
                     >
                       <validation-provider
                         v-slot="{ errors }"
@@ -103,7 +104,7 @@
                         :rules="`required|${unitNumberAlreadyExistsRule}`"
                       >
                         <v-text-field
-                          v-model="unitNumber"
+                          v-model="add_unitNumber"
                           label="Unit Number"
                           type="number"
                           :error-messages="errors"
@@ -120,7 +121,7 @@
                         rules="required"
                       >
                         <v-text-field
-                          v-model="unitTitle"
+                          v-model="add_unitTitle"
                           label="Unit Title"
                           color="blue"
                           :error-messages="errors"
@@ -135,7 +136,7 @@
                         name="Unit Description"
                       >
                         <v-textarea
-                          v-model="unitShortDescription"
+                          v-model="add_unitShortDescription"
                           label="Short Description"
                           color="blue"
                           :error-messages="errors"
@@ -302,44 +303,18 @@
       {{ unitNotificationMessage }}
     </base-material-snackbar>
 
-    <v-dialog
-      v-model="dialogConfirm"
-      max-width="450"
-    >
-      <v-card>
-        <v-card-title>
-          <p><strong>Unit {{ unitNumber }}: {{ unitTitle }}</strong></p>
-          Are you sure you want to add?
-
-          <v-spacer />
-
-          <v-icon
-            aria-label="Close"
-            @click="dialogConfirm = false"
-          >
-            mdi-close
-          </v-icon>
-        </v-card-title>
-
-        <v-card-text class="pb-6 pt-12 text-center">
-          <v-btn
-            class="mr-3"
-            text
-            @click="dialogConfirm = false"
-          >
-            Nevermind
-          </v-btn>
-
-          <v-btn
-            color="success"
-            text
-            @click="submitAddUnitForm"
-          >
-            Yes
-          </v-btn>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <confirm-dialog
+      :model="dialogConfirmAddUnit"
+      :title="`Unit ${add_unitNumber}: ${add_unitTitle}`"
+      text="Are you sure you want to add?"
+      @goto-response="submitAddUnitForm"
+    />
+    <confirm-dialog
+      :model="dialogConfirmDeleteUnit"
+      :title="`Unit ${delete_unitNumber}: ${delete_unitTitle}`"
+      text="Are you sure you want to delete?"
+      @goto-response="confirmRemoveUnit"
+    />
   </v-container>
 </template>
 <script lang="ts" src="./Class.ts"></script>

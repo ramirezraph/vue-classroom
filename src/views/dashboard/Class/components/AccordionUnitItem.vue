@@ -61,6 +61,7 @@
                 color="error"
                 v-bind="attrs"
                 v-on="on"
+                @click="removeUnit"
               >
                 <v-icon size="25">
                   mdi-delete
@@ -161,6 +162,10 @@
     methods: {
       toggleAddNewLesson (): void {
         this.showHideAddLesson = !this.showHideAddLesson
+      },
+      removeUnit (): void {
+        // confirm
+        this.$emit('remove-unit', this.unit)
       },
     },
   })
