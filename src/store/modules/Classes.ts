@@ -1,6 +1,7 @@
 import { Class } from '@/model/Class'
 import { classesCollection } from '@/fb'
 import createPersistedState from 'vuex-persistedstate'
+import { User } from '@/model/User';
 
 export default {
   namespaced: true,
@@ -19,9 +20,9 @@ export default {
     },
   },
   actions: {
-     fetchClasses (context: { commit: (arg0: string, arg1: Class[]) => void }) {
+     fetchClasses (context: { commit: (arg0: string, arg1: Class[]) => void }, payload: User) {
       const classes: Class[] = []
-      classesCollection.get().then(function (querySnapshot) {
+      classesCollection.where('userList', 'array-contains', payload.id).get().then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             if (doc.exists) {
               const generatedClass = new Class(
