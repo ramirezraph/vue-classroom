@@ -102,7 +102,7 @@
                       <validation-provider
                         v-slot="{ errors }"
                         name="Unit Number"
-                        :rules="`required|${unitNumberAlreadyExistsRule}`"
+                        :rules="`required|min_value:0|${unitNumberAlreadyExistsRule}`"
                       >
                         <v-text-field
                           v-model="add_unitNumber"
@@ -310,7 +310,7 @@
       text="Are you sure you want to add?"
       @goto-response="submitAddUnitForm"
     />
-    <delete-unit-confirm-dialog
+    <delete-confirm-dialog
       :model="dialogConfirmDeleteUnit"
       :title="`Unit ${delete_unitNumber}: ${delete_unitTitle}`"
       @goto-response="confirmRemoveUnit"

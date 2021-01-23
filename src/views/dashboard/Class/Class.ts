@@ -9,9 +9,10 @@ import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
 import { classesCollection } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
-import { excluded, required } from 'vee-validate/dist/rules'
+// eslint-disable-next-line camelcase
+import { excluded, min_value, required } from 'vee-validate/dist/rules'
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
-import DeleteUnitConfirmDialog from '@/views/dashboard/components/dialogs/DeleteUnitConfirmDialog.vue'
+import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
 
 extend('required', {
   ...required,
@@ -21,6 +22,12 @@ extend('required', {
 extend('excluded', {
   ...excluded,
   message: '{_field_} already in used.',
+})
+
+extend('min_value', {
+  // eslint-disable-next-line camelcase
+  ...min_value,
+  message: '{_field_} cannot be a negative',
 })
 
 export default Vue.extend({
@@ -34,7 +41,7 @@ export default Vue.extend({
     ValidationProvider,
     ValidationObserver,
     ConfirmDialog,
-    DeleteUnitConfirmDialog,
+    DeleteConfirmDialog,
   },
   props: {
     id: { // from router params
