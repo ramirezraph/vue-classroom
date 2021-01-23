@@ -7,7 +7,7 @@ import ClassClasswork from './components/ClassClasswork.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
-import { classesCollection, db } from '@/fb'
+import { classesCollection } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 import { excluded, required } from 'vee-validate/dist/rules'
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
@@ -55,7 +55,6 @@ export default Vue.extend({
       discussions: [] as Post[],
 
       dbRef: classesCollection.doc(this.id),
-
       // Add Unit
       dialogConfirmAddUnit: false,
       add_unitNumber: null,

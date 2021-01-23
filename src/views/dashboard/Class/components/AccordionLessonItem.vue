@@ -196,11 +196,12 @@
               width="120"
             >
               <v-switch
-                v-model="isUnitLive"
+                v-model="lessonItem.isLive"
                 dense
                 inset
                 color="white"
                 class="liveDraft"
+                @change="toggleLiveDraft"
               >
                 <template #label>
                   <span class="input__label ml-n4 white--text">{{ liveDraftLabel }}</span>
@@ -234,16 +235,24 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { Lesson } from '@/model/Lesson'
+  import firebase from 'firebase'
+  // eslint-disable-next-line no-undef
+  import DocumentReference = firebase.firestore.DocumentReference
+
   export default Vue.extend({
     props: {
       lesson: {
         type: Object as PropType<Lesson>,
         required: true,
       },
+      unitDbRef: {
+        type: Object as PropType<DocumentReference>,
+        required: true,
+      },
     },
     data () {
       return {
-        isUnitLive: false,
+
       }
     },
     computed: {
@@ -251,14 +260,28 @@
         return this.lesson
       },
       liveDraftLabel (): string {
-        return this.isUnitLive ? 'Live' : 'Draft'
+        return this.lesson.isLive ? 'Live' : 'Draft'
       },
       liveDraftColor (): string {
-        return this.isUnitLive ? 'green' : 'orange'
+        return this.lesson.isLive ? 'green' : 'orange'
+      },
+      lessonDbRef (): DocumentReference {
+        return this.unitDbRef.collection('lessons').doc(this.lesson.id)
       },
     },
     methods: {
-
+      toggleLiveDraft (): void {
+        const updatedLesson = {
+          isLive: this.lesson.isLive,
+        }
+        this.lessonDbRef.update(updatedLesson)
+          .then(() => {
+            console.log('toggle success')
+          })
+          .catch(error => {
+            console.log('toggle failed', error)
+          })
+      },
     },
   })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel @click.once="unitOpened">
     <v-expansion-panel-header color="#404040">
       <v-card
         flat
@@ -35,6 +35,7 @@
             v-for="(lesson, indexLesson) in lessons"
             :key="indexLesson"
             :lesson="lesson"
+            :unit-db-ref="unitDbRef"
           />
         </v-expansion-panels>
       </v-card>
@@ -129,6 +130,9 @@
   import { Unit } from '@/model/Unit'
   import Vue, { PropType } from 'vue'
   import AccordionLessonItem from './AccordionLessonItem.vue'
+  import firebase from 'firebase'
+  // eslint-disable-next-line no-undef
+  import DocumentReference = firebase.firestore.DocumentReference;
   export default Vue.extend({
     components: {
       AccordionLessonItem,
@@ -138,11 +142,16 @@
         type: Object as PropType<Unit>,
         required: true,
       },
+      classDbRef: {
+        type: Object as PropType<DocumentReference>,
+        required: true,
+      },
     },
     data () {
       return {
         showHideAddLesson: false,
         isUnitLive: false,
+
       }
     },
     computed: {
@@ -158,6 +167,9 @@
       liveDraftColorSwitch (): string {
         return this.isUnitLive ? 'white' : 'white'
       },
+      unitDbRef (): DocumentReference {
+        return this.classDbRef.collection('units').doc(this.unit.id)
+      },
     },
     methods: {
       toggleAddNewLesson (): void {
@@ -166,6 +178,27 @@
       removeUnit (): void {
         // confirm
         this.$emit('remove-unit', this.unit)
+      },
+      fetchLessons (): void {
+        let fetchLessons: Lesson[] = []
+        this.unitDbRef.collection('lessons').orderBy('lessonNumber')
+          .onSnapshot(snapshot => {
+            fetchLessons = []
+            snapshot.forEach(doc => {
+              const lesson = new Lesson(
+                doc.id,
+                doc.data().lessonNumber,
+                doc.data().title,
+                doc.data().shortDescription,
+                doc.data().isLive,
+              )
+              fetchLessons.push(lesson)
+            })
+            this.unitItem.lessons = fetchLessons
+          })
+      },
+      unitOpened (): void {
+        this.fetchLessons()
       },
     },
   })
