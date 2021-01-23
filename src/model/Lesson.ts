@@ -15,11 +15,13 @@ interface File {
 
 export class Lesson {
   files?: File[] = []
-  isLive ?= false;
+
   // eslint-disable-next-line no-useless-constructor
   constructor (
     public id: string,
+    public lessonNumber: number,
     public title: string,
     public shortDescription: string,
+    public isLive = false,
  ) {}
 }

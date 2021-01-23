@@ -196,7 +196,7 @@
               width="120"
             >
               <v-switch
-                v-model="isUnitLive"
+                v-model="lessonItem.isLive"
                 dense
                 inset
                 color="white"
@@ -243,7 +243,7 @@
     },
     data () {
       return {
-        isUnitLive: false,
+
       }
     },
     computed: {
@@ -251,10 +251,10 @@
         return this.lesson
       },
       liveDraftLabel (): string {
-        return this.isUnitLive ? 'Live' : 'Draft'
+        return this.lesson.isLive ? 'Live' : 'Draft'
       },
       liveDraftColor (): string {
-        return this.isUnitLive ? 'green' : 'orange'
+        return this.lesson.isLive ? 'green' : 'orange'
       },
     },
     methods: {
