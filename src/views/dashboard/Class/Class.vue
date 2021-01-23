@@ -102,7 +102,7 @@
                       <validation-provider
                         v-slot="{ errors }"
                         name="Unit Number"
-                        :rules="`required|${unitNumberAlreadyExistsRule}`"
+                        :rules="`required|min_value:0|${unitNumberAlreadyExistsRule}`"
                       >
                         <v-text-field
                           v-model="add_unitNumber"
