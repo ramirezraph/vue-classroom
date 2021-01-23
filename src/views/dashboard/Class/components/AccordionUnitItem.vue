@@ -35,6 +35,7 @@
             v-for="(lesson, indexLesson) in lessons"
             :key="indexLesson"
             :lesson="lesson"
+            :unit-db-ref="unitDbRef"
           />
         </v-expansion-panels>
       </v-card>
@@ -191,14 +192,12 @@
                 doc.data().shortDescription,
                 doc.data().isLive,
               )
-              console.log(lesson)
               fetchLessons.push(lesson)
             })
             this.unitItem.lessons = fetchLessons
           })
       },
       unitOpened (): void {
-        console.log('This unit opened: ' + this.unit.id)
         this.fetchLessons()
       },
     },
