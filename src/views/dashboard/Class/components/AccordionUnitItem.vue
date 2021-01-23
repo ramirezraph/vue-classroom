@@ -47,6 +47,7 @@
         >
           <v-btn
             color="blue lighten-1"
+            :disabled="showHideAddLesson"
             @click="toggleAddNewLesson"
           >
             <v-icon left>
@@ -92,7 +93,7 @@
             >
               <v-form
                 class="mt-4"
-                @submit.prevent=""
+                @submit.prevent="submitAddLessonForm"
               >
                 <validation-provider
                   v-slot="{ errors }"
@@ -247,6 +248,9 @@
     },
     methods: {
       toggleAddNewLesson (): void {
+        this.add_lessonNumber = null
+        this.add_lessonTitle = ''
+        this.add_lessonDescription = ''
         this.showHideAddLesson = !this.showHideAddLesson
       },
       removeUnit (): void {
@@ -273,6 +277,32 @@
       },
       unitOpened (): void {
         this.fetchLessons()
+      },
+      submitAddLessonForm (dialogResponse: boolean): void {
+        if (dialogResponse) {
+          const newLesson = {
+            lessonNumber: this.add_lessonNumber,
+            title: this.add_lessonTitle,
+            shortDescription: this.add_lessonDescription,
+            isLive: false,
+          }
+
+          this.unitDbRef.collection('lessons').add(newLesson)
+            .then(() => {
+              // this.unitNotificationType = 'success'
+              // this.unitNotificationMessage = 'Lesson added successfully.'
+              // this.unitNotification = true
+              console.log('adding lesson succeed')
+            })
+            .catch(error => {
+              // this.unitNotificationType = 'error'
+              // this.unitNotificationMessage = 'Adding Lesson failed: ' + error
+              // this.unitNotification = true
+              console.log('adding lesson failed', error)
+            })
+          this.toggleAddNewLesson()
+        }
+        // this.dialogConfirmAddUnit = false
       },
     },
   })

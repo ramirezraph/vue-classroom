@@ -12,7 +12,7 @@ import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 // eslint-disable-next-line camelcase
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
-import DeleteUnitConfirmDialog from '@/views/dashboard/components/dialogs/DeleteUnitConfirmDialog.vue'
+import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
 
 extend('required', {
   ...required,
@@ -41,7 +41,7 @@ export default Vue.extend({
     ValidationProvider,
     ValidationObserver,
     ConfirmDialog,
-    DeleteUnitConfirmDialog,
+    DeleteConfirmDialog,
   },
   props: {
     id: { // from router params

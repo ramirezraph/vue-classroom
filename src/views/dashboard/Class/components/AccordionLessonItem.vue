@@ -13,7 +13,7 @@
           >
             mdi-circle-medium
           </v-icon>
-          Lesson: {{ lessonItem.title }}
+          Lesson {{ lessonItem.lessonNumber }}: {{ lessonItem.title }}
         </p>
       </v-card>
       <template #actions>

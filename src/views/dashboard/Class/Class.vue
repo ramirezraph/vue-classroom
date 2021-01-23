@@ -310,7 +310,7 @@
       text="Are you sure you want to add?"
       @goto-response="submitAddUnitForm"
     />
-    <delete-unit-confirm-dialog
+    <delete-confirm-dialog
       :model="dialogConfirmDeleteUnit"
       :title="`Unit ${delete_unitNumber}: ${delete_unitTitle}`"
       @goto-response="confirmRemoveUnit"

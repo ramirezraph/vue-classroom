@@ -20,7 +20,7 @@
         <p>
           This action <strong>cannot</strong> be undone.
           This will permanently delete the <br> <strong>{{ title }}</strong>,
-          along with other data associated with this unit.
+          along with other data associated with this.
         </p>
         <p>Please type <strong>{{ title }}</strong> to confirm.</p>
         <v-text-field
