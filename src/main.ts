@@ -21,8 +21,13 @@ import './plugins/vee-validate'
 import './plugins/vue-world-map'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
+import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
+import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
 
 Vue.config.productionTip = false
+
+Vue.component('ConfirmDialog', ConfirmDialog)
+Vue.component('DeleteConfirmDialog', DeleteConfirmDialog)
 
 new Vue({
   router,

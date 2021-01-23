@@ -42,7 +42,7 @@
           class="text-none"
           @click="confirmClicked"
         >
-          I understand the consequences, delete this unit
+          I understand the consequences, delete this data
         </v-btn>
       </v-card-text>
     </v-card>
