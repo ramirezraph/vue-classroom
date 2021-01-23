@@ -34,7 +34,7 @@
         >
           <p>{{ lessonItem.shortDescription }}</p>
         </div>
-        <div class="d-flex px-6 mb-4">
+        <div class="d-flex px-6 mt-6 mb-4">
           <span
             class="blue--text body-1"
             style="cursor: pointer;"
@@ -215,6 +215,7 @@
                   color="error"
                   v-bind="attrs"
                   v-on="on"
+                  @click="removeLesson"
                 >
                   <v-icon size="25">
                     mdi-delete
@@ -229,6 +230,12 @@
         </v-row>
       </v-card>
     </v-expansion-panel-content>
+
+    <delete-confirm-dialog
+      :model="dialogConfirmDeleteLesson"
+      :title="`Lesson ${lessonItem.lessonNumber}: ${lessonItem.title}`"
+      @goto-response="confirmRemoveUnit"
+    />
   </v-expansion-panel>
 </template>
 
@@ -252,7 +259,7 @@
     },
     data () {
       return {
-
+        dialogConfirmDeleteLesson: false,
       }
     },
     computed: {
@@ -281,6 +288,21 @@
           .catch(error => {
             console.log('toggle failed', error)
           })
+      },
+      removeLesson (): void {
+        this.dialogConfirmDeleteLesson = true
+      },
+      confirmRemoveUnit (response: boolean): void {
+        if (response) {
+          this.lessonDbRef.delete()
+            .then(() => {
+              console.log('Lesson deleted successfully.')
+            })
+            .catch(error => {
+              console.log('Lesson delete failed.', error)
+            })
+        }
+        this.dialogConfirmDeleteLesson = false
       },
     },
   })
