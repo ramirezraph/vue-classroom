@@ -1,9 +1,14 @@
 import { Unit } from './Unit'
 import { Post } from '@/model/Post'
+import { User } from '@/model/User'
 
 export class Class {
     public units?: Unit[] = []
     public discussions?: Post[] = []
+    public people?: User[] = []
+
+    // list of user id's
+    public userList?: string[] = []
 
   // eslint-disable-next-line no-useless-constructor
   constructor (
