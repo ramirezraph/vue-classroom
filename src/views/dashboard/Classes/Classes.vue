@@ -30,6 +30,8 @@
       <v-btn
         text
         class="white"
+        :disabled="joinClassCardVisible"
+        @click="joinClassCardVisible = true"
       >
         <v-icon
           left
@@ -50,6 +52,66 @@
         Create Class
       </v-btn>
     </v-card>
+    <v-expand-transition>
+      <v-card
+        v-if="joinClassCardVisible"
+        max-width="1055px"
+        class="mx-6 px-6"
+      >
+        <v-card-title class="heading pt-6">
+          <span>Join Class</span>
+          <v-spacer />
+          <v-btn
+            icon
+            @click="cancelJoinClass"
+          >
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text class="pb-6">
+          <p>Ask your teacher for the class code, then enter it here:</p>
+          <validation-observer
+            ref="observer"
+            v-slot="{ invalid }"
+          >
+            <v-form @submit.prevent="submitJoinClass">
+              <validation-provider
+                v-slot="{ errors }"
+                name="Class Code"
+                rules="required"
+              >
+                <v-text-field
+                  v-model="join_classCode"
+                  width="150"
+                  single-line
+                  :error-messages="errors"
+                  label="Class Code"
+                  color="blue"
+                  outlined
+                  style="width: 600px"
+                />
+              </validation-provider>
+              <v-btn
+                min-width="200px"
+                color="blue"
+                :disabled="invalid"
+                type="submit"
+              >
+                Join
+              </v-btn>
+              <v-btn
+                text
+                @click="cancelJoinClass"
+              >
+                Cancel
+              </v-btn>
+            </v-form>
+          </validation-observer>
+        </v-card-text>
+      </v-card>
+    </v-expand-transition>
     <v-card
       id="class-card"
       class="d-flex flex-wrap justify-start pl-sm-6 ma-0 pb-12"
