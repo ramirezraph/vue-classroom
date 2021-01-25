@@ -43,6 +43,7 @@
       <v-btn
         text
         class="white"
+        @click="dialogCreateClass = true"
       >
         <v-icon
           left
@@ -127,8 +128,13 @@
         :teacher-name="item.teacherName"
         :image-source="item.imageSource"
         :color="item.color"
+        class="mr-4 mb-n3"
       />
     </v-card>
+    <create-class-dialog
+      :v-model="dialogCreateClass"
+      @cancel="cancelCreateClass"
+    />
   </v-container>
 </template>
 <script src="./Classes.ts" lang="ts"></script>
