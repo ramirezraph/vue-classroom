@@ -18,6 +18,7 @@
             :description="selectedClass.description"
             :code="selectedClass.code"
             :teacher="selectedClass.teacherName"
+            class="mr-4 mb-n4"
           />
         </v-row>
         <v-row>

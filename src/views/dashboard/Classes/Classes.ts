@@ -2,6 +2,8 @@ import Vue from 'vue'
 import { Class } from '@/model/Class'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
+import CreateClassDialog from './components/CreateClassDialog.vue'
+import ClassItem from './components/ClassItem.vue'
 
 extend('required', {
   ...required,
@@ -11,13 +13,15 @@ extend('required', {
 export default Vue.extend({
   name: 'Classes',
   components: {
-    ClassItem: () => import('./components/ClassItem.vue'),
+    ClassItem,
     ValidationProvider,
     ValidationObserver,
+    CreateClassDialog,
   },
   data () {
     return {
       joinClassCardVisible: false,
+      dialogCreateClass: false,
       join_classCode: '',
     }
   },
@@ -33,6 +37,9 @@ export default Vue.extend({
     cancelJoinClass (): void {
       this.join_classCode = ''
       this.joinClassCardVisible = false
+    },
+    cancelCreateClass (): void {
+      this.dialogCreateClass = false
     },
   },
 })

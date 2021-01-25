@@ -4,7 +4,7 @@
     min-height="257"
     :max-width="minMaxWidth"
     max-height="257"
-    class="class-item classes mr-4 mb-n3"
+    class="class-item classes"
     :color="color"
     hover
     @click="classOnClicked"
@@ -106,6 +106,11 @@
         required: false,
         default: 'grey',
       },
+      readonly: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
@@ -126,6 +131,10 @@
     },
     methods: {
       classOnClicked () {
+        if (this.readonly) {
+          return
+        }
+
         this.$router.push(`classes/${this.id}`)
       },
     },
