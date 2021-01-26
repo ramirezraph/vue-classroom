@@ -140,12 +140,12 @@
         {
           icon: 'mdi-notebook',
           title: 'CPE 301',
-          to: '/cpe301',
+          to: '/classes/3zhPOXhOxSUzTmrchdvQ',
         },
         {
           icon: 'mdi-notebook',
           title: 'CPE 301L',
-          to: '/cpe301l',
+          to: '/classes/YSCj3WEEBYWmDZ3EwGtP',
         },
         {
           icon: 'mdi-notebook',

@@ -53,7 +53,7 @@
                     <accordion-unit-item
                       v-for="unitItem in units"
                       :key="unitItem.add_unitNumber"
-                      :class-db-ref="dbRef"
+                      :class-db-ref="computed_dbRef"
                       :unit="unitItem"
                       @remove-unit="removeUnit"
                     />

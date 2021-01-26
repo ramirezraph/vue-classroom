@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel @click.once="unitOpened">
+  <v-expansion-panel
+    :key="componentKey"
+    @click.once="unitOpened"
+  >
     <v-expansion-panel-header color="#404040">
       <v-card
         flat
@@ -32,8 +35,8 @@
           class="mt-4"
         >
           <accordion-lesson-item
-            v-for="(lesson, indexLesson) in lessons"
-            :key="indexLesson"
+            v-for="lesson in lessons"
+            :key="lesson.id"
             :lesson="lesson"
             :unit-db-ref="unitDbRef"
           />
@@ -219,6 +222,8 @@
         add_lessonNumber: null,
         add_lessonTitle: '',
         add_lessonDescription: '',
+
+        componentKey: 0,
       }
     },
     computed: {
@@ -244,6 +249,13 @@
         })
         lessonNumbers = lessonNumbers.substring(0, lessonNumbers.length - 1)
         return `excluded:${lessonNumbers}`
+      },
+    },
+    watch: {
+      '$route' () {
+        // force rerender the component to reset the @click.once event.
+        // everytime the router change.
+        this.componentKey += 1
       },
     },
     methods: {
@@ -276,6 +288,7 @@
           })
       },
       unitOpened (): void {
+        console.log('once!')
         this.fetchLessons()
       },
       submitAddLessonForm (dialogResponse: boolean): void {
