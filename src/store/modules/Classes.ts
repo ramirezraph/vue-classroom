@@ -1,6 +1,5 @@
 import { Class } from '@/model/Class'
 import { classesCollection } from '@/fb'
-import createPersistedState from 'vuex-persistedstate'
 import { User } from '@/model/User';
 
 export default {
@@ -8,7 +7,6 @@ export default {
   state: {
     classes: [] as Class[],
   },
-  plugins: [createPersistedState()],
   getters: {
     classes (state: { classes: Class[]; }): Class[] {
       return state.classes
