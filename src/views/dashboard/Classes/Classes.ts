@@ -5,7 +5,7 @@ import { required } from 'vee-validate/dist/rules'
 import CreateClassDialog from './components/CreateClassDialog.vue'
 import ClassItem from './components/ClassItem.vue'
 
-extend('required', {
+extend('joinClass_required', {
   ...required,
   message: 'You need a class code to join a class.',
 })
