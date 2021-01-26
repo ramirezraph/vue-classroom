@@ -5,7 +5,7 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <v-card>
+    <v-card id="createDialog">
       <v-toolbar
         dark
         color="blue"
@@ -224,5 +224,7 @@
 </script>
 
 <style scoped>
-
+  #createDialog {
+    background-color: #eeeeee;
+  }
 </style>
