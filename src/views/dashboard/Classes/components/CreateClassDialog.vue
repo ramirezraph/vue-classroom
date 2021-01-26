@@ -5,7 +5,7 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <v-card>
+    <v-card id="createDialog">
       <v-toolbar
         dark
         color="blue"
@@ -53,7 +53,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Code"
-                      rules="required"
+                      rules="createClass_required"
                     >
                       <v-text-field
                         v-model="code"
@@ -66,7 +66,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Title"
-                      rules="required"
+                      rules="createClass_required"
                     >
                       <v-text-field
                         v-model="title"
@@ -92,7 +92,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Teacher"
-                      rules="required"
+                      rules="createClass_required"
                     >
                       <v-text-field
                         v-model="teacherName"
@@ -167,7 +167,7 @@
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
 
-  extend('required', {
+  extend('createClass_required', {
     ...required,
     message: '{_field_} is required.',
   })
@@ -224,5 +224,7 @@
 </script>
 
 <style scoped>
-
+  #createDialog {
+    background-color: #eeeeee;
+  }
 </style>

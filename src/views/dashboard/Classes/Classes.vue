@@ -81,7 +81,7 @@
               <validation-provider
                 v-slot="{ errors }"
                 name="Class Code"
-                rules="required"
+                rules="joinClass_required"
               >
                 <v-text-field
                   v-model="join_classCode"

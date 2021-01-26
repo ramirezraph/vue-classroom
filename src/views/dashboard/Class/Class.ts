@@ -11,6 +11,9 @@ import { classesCollection } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 // eslint-disable-next-line camelcase
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
+import firebase from 'firebase'
+import DocumentReference = firebase.firestore.DocumentReference;
+import DocumentData = firebase.firestore.DocumentData;
 
 extend('required', {
   ...required,
@@ -57,7 +60,6 @@ export default Vue.extend({
       units: [] as Unit[],
       discussions: [] as Post[],
 
-      dbRef: classesCollection.doc(this.id),
       // Add Unit
       dialogConfirmAddUnit: false,
       add_unitNumber: null,
@@ -71,6 +73,7 @@ export default Vue.extend({
       delete_unitNumber: -1,
       delete_unitTitle: '',
 
+      dbRef: classesCollection.doc(this.id),
     }
   },
   computed: {
@@ -85,6 +88,16 @@ export default Vue.extend({
       unitNumbers = unitNumbers.substring(0, unitNumbers.length - 1)
       return `excluded:${unitNumbers}`
     },
+    computed_dbRef (): DocumentReference {
+      return this.dbRef
+    },
+  },
+  watch: {
+    '$route' () {
+      this.dbRef = classesCollection.doc(this.id)
+      this.fetchUnits()
+      this.fetchDiscussions()
+    },
   },
   created () {
     this.fetchUnits()
@@ -95,7 +108,7 @@ export default Vue.extend({
       this.unitDataLoading = true
       try {
         let fetchUnit: Unit[] = []
-        this.dbRef.collection('units').orderBy('number')
+        classesCollection.doc(this.id).collection('units').orderBy('number')
           .onSnapshot(snapshot => {
             fetchUnit = []
             snapshot.forEach(doc => {
@@ -117,7 +130,7 @@ export default Vue.extend({
     fetchDiscussions (): void {
       try {
         let fetchDiscussions: Post[] = []
-        this.dbRef.collection('discussions')
+        classesCollection.doc(this.id).collection('discussions')
           .onSnapshot(snapshot => {
             fetchDiscussions = []
             snapshot.forEach(doc => {
@@ -156,7 +169,7 @@ export default Vue.extend({
           isLive: this.add_unitIsLive,
         }
 
-        this.dbRef.collection('units').add(newUnit)
+        classesCollection.doc(this.id).collection('units').add(newUnit)
           .then(() => {
             this.unitNotificationType = 'success'
             this.unitNotificationMessage = 'Unit added successfully.'
@@ -179,7 +192,7 @@ export default Vue.extend({
     },
     confirmRemoveUnit (response: boolean): void {
       if (response) {
-        this.dbRef.collection('units').doc(this.delete_unitId).delete()
+        classesCollection.doc(this.id).collection('units').doc(this.delete_unitId).delete()
           .then(() => {
             this.unitNotificationType = 'success'
             this.unitNotificationMessage = 'Unit deleted successfully.'

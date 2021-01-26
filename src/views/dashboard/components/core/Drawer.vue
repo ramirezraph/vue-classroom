@@ -49,8 +49,11 @@
     <v-list
       dense
       nav
+      class="pa-2"
     >
-      <base-item-group :item="profile" />
+      <base-item-group
+        :item="profile"
+      />
     </v-list>
 
     <v-divider class="mb-2" />
@@ -118,47 +121,43 @@
     },
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: () => ({
-      items: [
-        {
-          icon: 'mdi-view-dashboard',
-          title: 'dashboard',
-          to: '/',
-        },
-        {
-          icon: 'mdi-google-classroom',
-          title: 'Classes',
-          to: '/classes',
-        },
-        {
-          icon: 'mdi-calendar-month',
-          title: 'Calendar',
-          to: '/calendar',
-        },
-      ],
-      subjectsLinks: [
-        {
-          icon: 'mdi-notebook',
-          title: 'CPE 301',
-          to: '/cpe301',
-        },
-        {
-          icon: 'mdi-notebook',
-          title: 'CPE 301L',
-          to: '/cpe301l',
-        },
-        {
-          icon: 'mdi-notebook',
-          title: 'CPE 303',
-          to: '/cpe300',
-        },
-        {
-          icon: 'mdi-notebook',
-          title: 'CPE 300',
-          to: '/cpe300',
-        },
-      ],
-    }),
+    data () {
+      return {
+        items: [
+          {
+            icon: 'mdi-view-dashboard',
+            title: 'dashboard',
+            to: '/',
+          },
+          {
+            icon: 'mdi-google-classroom',
+            title: 'Classes',
+            to: '/classes',
+          },
+          {
+            icon: 'mdi-calendar-month',
+            title: 'Calendar',
+            to: '/calendar',
+          },
+        ],
+        subjectsLinks: [],
+      }
+    },
+
+    created () {
+      const classes = this.$store.getters['classes/classes']
+      classes.map(c => {
+        this.subjectsLinks.push(
+          {
+            icon: 'mdi-notebook',
+            title: c.code,
+            to: `/classes/${c.id}`,
+          },
+        )
+      })
+      const currentUser = this.$store.getters['user/getCurrentUser']
+      this.profile.title = `${currentUser.firstName} ${currentUser.lastName}`
+    },
 
     computed: {
       ...mapState(['barColor', 'barImage']),
