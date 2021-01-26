@@ -288,7 +288,6 @@
           })
       },
       unitOpened (): void {
-        console.log('once!')
         this.fetchLessons()
       },
       submitAddLessonForm (dialogResponse: boolean): void {
