@@ -49,7 +49,7 @@
                   ref="observer"
                   v-slot="{ invalid }"
                 >
-                  <v-form @submit.prevent="">
+                  <v-form @submit.prevent="submit">
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Code"
@@ -126,9 +126,10 @@
                       name="Class Color"
                       rules="required"
                     >
-                      <v-text-field
+                      <v-select
                         v-model="color"
                         :error-messages="errors"
+                        :items="classColors"
                         label="Class Color"
                         color="blue"
                         outlined
@@ -167,6 +168,20 @@
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
 
+  export enum ClassColor {
+    Red = 'red',
+    Pink = 'pink',
+    Purple = 'purple',
+    DeepPurple = 'deep-purple',
+    Indigo = 'indigo',
+    Blue = 'blue',
+    Teal = 'teal',
+    Green = 'green',
+    Orange = 'orange',
+    BlueGrey = 'blue-grey',
+    Yellow = 'yellow',
+  }
+
   extend('createClass_required', {
     ...required,
     message: '{_field_} is required.',
@@ -192,7 +207,7 @@
         code: '',
         teacherName: 'Raphael Ramirez',
         imageSource: null,
-        color: '',
+        color: ClassColor.Blue,
       }
     },
     computed: {
@@ -214,8 +229,19 @@
       displayImage (): string {
         return ''
       },
+      classColors (): string[] {
+        const colors: string[] = []
+        for (const key in ClassColor) {
+          colors.push(ClassColor[key])
+        }
+        return colors
+      },
     },
     methods: {
+      submit (): void {
+        console.log(this.title, this.description, this.color, this.imageSource, this.teacherName)
+        console.log('create class submit')
+      },
       cancel (): void {
         this.$emit('cancel')
       },
