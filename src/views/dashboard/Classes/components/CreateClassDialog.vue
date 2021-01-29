@@ -49,7 +49,7 @@
                   ref="observer"
                   v-slot="{ invalid }"
                 >
-                  <v-form @submit.prevent="submit">
+                  <v-form @submit.prevent="dialogConfirmAddClass = true">
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Code"
@@ -159,6 +159,12 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <confirm-dialog
+      :model="dialogConfirmAddClass"
+      :title="`${code} - ${title}`"
+      text="Are you sure you want to add?"
+      @goto-response="submit"
+    />
   </v-dialog>
 </template>
 
@@ -167,6 +173,7 @@
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
+  import { Class } from '@/model/Class'
 
   export enum ClassColor {
     Red = 'red',
@@ -202,17 +209,23 @@
     },
     data () {
       return {
+        currentUser: this.$store.getters['user/getCurrentUser'],
+
         title: '',
         description: '',
         code: '',
-        teacherName: 'Raphael Ramirez',
         imageSource: null,
         color: ClassColor.Blue,
+
+        dialogConfirmAddClass: false,
       }
     },
     computed: {
       modelData (): boolean {
         return this.vModel
+      },
+      teacherName (): string {
+        return `${this.currentUser.firstName} ${this.currentUser.middleName.substr(0, 1)}. ${this.currentUser.lastName}`
       },
       displayTitle (): string {
         return this.title || 'Class Title'
@@ -238,9 +251,22 @@
       },
     },
     methods: {
-      submit (): void {
-        console.log(this.title, this.description, this.color, this.imageSource, this.teacherName)
-        console.log('create class submit')
+      submit (dialogResponse: boolean): void {
+        if (dialogResponse) {
+          const newClass = {
+            code: this.code,
+            color: this.color,
+            description: this.description,
+            imgSource: '',
+            teacherName: this.teacherName,
+            title: this.title,
+            userList: [
+              this.currentUser.id,
+            ],
+          }
+          console.log(newClass)
+        }
+        this.dialogConfirmAddClass = false
       },
       cancel (): void {
         this.$emit('cancel')
