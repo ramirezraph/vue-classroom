@@ -13,7 +13,6 @@ import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
 import firebase from 'firebase'
 import DocumentReference = firebase.firestore.DocumentReference;
-import DocumentData = firebase.firestore.DocumentData;
 
 extend('required', {
   ...required,

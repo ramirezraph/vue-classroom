@@ -16,6 +16,12 @@ export default {
       return state.currentUser
     }
   },
-  mutations: {},
-  action: {},
+  mutations: {
+    SET_CURRENT_USER (state, payload: User) {
+      state.currentUser = payload
+    }
+  },
+  action: {
+    // set user once logged in
+  },
 }

@@ -49,7 +49,7 @@
                   ref="observer"
                   v-slot="{ invalid }"
                 >
-                  <v-form @submit.prevent="">
+                  <v-form @submit.prevent="dialogConfirmAddClass = true">
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Code"
@@ -126,9 +126,10 @@
                       name="Class Color"
                       rules="required"
                     >
-                      <v-text-field
+                      <v-select
                         v-model="color"
                         :error-messages="errors"
+                        :items="classColors"
                         label="Class Color"
                         color="blue"
                         outlined
@@ -158,6 +159,12 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <confirm-dialog
+      :model="dialogConfirmAddClass"
+      :title="`${code} - ${title}`"
+      text="Are you sure you want to add?"
+      @goto-response="submit"
+    />
   </v-dialog>
 </template>
 
@@ -166,6 +173,20 @@
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
+
+  export enum ClassColor {
+    Red = 'red',
+    Pink = 'pink',
+    Purple = 'purple',
+    DeepPurple = 'deep-purple',
+    Indigo = 'indigo',
+    Blue = 'blue',
+    Teal = 'teal',
+    Green = 'green',
+    Orange = 'orange',
+    BlueGrey = 'blue-grey',
+    Yellow = 'yellow',
+  }
 
   extend('createClass_required', {
     ...required,
@@ -187,17 +208,23 @@
     },
     data () {
       return {
+        currentUser: this.$store.getters['user/getCurrentUser'],
+
         title: '',
         description: '',
         code: '',
-        teacherName: 'Raphael Ramirez',
         imageSource: null,
-        color: '',
+        color: ClassColor.Blue,
+
+        dialogConfirmAddClass: false,
       }
     },
     computed: {
       modelData (): boolean {
         return this.vModel
+      },
+      teacherName (): string {
+        return `${this.currentUser.firstName} ${this.currentUser.middleName.substr(0, 1)}. ${this.currentUser.lastName}`
       },
       displayTitle (): string {
         return this.title || 'Class Title'
@@ -214,8 +241,32 @@
       displayImage (): string {
         return ''
       },
+      classColors (): string[] {
+        const colors: string[] = []
+        for (const key in ClassColor) {
+          colors.push(ClassColor[key])
+        }
+        return colors
+      },
     },
     methods: {
+      submit (dialogResponse: boolean): void {
+        if (dialogResponse) {
+          const newClass = {
+            code: this.code,
+            color: this.color,
+            description: this.description,
+            imgSource: '',
+            teacherName: this.teacherName,
+            title: this.title,
+            userList: [
+              this.currentUser.id,
+            ],
+          }
+          console.log(newClass)
+        }
+        this.dialogConfirmAddClass = false
+      },
       cancel (): void {
         this.$emit('cancel')
       },
