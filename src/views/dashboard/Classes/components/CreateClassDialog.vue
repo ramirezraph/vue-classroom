@@ -173,7 +173,6 @@
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
-  import { Class } from '@/model/Class'
 
   export enum ClassColor {
     Red = 'red',

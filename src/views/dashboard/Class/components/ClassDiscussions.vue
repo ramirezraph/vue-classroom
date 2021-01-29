@@ -97,7 +97,9 @@
           v-if="discussions.length === 0"
           class="ma-6"
         >
-          <p class="grey--text">No discussion yet.</p>
+          <p class="grey--text">
+            No discussion yet.
+          </p>
         </div>
         <v-timeline
           align-top

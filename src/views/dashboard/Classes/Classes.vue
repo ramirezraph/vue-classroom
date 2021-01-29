@@ -131,9 +131,28 @@
         class="mr-4 mb-n3"
       />
     </v-card>
+
+    <!--  Dialogs & Notifications -->
+    <base-material-snackbar
+      v-model="notification"
+      :type="notificationType"
+      v-bind="{
+        'top': true,
+        'center': true
+      }"
+    >
+      {{ notificationMessage }}
+    </base-material-snackbar>
+
+    <classic-dialog
+      :v-model="dialogClassNotFound"
+      title="Class not found"
+      text="No class with that class code"
+      @close="dialogClassNotFound = false"
+    />
     <create-class-dialog
       :v-model="dialogCreateClass"
-      @cancel="cancelCreateClass"
+      @cancel="dialogCreateClass = false"
     />
   </v-container>
 </template>

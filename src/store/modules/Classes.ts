@@ -8,17 +8,20 @@ export default {
     classes: [] as Class[],
   },
   getters: {
-    classes (state: { classes: Class[]; }): Class[] {
+    classes (state): Class[] {
       return state.classes
     },
   },
   mutations: {
-    SET_CLASSES (state: { classes: Class[]; }, payload: Class[]): void {
+    SET_CLASSES (state, payload: Class[]): void {
       state.classes = payload
     },
+    ADD_CLASSES (state, payload: Class): void {
+      state.classes.push(payload)
+    }
   },
   actions: {
-     fetchClasses (context: { commit: (arg0: string, arg1: Class[]) => void }, payload: User) {
+     fetchClasses (context, payload: User) {
        classesCollection.where('userList', 'array-contains', payload.id)
          .onSnapshot(snapshot => {
            const classes: Class[] = []
