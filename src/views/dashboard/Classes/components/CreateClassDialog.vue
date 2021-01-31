@@ -163,7 +163,7 @@
     <confirm-dialog
       :model="dialogConfirmAddClass"
       :title="`${code} - ${title}`"
-      text="Are you sure you want to add?"
+      text="Are you sure you want to add this class?"
       @goto-response="submit"
     />
   </v-dialog>
@@ -174,6 +174,7 @@
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
+  import { classesCollection, storageRef } from '@/fb'
 
   export enum ClassColor {
     Red = 'red',
@@ -214,7 +215,7 @@
         title: '',
         description: '',
         code: '',
-        imageFile: [],
+        imageFile: {} as File,
         imageSource: '',
         color: ClassColor.Blue,
 
@@ -261,22 +262,50 @@
       },
       submit (dialogResponse: boolean): void {
         if (dialogResponse) {
+          let newClassId = ''
           const newClass = {
             code: this.code,
             color: this.color,
             description: this.description,
-            imgSource: this.imageSource,
+            imageSource: '',
             teacherName: this.teacherName,
             title: this.title,
             userList: [
               this.currentUser.id,
             ],
           }
+          classesCollection.add(newClass)
+            .then((doc) => {
+              newClassId = doc.id
+              if (this.imageSource) {
+                // upload the file on storage
+                const classImageRef = storageRef.child('classes').child(doc.id).child('classImage')
+                classImageRef.put(this.imageFile).then(() => {
+                  // and update the imgSource url in firestore db
+                  classImageRef.getDownloadURL().then(url => {
+                    classesCollection.doc(doc.id).set({
+                      imageSource: url,
+                    }, { merge: true })
+                  })
+                })
+              }
+              this.$router.push(`/classes/${newClassId}`)
+            })
+            .catch(error => {
+              console.log('adding class failed', error)
+            })
+
           console.log(newClass)
         }
         this.dialogConfirmAddClass = false
       },
       cancel (): void {
+        this.title = ''
+        this.description = ''
+        this.code = ''
+        this.imageFile = {} as File
+        this.imageSource = ''
+        this.color = ClassColor.Blue
         this.$emit('cancel')
       },
     },
