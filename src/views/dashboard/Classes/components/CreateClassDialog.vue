@@ -108,7 +108,7 @@
                       name="Class Background Image"
                     >
                       <v-file-input
-                        v-model="imageSource"
+                        v-model="imageFile"
                         :error-messages="errors"
                         accept="image/*"
                         label="Class Background Image"
@@ -119,6 +119,7 @@
                         prepend-inner-icon="mdi-image"
                         persistent-hint
                         outlined
+                        @change="onImageSelect"
                       />
                     </validation-provider>
                     <validation-provider
@@ -162,7 +163,7 @@
     <confirm-dialog
       :model="dialogConfirmAddClass"
       :title="`${code} - ${title}`"
-      text="Are you sure you want to add?"
+      text="Are you sure you want to add this class?"
       @goto-response="submit"
     />
   </v-dialog>
@@ -173,6 +174,7 @@
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
+  import { classesCollection, storageRef } from '@/fb'
 
   export enum ClassColor {
     Red = 'red',
@@ -213,7 +215,8 @@
         title: '',
         description: '',
         code: '',
-        imageSource: null,
+        imageFile: {} as File,
+        imageSource: '',
         color: ClassColor.Blue,
 
         dialogConfirmAddClass: false,
@@ -239,7 +242,7 @@
         return this.color || 'blue'
       },
       displayImage (): string {
-        return ''
+        return this.imageSource || ''
       },
       classColors (): string[] {
         const colors: string[] = []
@@ -250,24 +253,57 @@
       },
     },
     methods: {
+      onImageSelect () {
+        if (this.imageFile) {
+          this.imageSource = URL.createObjectURL(this.imageFile)
+        } else {
+          this.imageSource = ''
+        }
+      },
       submit (dialogResponse: boolean): void {
         if (dialogResponse) {
+          let newClassId = ''
           const newClass = {
             code: this.code,
             color: this.color,
             description: this.description,
-            imgSource: '',
+            imageSource: '',
             teacherName: this.teacherName,
             title: this.title,
             userList: [
               this.currentUser.id,
             ],
           }
-          console.log(newClass)
+          classesCollection.add(newClass)
+            .then((doc) => {
+              newClassId = doc.id
+              if (this.imageSource) {
+                // upload the file on storage
+                const classImageRef = storageRef.child('classes').child(doc.id).child('classImage')
+                classImageRef.put(this.imageFile).then(() => {
+                  // and update the imgSource url in firestore db
+                  classImageRef.getDownloadURL().then(url => {
+                    classesCollection.doc(doc.id).set({
+                      imageSource: url,
+                    }, { merge: true })
+                  })
+                })
+              }
+              this.$router.push(`/classes/${newClassId}`)
+            })
+            .catch(error => {
+              console.log('adding class failed', error)
+            })
         }
         this.dialogConfirmAddClass = false
       },
       cancel (): void {
+        this.title = ''
+        this.description = ''
+        this.code = ''
+        this.imageFile = {} as File
+        this.imageSource = ''
+        this.color = ClassColor.Blue
         this.$emit('cancel')
       },
     },

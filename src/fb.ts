@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/storage'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -18,10 +19,17 @@ firebase.initializeApp(firebaseConfig)
 
 const db = firebase.firestore()
 
-// collection references
+// firestore class collection reference
 const classesCollection = db.collection('classes')
+
+// Get a reference to the storage service, which is used to create references in your storage bucket
+const storage = firebase.storage()
+
+// Create a storage reference from our storage service
+const storageRef = storage.ref()
 
 export {
   db,
+  storageRef,
   classesCollection,
 }
