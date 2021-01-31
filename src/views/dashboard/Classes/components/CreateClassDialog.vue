@@ -294,8 +294,6 @@
             .catch(error => {
               console.log('adding class failed', error)
             })
-
-          console.log(newClass)
         }
         this.dialogConfirmAddClass = false
       },

@@ -85,7 +85,7 @@
       expand
       nav
     >
-      <template v-for="(item, i) in subjectsLinks">
+      <template v-for="(item, i) in drawerClassLinks">
         <base-item-group
           v-if="item.children"
           :key="`group-${i}`"
@@ -105,10 +105,8 @@
 </template>
 
 <script>
-  // Utilities
-  import {
-    mapState,
-  } from 'vuex'
+// Utilities
+  import { mapState } from 'vuex'
 
   export default {
     name: 'DashboardCoreDrawer',
@@ -140,23 +138,7 @@
             to: '/calendar',
           },
         ],
-        subjectsLinks: [],
       }
-    },
-
-    created () {
-      const classes = this.$store.getters['classes/classes']
-      classes.map(c => {
-        this.subjectsLinks.push(
-          {
-            icon: 'mdi-notebook',
-            title: c.code,
-            to: `/classes/${c.id}`,
-          },
-        )
-      })
-      const currentUser = this.$store.getters['user/getCurrentUser']
-      this.profile.title = `${currentUser.firstName} ${currentUser.lastName}`
     },
 
     computed: {
@@ -171,16 +153,34 @@
           this.$store.commit('SET_DRAWER', val)
         },
       },
+
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+      drawerClassLinks () {
+        const classes = this.$store.getters['classes/classes']
+        const classLinks = []
+        classes.map(c => {
+          classLinks.push(
+            {
+              icon: 'mdi-notebook',
+              title: c.code,
+              to: `/classes/${c.id}`,
+            },
+          )
+        })
+
+        return classLinks
+      },
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       moduleLinks () {
         return this.items.map(this.mapItemLinks)
       },
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       profile () {
+        const currentUser = this.$store.getters['user/getCurrentUser']
         return {
           avatar: true,
           group: '',
-          title: this.$t('avatar'),
+          title: `${currentUser.firstName} ${currentUser.lastName}`,
           children: [
             {
               href: '',
