@@ -108,7 +108,7 @@
                       name="Class Background Image"
                     >
                       <v-file-input
-                        v-model="imageSource"
+                        v-model="imageFile"
                         :error-messages="errors"
                         accept="image/*"
                         label="Class Background Image"
@@ -119,6 +119,7 @@
                         prepend-inner-icon="mdi-image"
                         persistent-hint
                         outlined
+                        @change="onImageSelect"
                       />
                     </validation-provider>
                     <validation-provider
@@ -213,7 +214,8 @@
         title: '',
         description: '',
         code: '',
-        imageSource: null,
+        imageFile: [],
+        imageSource: '',
         color: ClassColor.Blue,
 
         dialogConfirmAddClass: false,
@@ -239,7 +241,7 @@
         return this.color || 'blue'
       },
       displayImage (): string {
-        return ''
+        return this.imageSource || ''
       },
       classColors (): string[] {
         const colors: string[] = []
@@ -250,13 +252,20 @@
       },
     },
     methods: {
+      onImageSelect () {
+        if (this.imageFile) {
+          this.imageSource = URL.createObjectURL(this.imageFile)
+        } else {
+          this.imageSource = ''
+        }
+      },
       submit (dialogResponse: boolean): void {
         if (dialogResponse) {
           const newClass = {
             code: this.code,
             color: this.color,
             description: this.description,
-            imgSource: '',
+            imgSource: this.imageSource,
             teacherName: this.teacherName,
             title: this.title,
             userList: [
