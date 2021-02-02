@@ -29,13 +29,6 @@
 
     <v-spacer />
 
-    <v-btn
-      text
-      class="ml-2"
-    >
-      Sign Out
-    </v-btn>
-
     <v-menu
       bottom
       left
