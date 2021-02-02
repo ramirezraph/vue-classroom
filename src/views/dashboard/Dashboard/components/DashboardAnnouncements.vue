@@ -1,10 +1,10 @@
 <template>
   <base-material-card
-    color="red"
+    color="blue"
     title="Announcements"
   >
     <v-card-text>
-      <base-material-tabs color="lightRed">
+      <base-material-tabs color="blue lighten-2">
         <v-tab
           v-for="(tab, i) in tabs"
           :key="i"
@@ -90,7 +90,6 @@
     name: 'Announcements',
     data () {
       return {
-        tab: 0,
         tabs: [
           'School',
           'Classes',
