@@ -23,6 +23,12 @@
         <dashboard-announcements />
       </v-col>
     </v-row>
+    <v-row no-gutters>
+      <v-col>
+        <!-- Classes -->
+        <dashboard-class-meetings />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
