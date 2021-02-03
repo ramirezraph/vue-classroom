@@ -264,13 +264,16 @@
       },
       submit (dialogResponse: boolean): void {
         if (dialogResponse) {
+          const currentUser: User = this.$store.getters['user/getCurrentUser']
           let newClassId = ''
+
           const newClass = {
             code: this.code,
             color: this.color,
             description: this.description,
             imageSource: '',
             teacherName: this.teacherName,
+            ownerId: currentUser.id,
             title: this.title,
             userList: [
               this.currentUser.id,
@@ -279,9 +282,6 @@
           classesCollection.add(newClass)
             .then((doc) => {
               newClassId = doc.id
-
-              const currentUser: User = this.$store.getters['user/getCurrentUser']
-
               // update people subcollection
               classesCollection.doc(newClassId).collection('people')
                 .doc(currentUser.id)

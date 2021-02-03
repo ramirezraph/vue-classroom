@@ -34,7 +34,8 @@ export default {
                  doc.data().code,
                  doc.data().teacherName,
                  doc.data().imageSource,
-                 doc.data().color
+                 doc.data().color,
+                 doc.data().ownerId,
                )
                classes.push(generatedClass)
              }
