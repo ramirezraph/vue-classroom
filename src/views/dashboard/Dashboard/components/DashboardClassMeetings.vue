@@ -34,7 +34,7 @@
       <v-tabs-items v-model="activeTab">
         <v-tab-item>
           <v-card
-            max-width="600"
+            max-width="650"
             flat
           >
             <class-meeting-item
