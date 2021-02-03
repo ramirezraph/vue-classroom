@@ -175,6 +175,8 @@
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { required } from 'vee-validate/dist/rules'
   import { classesCollection, storageRef } from '@/fb'
+  import { User } from '@/model/User'
+  import firebase from 'firebase'
 
   export enum ClassColor {
     Red = 'red',
@@ -277,19 +279,40 @@
           classesCollection.add(newClass)
             .then((doc) => {
               newClassId = doc.id
-              if (this.imageSource) {
-                // upload the file on storage
-                const classImageRef = storageRef.child('classes').child(doc.id).child('classImage')
-                classImageRef.put(this.imageFile).then(() => {
-                  // and update the imgSource url in firestore db
-                  classImageRef.getDownloadURL().then(url => {
-                    classesCollection.doc(doc.id).set({
-                      imageSource: url,
-                    }, { merge: true })
+
+              const currentUser: User = this.$store.getters['user/getCurrentUser']
+
+              // update people subcollection
+              classesCollection.doc(newClassId).collection('people')
+                .doc(currentUser.id)
+                .set({
+                  email: currentUser.email,
+                  firstname: currentUser.firstName,
+                  imgProfile: '',
+                  lastName: currentUser.lastName,
+                  middleName: currentUser.middleName,
+                  type: 'Teacher',
+                }).then(() => {
+                  // update userList Array
+                  classesCollection.doc(doc.id).update({
+                    userList: firebase.firestore.FieldValue.arrayUnion(currentUser.id),
+                  }).then(() => {
+                    if (this.imageSource) {
+                      // upload the class image on storage
+                      const classImageRef = storageRef.child('classes').child(doc.id).child('classImage')
+                      classImageRef.put(this.imageFile).then(() => {
+                        // and update the imgSource url in firestore db
+                        classImageRef.getDownloadURL().then(url => {
+                          classesCollection.doc(doc.id).set({
+                            imageSource: url,
+                          }, { merge: true })
+                        })
+                      })
+                    }
+
+                    this.$router.push(`/classes/${newClassId}`)
                   })
                 })
-              }
-              this.$router.push(`/classes/${newClassId}`)
             })
             .catch(error => {
               console.log('adding class failed', error)
