@@ -2,9 +2,10 @@
   <v-tabs-items>
     <v-card
       flat
+      class="ma-7 ml-4"
     >
-      <div class="heading black--text">
-        {{ teacherName }}
+      <div>
+        <small>{{ teacherName }}</small>
       </div>
       <div class="display-1 red--text">
         {{ className }}
@@ -12,20 +13,25 @@
       <div>
         <v-chip
           color="green lighten-2"
-          class="mr-5 short justify-center"
+          class="mr-5 mb-3 short justify-center white--text"
+          width="150"
+          small
         >
           {{ timeStart }}
         </v-chip>
         <v-chip
           color="red"
-          class="mr-5 short justify-center"
+          class="mr-10 mb-3 short justify-center white--text"
+          width="150"
+          small
         >
           {{ timeEnd }}
         </v-chip>
         <v-btn
           color="blue"
           small
-          class="button ml-11 mb-3 text-none"
+          class="button ml-16 mb-5 text-none"
+          width="110"
           depressed
           tile
         >
@@ -34,15 +40,18 @@
         <v-btn
           color="red"
           small
-          class="button mr-5 ml-4 mb-3 text-none"
+          class="button mr-10 ml-4 mb-5 text-none"
           depressed
           tile
+          width="110"
         >
           I'll be absent
         </v-btn>
       </div>
+      <v-divider
+        dark
+      />
     </v-card>
-    <v-divider />
   </v-tabs-items>
 </template>
 

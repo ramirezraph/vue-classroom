@@ -5,13 +5,13 @@
   >
     <v-card-title class="blue--text">
       <div class="d-inline-flex align-center">
-        <div>
+        <div class="ml-4 mt-10">
           Class Meeting/s
         </div>
         <div>
           <v-tabs
             v-model="activeTab"
-            class="px-5"
+            class="pt-10 pl-4"
           >
             <v-tab
               v-for="(tab, i) in tabs"
@@ -34,7 +34,7 @@
       <v-tabs-items v-model="activeTab">
         <v-tab-item>
           <v-card
-            class="d-block"
+            max-width="600"
             flat
           >
             <class-meeting-item
