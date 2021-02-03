@@ -1,36 +1,47 @@
 <template>
-  <v-tabs-items>
-    <v-card
-      flat
-      class="ma-7 ml-4"
-    >
-      <div>
-        <small>{{ teacherName }}</small>
-      </div>
-      <div class="display-1 red--text">
-        {{ className }}
-      </div>
+  <v-card
+    flat
+    class="ma-0 pa-4"
+    max-width="600"
+  >
+    <div>
+      <small>{{ teacherName }}</small>
+    </div>
+    <div class="display-1 red--text">
+      {{ className }}
+    </div>
+    <div class="d-flex mt-3 pb-6">
       <div>
         <v-chip
           color="green lighten-2"
-          class="mr-5 mb-3 short justify-center white--text"
-          width="150"
-          small
+          class="time-chips white--text px-6 mr-2"
         >
+          <v-icon
+            left
+            small
+          >
+            mdi-clock-start
+          </v-icon>
           {{ timeStart }}
         </v-chip>
         <v-chip
           color="red"
-          class="mr-10 mb-3 short justify-center white--text"
-          width="150"
-          small
+          class="time-chips white--text px-6 mr-2"
         >
+          <v-icon
+            left
+            small
+          >
+            mdi-clock-end
+          </v-icon>
           {{ timeEnd }}
         </v-chip>
+      </div>
+      <div class="ml-auto">
         <v-btn
           color="blue"
           small
-          class="button ml-16 mb-5 text-none"
+          class="text-none mr-2"
           width="110"
           depressed
           tile
@@ -40,7 +51,7 @@
         <v-btn
           color="red"
           small
-          class="button mr-10 ml-4 mb-5 text-none"
+          class="text-none mr-2"
           depressed
           tile
           width="110"
@@ -48,11 +59,10 @@
           I'll be absent
         </v-btn>
       </div>
-      <v-divider
-        dark
-      />
-    </v-card>
-  </v-tabs-items>
+    </div>
+    <v-divider />
+    <v-divider />
+  </v-card>
 </template>
 
 <script lang="ts">

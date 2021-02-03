@@ -2,29 +2,27 @@
   <v-card
     elevation="2"
     outlined
+    class="ma-0 py-6"
   >
     <v-card-title class="blue--text">
-      <div class="d-inline-flex align-center">
-        <div class="ml-4 mt-10">
-          Class Meeting/s
+      <div class="d-flex align-center">
+        <div class="ml-4">
+          <span class="display-2">Class Meeting/s</span>
         </div>
         <div>
           <v-tabs
+            id="meetingTab"
             v-model="activeTab"
-            class="pt-10 pl-4"
+            class="pl-8"
+            hide-slider
+            height="33"
           >
             <v-tab
               v-for="(tab, i) in tabs"
               :key="i"
+              class="text-none subtitle-1"
             >
-              <v-btn
-                class="text-none white--text"
-                rounded
-                color="blue"
-                max-width="90"
-              >
-                {{ tab }}
-              </v-btn>
+              {{ tab }}
             </v-tab>
           </v-tabs>
         </div>
@@ -33,20 +31,15 @@
     <v-card-text>
       <v-tabs-items v-model="activeTab">
         <v-tab-item>
-          <v-card
-            max-width="650"
-            flat
-          >
-            <class-meeting-item
-              v-for="meeting in meetings"
-              :key="meeting.classId"
-              :class-id="meeting.classId"
-              :teacher-name="meeting.teacherName"
-              :class-name="meeting.className"
-              :time-start="meeting.timeStart"
-              :time-end="meeting.timeEnd"
-            />
-          </v-card>
+          <class-meeting-item
+            v-for="meeting in meetings"
+            :key="meeting.classId"
+            :class-id="meeting.classId"
+            :teacher-name="meeting.teacherName"
+            :class-name="meeting.className"
+            :time-start="meeting.timeStart"
+            :time-end="meeting.timeEnd"
+          />
         </v-tab-item>
       </v-tabs-items>
     </v-card-text>
@@ -78,9 +71,10 @@
   })
  </script>
 
-<style lang="scss">
-.short{
-  width:100px;
-  height: 25px;
-}
+<style lang="scss" scoped>
+  div.v-tab.v-tab--active {
+    background-color: rgb(33, 150, 243);
+    color: whitesmoke;
+    border-radius: 25px;
+  }
 </style>
