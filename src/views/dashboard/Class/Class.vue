@@ -53,6 +53,7 @@
                     <accordion-unit-item
                       v-for="unitItem in units"
                       :key="unitItem.add_unitNumber"
+                      :has-edit-access="hasEditAccess"
                       :class-db-ref="computed_dbRef"
                       :unit="unitItem"
                       @remove-unit="removeUnit"
@@ -67,7 +68,10 @@
                     No unit found.
                   </p>
                 </div>
-                <div class="pa-4">
+                <div
+                  v-if="hasEditAccess"
+                  class="pa-4"
+                >
                   <v-btn
                     color="grey"
                     :disabled="showHideAddUnit"

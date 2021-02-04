@@ -37,12 +37,14 @@
           <accordion-lesson-item
             v-for="lesson in lessons"
             :key="lesson.id"
+            :has-edit-access="hasEditAccess"
             :lesson="lesson"
             :unit-db-ref="unitDbRef"
           />
         </v-expansion-panels>
       </v-card>
       <v-card
+        v-if="hasEditAccess"
         flat
       >
         <v-row
@@ -204,6 +206,10 @@
       AccordionLessonItem,
     },
     props: {
+      hasEditAccess: {
+        type: Boolean,
+        required: true,
+      },
       unit: {
         type: Object as PropType<Unit>,
         required: true,
@@ -282,7 +288,13 @@
                 doc.data().shortDescription,
                 doc.data().isLive,
               )
-              fetchLessons.push(lesson)
+              if (this.hasEditAccess) {
+                fetchLessons.push(lesson)
+              } else {
+                if (lesson.isLive === true) {
+                  fetchLessons.push(lesson)
+                }
+              }
             })
             this.unitItem.lessons = fetchLessons
           })
