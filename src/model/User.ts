@@ -1,10 +1,13 @@
 
 export enum UserType {
-  Owner,
-  Student
+  Owner = 'Owner',
+  Teacher = 'Teacher',
+  Student = 'Student',
 }
 
 export class User {
+  public userType: UserType = UserType.Student
+
   // eslint-disable-next-line no-useless-constructor
   constructor (
     public id: string,

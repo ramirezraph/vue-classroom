@@ -9,6 +9,7 @@
       >
         <p class="text-h4 ma-0">
           <v-icon
+            v-if="hasEditAccess"
             :color="liveDraftColor"
           >
             mdi-circle-medium
@@ -57,6 +58,7 @@
             </v-icon>
           </v-btn>
           <v-btn
+            v-if="hasEditAccess"
             icon
             small
           >
@@ -65,6 +67,7 @@
             </v-icon>
           </v-btn>
           <v-btn
+            v-if="hasEditAccess"
             icon
             small
           >
@@ -74,6 +77,7 @@
           </v-btn>
         </div>
         <v-row
+          v-if="hasEditAccess"
           no-gutters
           class="mt-12"
         >
@@ -248,6 +252,10 @@
 
   export default Vue.extend({
     props: {
+      hasEditAccess: {
+        type: Boolean,
+        required: true,
+      },
       lesson: {
         type: Object as PropType<Lesson>,
         required: true,

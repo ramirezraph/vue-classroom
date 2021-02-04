@@ -23,7 +23,7 @@
             <span class="headline">{{ title }}</span>
           </v-col>
           <v-col cols="12">
-            <span class="caption">{{ description }}</span>
+            <span class="caption">{{ description || '\0' }}</span>
           </v-col>
         </v-row>
       </v-card-title>

@@ -12,6 +12,7 @@ import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 // eslint-disable-next-line camelcase
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
 import firebase from 'firebase'
+import { User, UserType } from '@/model/User'
 import DocumentReference = firebase.firestore.DocumentReference;
 
 extend('required', {
@@ -58,6 +59,7 @@ export default Vue.extend({
 
       units: [] as Unit[],
       discussions: [] as Post[],
+      people: [] as User[],
 
       // Add Unit
       dialogConfirmAddUnit: false,
@@ -90,17 +92,45 @@ export default Vue.extend({
     computed_dbRef (): DocumentReference {
       return this.dbRef
     },
+    isClassOwner (): boolean {
+      const currentUser: User = this.$store.getters['user/getCurrentUser']
+      if (currentUser.id === this.selectedClass.ownerId) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    hasEditAccess (): boolean {
+      let hasAccess = false
+
+      if (this.isClassOwner) {
+        hasAccess = true
+      } else {
+        const currentUser: User = this.$store.getters['user/getCurrentUser']
+        const foundUser = this.people.find(p => p.id === currentUser.id)
+        if (foundUser) {
+          if (foundUser.userType === UserType.Teacher) {
+            hasAccess = true
+          }
+        }
+      }
+
+      return hasAccess
+    },
   },
   watch: {
     '$route' () {
       this.dbRef = classesCollection.doc(this.id)
       this.fetchUnits()
       this.fetchDiscussions()
+      this.fetchPeople()
     },
   },
   created () {
     this.fetchUnits()
     this.fetchDiscussions()
+    this.fetchPeople()
   },
   methods: {
     fetchUnits (): void {
@@ -146,6 +176,32 @@ export default Vue.extend({
               }
             })
             this.discussions = fetchDiscussions
+          })
+      } finally {
+        this.unitDataLoading = false
+      }
+    },
+    fetchPeople (): void {
+      try {
+        let fetchPeople: User[] = []
+        classesCollection.doc(this.id).collection('people')
+          .onSnapshot(snapshot => {
+            fetchPeople = []
+            snapshot.forEach(doc => {
+              if (doc.exists) {
+                const people = new User(
+                  doc.id,
+                  doc.data().firstName,
+                  doc.data().middleName,
+                  doc.data().lastName,
+                  doc.data().email,
+                  doc.data().imgProfile,
+                )
+                people.userType = doc.data().type
+                fetchPeople.push(people)
+              }
+            })
+            this.people = fetchPeople
           })
       } finally {
         this.unitDataLoading = false
