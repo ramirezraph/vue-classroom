@@ -75,29 +75,32 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'PagesLogin',
 
     components: {
-      PagesBtn: () => import('./components/Btn'),
+      PagesBtn: () => import('./components/Btn.vue'),
     },
 
-    data: () => ({
-      socials: [
-        {
-          href: '#',
-          icon: 'mdi-facebook-box',
-        },
-        {
-          href: '#',
-          icon: 'mdi-twitter',
-        },
-        {
-          href: '#',
-          icon: 'mdi-github-box',
-        },
-      ],
-    }),
-  }
+    data () {
+      return {
+        socials: [
+          {
+            href: '#',
+            icon: 'mdi-facebook-box',
+          },
+          {
+            href: '#',
+            icon: 'mdi-twitter',
+          },
+          {
+            href: '#',
+            icon: 'mdi-github-box',
+          },
+        ],
+      }
+    },
+  })
 </script>

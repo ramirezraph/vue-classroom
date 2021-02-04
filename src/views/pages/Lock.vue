@@ -41,12 +41,13 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'PagesLock',
 
     components: {
-      PagesBtn: () => import('./components/Btn'),
+      PagesBtn: () => import('./components/Btn.vue'),
     },
-  }
+  })
 </script>

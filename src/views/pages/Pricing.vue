@@ -46,43 +46,46 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'PagesPricing',
 
     components: {
-      PagesHeading: () => import('./components/Heading'),
-      PagesPlanCard: () => import('./components/PlanCard'),
+      PagesHeading: () => import('./components/Heading.vue'),
+      PagesPlanCard: () => import('./components/PlanCard.vue'),
     },
 
-    data: () => ({
-      plans: [
-        {
-          heading: 'Freelancer',
-          icon: 'mdi-sofa',
-          title: 'Free',
-          text: 'This is good if your company size is between 2 and 10 Persons.',
-        },
-        {
-          best: true,
-          heading: 'Small Company',
-          icon: 'mdi-home',
-          title: '29$',
-          text: 'This is good if your company size is between 2 and 10 Persons.',
-        },
-        {
-          heading: 'Medium Company',
-          icon: 'mdi-domain',
-          title: '69$',
-          text: 'This is good if your company size is between 11 and 99 Persons.',
-        },
-        {
-          heading: 'Extra Pack',
-          icon: 'mdi-bank',
-          title: '159$',
-          text: 'This is good if your company size is 99+ or greater Persons.',
-        },
-      ],
-    }),
-  }
+    data () {
+      return {
+        plans: [
+          {
+            heading: 'Freelancer',
+            icon: 'mdi-sofa',
+            title: 'Free',
+            text: 'This is good if your company size is between 2 and 10 Persons.',
+          },
+          {
+            best: true,
+            heading: 'Small Company',
+            icon: 'mdi-home',
+            title: '29$',
+            text: 'This is good if your company size is between 2 and 10 Persons.',
+          },
+          {
+            heading: 'Medium Company',
+            icon: 'mdi-domain',
+            title: '69$',
+            text: 'This is good if your company size is between 11 and 99 Persons.',
+          },
+          {
+            heading: 'Extra Pack',
+            icon: 'mdi-bank',
+            title: '159$',
+            text: 'This is good if your company size is 99+ or greater Persons.',
+          },
+        ],
+      }
+    },
+  })
 </script>

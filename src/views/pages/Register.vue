@@ -123,56 +123,59 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'PagesRegister',
 
     components: {
-      PagesBtn: () => import('./components/Btn'),
-      PagesHeading: () => import('./components/Heading'),
+      PagesBtn: () => import('./components/Btn.vue'),
+      PagesHeading: () => import('./components/Heading.vue'),
     },
 
-    data: () => ({
-      sections: [
-        {
-          icon: 'mdi-chart-timeline-variant',
-          iconColor: 'primary',
-          title: 'Marketing',
-          text: 'We\'ve created the marketing campaign of the website. It was a very interesting collaboration.',
-        },
-        {
-          icon: 'mdi-code-tags',
-          iconColor: 'secondary',
-          title: 'Fully Coded in HTML5',
-          text: 'We\'ve developed the website with HTML5 and CSS3. The client has access to the code using GitHub.',
-        },
-        {
-          icon: 'mdi-account-multiple',
-          iconColor: 'cyan',
-          title: 'Built Audience',
-          text: 'There is also a Fully Customizable CMS Admin Dashboard for this product.',
-        },
-      ],
-      socials: [
-        {
-          href: '#',
-          icon: 'mdi-twitter',
-          iconColor: '#1DA1F2',
-        },
-        {
-          href: '#',
-          icon: 'mdi-dribbble',
-          iconColor: '#ea4c89',
-        },
-        {
-          href: '#',
-          icon: 'mdi-facebook',
-          iconColor: '#3B5998',
-        },
+    data () {
+      return {
+        sections: [
+          {
+            icon: 'mdi-chart-timeline-variant',
+            iconColor: 'primary',
+            title: 'Marketing',
+            text: 'We\'ve created the marketing campaign of the website. It was a very interesting collaboration.',
+          },
+          {
+            icon: 'mdi-code-tags',
+            iconColor: 'secondary',
+            title: 'Fully Coded in HTML5',
+            text: 'We\'ve developed the website with HTML5 and CSS3. The client has access to the code using GitHub.',
+          },
+          {
+            icon: 'mdi-account-multiple',
+            iconColor: 'cyan',
+            title: 'Built Audience',
+            text: 'There is also a Fully Customizable CMS Admin Dashboard for this product.',
+          },
+        ],
+        socials: [
+          {
+            href: '#',
+            icon: 'mdi-twitter',
+            iconColor: '#1DA1F2',
+          },
+          {
+            href: '#',
+            icon: 'mdi-dribbble',
+            iconColor: '#ea4c89',
+          },
+          {
+            href: '#',
+            icon: 'mdi-facebook',
+            iconColor: '#3B5998',
+          },
 
-      ],
-    }),
-  }
+        ],
+      }
+    },
+  })
 </script>
 
 <style lang="sass">
