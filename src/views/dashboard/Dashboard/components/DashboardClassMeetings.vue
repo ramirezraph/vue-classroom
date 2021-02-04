@@ -5,7 +5,7 @@
     class="ma-0 py-6"
   >
     <v-card-title class="blue--text">
-      <div class="d-block align-center">
+      <div class="d-flex align-center">
         <div class="ml-4">
           <span class="display-2">Class Meeting/s</span>
         </div>

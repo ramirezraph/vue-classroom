@@ -1,34 +1,24 @@
 <template>
-  <v-card>
-    <v-card-title>
-      <div class="d-flex">
-        <div>
-          <v-icon
-            color="green lighten-2"
-            class="ml-8 mt-5"
-            x-large
-          >
-            ballot
-          </v-icon>
-        </div>
-        <div>
-          <h1 class="ml-6 mt-7">
-            Classes
-          </h1>
-        </div>
-      </div>
-    </v-card-title>
-    <div class="d-flex align-end flex-column">
-      <v-text-field
-        v-model="search"
-        placeholder="Search"
-        append-icon="mdi-magnify"
-        class="shrink mr-6"
-      />
-    </div>
-    <v-divider />
+  <base-material-card
+    icon="mdi-format-list-checks"
+    title="Classes"
+  >
     <v-card-text>
       <v-tabs-items>
+        <v-row>
+          <v-col
+            cols="8"
+          />
+          <v-col cols="4">
+            <div class="d-flex flex-column">
+              <v-text-field
+                v-model="search"
+                placeholder="Search"
+                append-icon="mdi-magnify"
+              />
+            </div>
+          </v-col>
+        </v-row>
         <v-data-table
           hide-default-footer
           :headers="headers"
@@ -40,10 +30,11 @@
           <template #[`item.teacher`]="{ item }">
             <v-chip
               dark
-              class="short blue white--text justify-center"
-              style="width: 60%;"
+              small
+              class="blue white--text justify-center"
+              style="width: 55%;"
             >
-              <span>{{ item.teacher }}</span>
+              {{ item.teacher }}
             </v-chip>
           </template>
           <template #[`item.actions`]="{ item }">
@@ -63,7 +54,7 @@
         </v-data-table>
       </v-tabs-items>
     </v-card-text>
-  </v-card>
+  </base-material-card>
 </template>
 
 <script>
@@ -73,53 +64,47 @@
     data () {
       return {
         headers: [
-          { text: '#', value: 'counter' },
-          { text: 'Subject Name', value: 'name' },
-          { text: 'Subject Code', value: 'code' },
-          { text: 'Credits/Hours', value: 'credits' },
-          { text: 'Teacher', value: 'teacher' },
           { text: 'Actions', value: 'actions', sortable: false },
+          { text: '#', value: 'counter' },
+          { text: 'Class Title', value: 'name' },
+          { text: 'Class Code', value: 'code' },
+          { text: 'Teacher', value: 'teacher' },
         ],
         classes: [
           {
+            actions: '',
             counter: '1',
             name: 'Software Design',
             code: 'CPE301',
-            credits: 4,
             teacher: 'John L. Doe',
-            actions: '',
           },
           {
+            actions: '',
             counter: '1',
             name: 'Data Structure and Algorithms',
             code: 'CPE302',
-            credits: 4,
             teacher: 'John Titor',
-            actions: '',
           },
           {
+            actions: '',
             counter: '1',
             name: 'Differential Calculus',
             code: 'CPE304',
-            credits: 4,
             teacher: 'Lee Harvey Oswald',
-            actions: '',
           },
           {
+            actions: '',
             counter: '1',
             name: 'Operating System',
             code: 'CPE305',
-            credits: 4,
             teacher: 'Michael Macintosh',
-            actions: '',
           },
           {
+            actions: '',
             counter: '1',
             name: 'Engineering Economy',
             code: 'CPE306',
-            credits: 4,
             teacher: 'Rudolph Fentz',
-            actions: '',
           },
         ],
         search: undefined,
