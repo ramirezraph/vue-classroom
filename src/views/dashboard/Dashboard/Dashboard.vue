@@ -29,6 +29,12 @@
         <dashboard-class-meetings />
       </v-col>
     </v-row>
+    <v-row no-gutters>
+      <v-col>
+        <!-- ClassList -->
+        <dashboard-class-list />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

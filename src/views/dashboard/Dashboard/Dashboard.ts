@@ -7,6 +7,7 @@ export default Vue.extend({
     DashboardTodos: () => import('./components/DashboardTodos.vue'),
     DashboardAnnouncements: () => import('./components/DashboardAnnouncements.vue'),
     DashboardClassMeetings: () => import('./components/DashboardClassMeetings.vue'),
+    DashboardClassList: () => import('./components/DashboardClassList.vue'),
   },
   data () {
     return {}
