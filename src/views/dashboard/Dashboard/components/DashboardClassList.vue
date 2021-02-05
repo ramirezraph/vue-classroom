@@ -2,23 +2,20 @@
   <base-material-card
     icon="mdi-format-list-checks"
     title="Classes"
+    inline
+    class="px-5 py-3"
   >
-    <v-card-text>
+    <base-material-tabs>
+      <v-text-field
+        v-model="search"
+        single-line
+        placeholder="Search"
+        append-icon="mdi-magnify"
+        style="max-width: 350px;"
+        class="ml-auto my-auto"
+      />
       <v-tabs-items>
-        <v-row>
-          <v-col
-            cols="8"
-          />
-          <v-col cols="4">
-            <div class="d-flex flex-column">
-              <v-text-field
-                v-model="search"
-                placeholder="Search"
-                append-icon="mdi-magnify"
-              />
-            </div>
-          </v-col>
-        </v-row>
+        <v-divider class="mt-3" />
         <v-data-table
           hide-default-footer
           :headers="headers"
@@ -32,7 +29,7 @@
               dark
               small
               class="blue white--text justify-center"
-              style="width: 55%;"
+              style="width: 45%;"
             >
               {{ item.teacher }}
             </v-chip>
@@ -53,7 +50,7 @@
           </template>
         </v-data-table>
       </v-tabs-items>
-    </v-card-text>
+    </base-material-tabs>
   </base-material-card>
 </template>
 
