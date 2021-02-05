@@ -94,15 +94,17 @@
                   class="mr-2"
                   color="black"
                   v-bind="attrs"
+                  :disabled="toggleUploadFile"
                   v-on="on"
+                  @click="toggleUploadFileCard('image/*')"
                 >
                   <v-icon>
-                    mdi-file-pdf
+                    mdi-file-image
                   </v-icon>
                 </v-btn>
               </template>
               <span>
-                PDF
+                Image
               </span>
             </v-tooltip>
             <v-tooltip top>
@@ -115,28 +117,9 @@
                   class="mr-2"
                   color="black"
                   v-bind="attrs"
+                  :disabled="toggleUploadFile"
                   v-on="on"
-                >
-                  <v-icon>
-                    mdi-file-powerpoint
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>
-                PowerPoint
-              </span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  outlined
-                  depressed
-                  tile
-                  class="mr-2"
-                  color="black"
-                  v-bind="attrs"
-                  v-on="on"
+                  @click="toggleUploadFileCard('video/*')"
                 >
                   <v-icon>
                     mdi-file-video
@@ -157,36 +140,17 @@
                   class="mr-2"
                   color="black"
                   v-bind="attrs"
+                  :disabled="toggleUploadFile"
                   v-on="on"
+                  @click="toggleUploadFileCard('.pdf,.doc,.docx,.ptx,.pptx')"
                 >
                   <v-icon>
-                    mdi-video
+                    mdi-link
                   </v-icon>
                 </v-btn>
               </template>
               <span>
-                Lecture
-              </span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  outlined
-                  depressed
-                  tile
-                  class="mr-2"
-                  color="black"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <v-icon>
-                    mdi-format-text
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Text
+                File
               </span>
             </v-tooltip>
           </div>
@@ -232,6 +196,88 @@
             </v-tooltip>
           </div>
         </v-row>
+        <v-expand-transition>
+          <v-card
+            v-if="toggleUploadFile"
+            class="py-3 px-1"
+            min-width="100%"
+            elevation="6"
+          >
+            <v-card-title class="subtitle-2">
+              Upload a file
+            </v-card-title>
+            <v-card-text>
+              <validation-observer
+                ref="observer"
+                v-slot="{ invalid }"
+              >
+                <v-form @submit.prevent="submitUploadFile">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Title"
+                    rules="required"
+                  >
+                    <v-text-field
+                      v-model="uploadFileTitle"
+                      prepend-icon="mdi-format-text"
+                      label="Title"
+                      :error-messages="errors"
+                    />
+                  </validation-provider>
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="File"
+                    rules="required"
+                  >
+                    <v-file-input
+                      id="fileInput"
+                      ref="fileInput"
+                      v-model="uploadFileFile"
+                      label="File Input"
+                      show-size
+                      :accept="activeAcceptFileType"
+                      :rules="fileRules"
+                      :error-messages="errors"
+                      :hint="activeAcceptFileType"
+                      persistent-hint
+                    >
+                      <template #selection="{ text }">
+                        <v-chip
+                          small
+                          label
+                          color="blue"
+                          class="white--text"
+                        >
+                          {{ text }}
+                        </v-chip>
+                      </template>
+                    </v-file-input>
+                  </validation-provider>
+                  <div class="mt-3 ml-8">
+                    <v-btn
+                      type="submit"
+                      min-width="150"
+                      class="green mr-2"
+                      depressed
+                      :disabled="invalid"
+                    >
+                      Submit
+                    </v-btn>
+                    <v-btn
+                      min-width="100"
+                      depressed
+                      text
+                      outlined
+                      @click="toggleUploadFileCard"
+                    >
+                      Cancel
+                    </v-btn>
+                  </div>
+                </v-form>
+              </validation-observer>
+            </v-card-text>
+          </v-card>
+        </v-expand-transition>
       </v-card>
     </v-expansion-panel-content>
 
@@ -249,7 +295,6 @@
   import firebase from 'firebase'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
-
   export default Vue.extend({
     props: {
       hasEditAccess: {
@@ -268,6 +313,14 @@
     data () {
       return {
         dialogConfirmDeleteLesson: false,
+
+        toggleUploadFile: false,
+        uploadFileTitle: '',
+        uploadFileFile: [],
+        activeAcceptFileType: '',
+        fileRules: [
+          value => !value || value.size < 25000000 || 'size should be less than 25 MB.',
+        ],
       }
     },
     computed: {
@@ -311,6 +364,17 @@
             })
         }
         this.dialogConfirmDeleteLesson = false
+      },
+      toggleUploadFileCard (accept?: string): void {
+        this.uploadFileTitle = ''
+        this.uploadFileFile = []
+        if (accept) {
+          this.activeAcceptFileType = accept
+        }
+        this.toggleUploadFile = !this.toggleUploadFile
+      },
+      submitUploadFile (): void {
+        console.log(this.uploadFileFile)
       },
     },
   })

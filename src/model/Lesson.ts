@@ -1,10 +1,8 @@
 
-enum FileType {
-  PDF,
-  Document,
-  PowerPoint,
-  Video,
-  Text
+export enum FileType {
+  Image = 'image/*',
+  Video= 'video/*',
+  OtherFile= '.pdf,.doc,.docx,.ptx,.pptx'
 }
 
 interface File {
