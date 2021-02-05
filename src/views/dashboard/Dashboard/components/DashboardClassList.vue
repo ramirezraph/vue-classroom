@@ -1,56 +1,52 @@
 <template>
   <base-material-card
     icon="mdi-format-list-checks"
-    title="Classes"
+    title="Classlist"
     inline
     class="px-5 py-3"
   >
-    <base-material-tabs>
-      <v-text-field
-        v-model="search"
-        single-line
-        placeholder="Search"
-        append-icon="mdi-magnify"
-        style="max-width: 350px;"
-        class="ml-auto my-auto"
-      />
-      <v-tabs-items>
-        <v-divider class="mt-3" />
-        <v-data-table
-          hide-default-footer
-          :headers="headers"
-          :items="classes"
-          :search.sync="search"
-          :sort-by="['name']"
-          multi-sort
+    <v-text-field
+      v-model="search"
+      single-line
+      placeholder="Search"
+      append-icon="mdi-magnify"
+      style="max-width: 350px;"
+      class="ml-auto my-auto"
+    />
+    <v-divider class="mt-3" />
+    <v-data-table
+      hide-default-footer
+      :headers="headers"
+      :items="classes"
+      :search.sync="search"
+      :sort-by="['name']"
+      multi-sort
+    >
+      <template #[`item.teacher`]="{ item }">
+        <v-chip
+          dark
+          small
+          class="blue white--text justify-center"
+          style="width: 45%;"
         >
-          <template #[`item.teacher`]="{ item }">
-            <v-chip
-              dark
-              small
-              class="blue white--text justify-center"
-              style="width: 45%;"
-            >
-              {{ item.teacher }}
-            </v-chip>
-          </template>
-          <template #[`item.actions`]="{ item }">
-            <v-icon
-              small
-              class="mr-2"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon
-              small
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
-        </v-data-table>
-      </v-tabs-items>
-    </base-material-tabs>
+          {{ item.teacher }}
+        </v-chip>
+      </template>
+      <template #[`item.actions`]="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+        >
+          mdi-eye
+        </v-icon>
+        <v-icon
+          small
+          @click="deleteItem(item)"
+        >
+          mdi-exit-to-app
+        </v-icon>
+      </template>
+    </v-data-table>
   </base-material-card>
 </template>
 

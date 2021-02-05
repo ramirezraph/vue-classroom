@@ -23,13 +23,19 @@
         <dashboard-announcements />
       </v-col>
     </v-row>
-    <v-row no-gutters>
+    <v-row
+      no-gutters
+      class="mt-6"
+    >
       <v-col>
         <!-- Classes -->
         <dashboard-class-meetings />
       </v-col>
     </v-row>
-    <v-row no-gutters>
+    <v-row
+      no-gutters
+      class="mt-6"
+    >
       <v-col>
         <!-- ClassList -->
         <dashboard-class-list />
