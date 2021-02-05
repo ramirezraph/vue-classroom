@@ -23,7 +23,6 @@ import vuetify from './plugins/vuetify'
 import i18n from './i18n'
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
 import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
 
