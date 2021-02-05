@@ -70,7 +70,7 @@
                   v-bind="attrs"
                   :disabled="toggleUploadFile"
                   v-on="on"
-                  @click="toggleUploadFileCard('image/*')"
+                  @click="toggleUploadFileCard('Image','image/*')"
                 >
                   <v-icon>
                     mdi-file-image
@@ -93,7 +93,7 @@
                   v-bind="attrs"
                   :disabled="toggleUploadFile"
                   v-on="on"
-                  @click="toggleUploadFileCard('video/*')"
+                  @click="toggleUploadFileCard('Video','video/*')"
                 >
                   <v-icon>
                     mdi-file-video
@@ -116,7 +116,7 @@
                   v-bind="attrs"
                   :disabled="toggleUploadFile"
                   v-on="on"
-                  @click="toggleUploadFileCard('.pdf,.doc,.docx,.ptx,.pptx')"
+                  @click="toggleUploadFileCard('Other','.pdf,.doc,.docx,.ptx,.pptx,.xlsx')"
                 >
                   <v-icon>
                     mdi-link
@@ -201,7 +201,7 @@
                   <validation-provider
                     v-slot="{ errors }"
                     name="File"
-                    rules="required"
+                    rules="required|size:25000"
                   >
                     <v-file-input
                       id="fileInput"
@@ -210,7 +210,6 @@
                       label="File Input"
                       show-size
                       :accept="activeAcceptFileType"
-                      :rules="fileRules"
                       :error-messages="errors"
                       :hint="activeAcceptFileType"
                       persistent-hint
@@ -234,6 +233,7 @@
                       class="green mr-2"
                       depressed
                       :disabled="invalid"
+                      :loading="uploadingInProgress"
                     >
                       Submit
                     </v-btn>
@@ -242,7 +242,8 @@
                       depressed
                       text
                       outlined
-                      @click="toggleUploadFileCard"
+                      :disabled="uploadingInProgress"
+                      @click="cancelUploadFile"
                     >
                       Cancel
                     </v-btn>
@@ -267,10 +268,18 @@
   import Vue, { PropType } from 'vue'
   import { ClassFile, Lesson } from '@/model/Lesson'
   import firebase from 'firebase'
-  import { resourcesCollection } from '@/fb'
+  import { resourcesCollection, storageRef } from '@/fb'
   import File from '@/views/dashboard/components/component/File.vue'
+  import { extend } from 'vee-validate'
+  import { size } from 'vee-validate/dist/rules'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
+
+  extend('size', {
+    ...size,
+    message: 'The maximum size is 25 MB.',
+  })
+
   export default Vue.extend({
     components: {
       File,
@@ -297,11 +306,10 @@
 
         toggleUploadFile: false,
         uploadFileTitle: '',
-        uploadFileFile: [],
+        uploadFileFile: {} as File,
+        activeFileType: '',
         activeAcceptFileType: '',
-        fileRules: [
-          value => !value || value.size < 25000000 || 'size should be less than 25 MB.',
-        ],
+        uploadingInProgress: false,
       }
     },
     computed: {
@@ -353,16 +361,76 @@
         }
         this.dialogConfirmDeleteLesson = false
       },
-      toggleUploadFileCard (accept?: string): void {
-        this.uploadFileTitle = ''
-        this.uploadFileFile = []
-        if (accept) {
+      toggleUploadFileCard (fileType?: string, accept?: string): void {
+        if (accept && fileType) {
           this.activeAcceptFileType = accept
+          this.activeFileType = fileType
         }
         this.toggleUploadFile = !this.toggleUploadFile
       },
+      cancelUploadFile (): void {
+        this.uploadFileTitle = ''
+        this.uploadFileFile = {} as File
+        this.activeFileType = ''
+
+        this.toggleUploadFileCard()
+      },
       submitUploadFile (): void {
-        console.log(this.uploadFileFile)
+        let fileExtension = ''
+        console.log(this.uploadFileFile.type)
+        switch (this.uploadFileFile.type) {
+          case 'image/png':
+            fileExtension = '.png'
+            break
+          case 'image/jpeg':
+            fileExtension = '.jpg'
+            break
+          case 'video/mp4':
+            fileExtension = '.mp4'
+            break
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            fileExtension = '.docx'
+            break
+          case 'application/msword':
+            fileExtension = '.doc'
+            break
+          case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            fileExtension = '.pptx'
+            break
+          case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            fileExtension = '.xlsx'
+            break
+          case 'application/pdf':
+            fileExtension = '.pdf'
+            break
+        }
+        this.uploadingInProgress = true
+        const path = this.lessonDbRef.path.split('/')
+        const classId = path[1]
+        const resourceRef = storageRef.child('classes')
+          .child(classId)
+          .child('lesson-files')
+          .child(this.lessonItem.id)
+          .child(`${this.uploadFileTitle}${fileExtension}`)
+        // upload the file to storage
+        resourceRef.put(this.uploadFileFile)
+          .then(() => {
+            resourceRef.getDownloadURL().then(url => {
+              // save file location to firestore
+              resourcesCollection.doc(this.lessonItem.id).collection('files')
+                .add({
+                  link: url,
+                  name: `${this.uploadFileTitle}${fileExtension}`,
+                  type: this.activeFileType,
+                }).then(() => {
+                  this.uploadFileTitle = ''
+                  this.uploadFileFile = {} as File
+                  this.activeFileType = ''
+                  this.uploadingInProgress = false
+                })
+            })
+            this.toggleUploadFileCard()
+          })
       },
       lessonOpened (): void {
         resourcesCollection.doc(this.lessonItem.id).collection('files')
@@ -375,7 +443,6 @@
                 doc.data().name,
                 doc.data().link,
               )
-              console.log('File:', newFile)
               fetchFiles.push(newFile)
             })
             this.lessonItem.files = fetchFiles

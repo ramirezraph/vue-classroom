@@ -174,7 +174,7 @@
 </template>
 
 <script lang="ts">
-  import { ClassFile, Lesson } from '@/model/Lesson'
+  import { Lesson } from '@/model/Lesson'
   import { Unit } from '@/model/Unit'
   import Vue, { PropType } from 'vue'
   import AccordionLessonItem from './AccordionLessonItem.vue'
@@ -182,7 +182,6 @@
   import { extend } from 'vee-validate'
   // eslint-disable-next-line camelcase
   import { excluded, min_value, required } from 'vee-validate/dist/rules'
-  import { resourcesCollection } from '@/fb'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference;
 
