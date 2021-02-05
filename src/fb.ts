@@ -22,6 +22,8 @@ const db = firebase.firestore()
 // firestore class collection reference
 const classesCollection = db.collection('classes')
 
+// firestore class collection reference
+const resourcesCollection = db.collection('resources')
 // Get a reference to the storage service, which is used to create references in your storage bucket
 const storage = firebase.storage()
 
@@ -32,4 +34,5 @@ export {
   db,
   storageRef,
   classesCollection,
+  resourcesCollection,
 }

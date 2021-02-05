@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel
+    :key="componentKey"
+    @click.once="lessonOpened"
+  >
     <v-expansion-panel-header color="#686868">
       <v-card
         flat
@@ -150,7 +153,7 @@
                 </v-btn>
               </template>
               <span>
-                File
+                Other File
               </span>
             </v-tooltip>
           </div>
@@ -291,8 +294,9 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { Lesson } from '@/model/Lesson'
+  import { ClassFile, Lesson } from '@/model/Lesson'
   import firebase from 'firebase'
+  import { resourcesCollection } from '@/fb'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
   export default Vue.extend({
@@ -312,6 +316,8 @@
     },
     data () {
       return {
+        componentKey: 0,
+
         dialogConfirmDeleteLesson: false,
 
         toggleUploadFile: false,
@@ -335,6 +341,13 @@
       },
       lessonDbRef (): DocumentReference {
         return this.unitDbRef.collection('lessons').doc(this.lesson.id)
+      },
+    },
+    watch: {
+      '$route' () {
+        // force rerender the component to reset the @click.once event.
+        // everytime the router change.
+        this.componentKey += 1
       },
     },
     methods: {
@@ -375,6 +388,23 @@
       },
       submitUploadFile (): void {
         console.log(this.uploadFileFile)
+      },
+      lessonOpened (): void {
+        resourcesCollection.doc(this.lessonItem.id).collection('files')
+          .onSnapshot(snapshot => {
+            const fetchFiles: ClassFile[] = []
+            snapshot.forEach(doc => {
+              const newFile = new ClassFile(
+                doc.id,
+                doc.data().type,
+                doc.data().name,
+                doc.data().link,
+              )
+              console.log('File:', newFile)
+              fetchFiles.push(newFile)
+            })
+            this.lessonItem.files = fetchFiles
+          })
       },
     },
   })
