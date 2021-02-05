@@ -271,26 +271,12 @@
             <v-tab-item
               value="people"
             >
-              <v-card flat>
-                <v-card-title>
-                  <span>Hello, People</span>
-                </v-card-title>
-                <v-card-text>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
-                </v-card-text>
-              </v-card>
+              <class-people />
             </v-tab-item>
             <v-tab-item
               value="livelecture"
             >
-              <v-card flat>
-                <v-card-title>
-                  <span>Hello, Live Lecture</span>
-                </v-card-title>
-                <v-card-text>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias veritatis ducimus quisquam deleniti molestiae tempore, fugiat illum cum ipsa debitis.
-                </v-card-text>
-              </v-card>
+              <class-live-lecture />
             </v-tab-item>
           </v-tabs-items>
         </v-card>

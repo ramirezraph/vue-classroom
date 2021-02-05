@@ -3,7 +3,9 @@ import { Class } from '@/model/Class'
 import ClassItem from '@/views/dashboard/Classes/components/ClassItem.vue'
 import ClassHeader from './components/ClassHeader.vue'
 import ClassDiscussions from './components/ClassDiscussions.vue'
+import ClassPeople from './components/ClassPeople.vue'
 import ClassClasswork from './components/ClassClasswork.vue'
+import ClassLiveLecture from './components/ClassLiveLecture.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
@@ -38,6 +40,8 @@ export default Vue.extend({
     ClassHeader,
     ClassDiscussions,
     ClassClasswork,
+    ClassPeople,
+    ClassLiveLecture,
     AccordionUnitItem,
     ValidationProvider,
     ValidationObserver,
