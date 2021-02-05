@@ -38,46 +38,17 @@
         >
           <p>{{ lessonItem.shortDescription }}</p>
         </div>
-        <div class="d-flex px-6 mt-6 mb-4">
-          <span
-            class="blue--text body-1"
-            style="cursor: pointer;"
-          >
-            <v-icon
-              left
-              color="blue"
-            >
-              mdi-video
-            </v-icon>
-            Introduction.mp4
-          </span>
-          <v-spacer />
-          <v-btn
-            icon
-            small
-          >
-            <v-icon class="blue--text">
-              mdi-download
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-if="hasEditAccess"
-            icon
-            small
-          >
-            <v-icon>
-              mdi-delete
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-if="hasEditAccess"
-            icon
-            small
-          >
-            <v-icon>
-              mdi-arrow-up-down
-            </v-icon>
-          </v-btn>
+        <div class="mt-6">
+          <file
+            v-for="file in lessonItem.files"
+            :key="file.id"
+            :has-edit-access="hasEditAccess"
+            :file-id="file.id"
+            :name="file.name"
+            :type="file.type"
+            :link="file.link"
+            class="mt-2 px-2"
+          />
         </div>
         <v-row
           v-if="hasEditAccess"
@@ -297,9 +268,13 @@
   import { ClassFile, Lesson } from '@/model/Lesson'
   import firebase from 'firebase'
   import { resourcesCollection } from '@/fb'
+  import File from '@/views/dashboard/components/component/File.vue'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
   export default Vue.extend({
+    components: {
+      File,
+    },
     props: {
       hasEditAccess: {
         type: Boolean,
