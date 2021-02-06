@@ -25,6 +25,7 @@
       v-if="hasEditAccess"
       icon
       small
+      @click="remove"
     >
       <v-icon>
         mdi-delete
@@ -85,6 +86,11 @@
         }
 
         return icon
+      },
+    },
+    methods: {
+      remove (): void {
+        this.$emit('on-remove', this.fileId, this.name)
       },
     },
   })
