@@ -288,15 +288,8 @@
   import firebase from 'firebase'
   import { resourcesCollection, storageRef } from '@/fb'
   import File from '@/views/dashboard/components/component/File.vue'
-  import { extend } from 'vee-validate'
-  import { size } from 'vee-validate/dist/rules'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
-
-  extend('size', {
-    ...size,
-    message: 'The maximum size is 25 MB.',
-  })
 
   export default Vue.extend({
     components: {
