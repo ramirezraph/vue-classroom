@@ -1,61 +1,85 @@
 <template>
-  <v-card>
-    <div>
-      <small>{{ description }}</small>
-    </div>
-    <div class="display-1 red--text">
-      {{ title }}
-    </div>
-    <div class="d-flex mt-3 pb-6">
-      <div>
-        <v-chip
-          color="green lighten-2"
-          class="time-chips white--text px-6 mr-2"
+  <v-card
+    outlined
+    class="ma-4"
+  >
+    <v-card-title>
+      <v-toolbar
+        class="mt-4"
+        dense
+        flat
+      >
+        <v-toolbar-title>
+          <span class="blue--text headline">{{ title }}</span>
+          <p class="caption">
+            {{ description }}
+          </p>
+        </v-toolbar-title>
+        <v-spacer />
+        <v-btn
+          icon
+          class="mb-8"
         >
-          <v-icon
-            left
-            small
-          >
-            mdi-clock-start
-          </v-icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-toolbar>
+    </v-card-title>
+    <v-card-text>
+      <div class="mx-7 mb-3">
+        <v-icon>mdi-calendar</v-icon>
+        <v-chip
+          small
+          class="ml-4 white--text justify-center"
+          style="width: 15%;"
+          color="grey darken-2"
+        >
+          {{ date }}
+        </v-chip>
+      </div>
+      <div class="mx-7 my-3">
+        <v-icon>mdi-clock-start</v-icon>
+        <v-chip
+          small
+          class="ml-4 white--text justify-center"
+          style="width: 15%;"
+          color="green lighten-3"
+        >
           {{ timeStart }}
         </v-chip>
+      </div>
+      <div class="mx-7 my-3">
+        <v-icon>mdi-clock-end</v-icon>
         <v-chip
-          color="red"
-          class="time-chips white--text px-6 mr-2"
+          small
+          class="ml-4 white--text justify-center"
+          style="width: 15%;"
+          color="red lighten-3"
         >
-          <v-icon
-            left
-            small
-          >
-            mdi-clock-end
-          </v-icon>
           {{ timeEnd }}
         </v-chip>
       </div>
-      <div class="ml-auto">
+      <div class="px-7">
         <v-btn
+          class="text-none"
           color="blue"
-          small
-          class="text-none mr-2"
-          width="110"
-          depressed
-          tile
         >
+          <v-icon
+            left
+            class="px-3"
+            small
+          >
+            mdi-video-wireless-outline
+          </v-icon>
           Join Meeting
         </v-btn>
         <v-btn
-          color="red"
-          small
-          class="text-none mr-2"
-          depressed
-          tile
-          width="110"
+          class="ml-3 text-none"
+          color="red lighten-1"
         >
           I'll be absent
         </v-btn>
       </div>
-    </div>
+    </v-card-text>
   </v-card>
 </template>
 

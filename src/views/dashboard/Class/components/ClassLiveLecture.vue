@@ -2,13 +2,13 @@
   <v-card
     flat
     outlined
-    color="white"
     class="mt-0"
   >
-    <v-card-title class="mt-5">
+    <v-card-title>
       <v-btn
         color="blue"
         rounded
+        class="mt-4 ml-5"
       >
         <v-icon>
           mdi-video-outline
@@ -16,11 +16,21 @@
         <span class="text-none">New Meeting</span>
       </v-btn>
     </v-card-title>
-    <v-card class="ma-2">
-      <v-card-text>
-        {{ lectures.title }}
-      </v-card-text>
-    </v-card>
+    <v-card-text>
+      <v-tabs-items>
+        <live-lecture-item
+          v-for="item in lectures"
+          :key="item.classId"
+          :class-id="item.classId"
+          :title="item.title"
+          :description="item.description"
+          :date="item.date"
+          :time-start="item.timeStart"
+          :time-end="item.timeEnd"
+          :link="item.link"
+        />
+      </v-tabs-items>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -35,7 +45,7 @@
     data () {
       return {
         lectures: [
-          { classId: '', title: 'John L. Doe', description: 'Logic Gates and Design', date: '2/27/2021', timeStart: '11:00AM', timeEnd: '12:30PM', link: '' },
+          { classId: '', title: 'Lecture 1: Introduction & Orientation', description: 'Lorem ipsum dolor antem', date: '2/27/2021', timeStart: '11:00AM', timeEnd: '12:30PM', link: '' },
         ],
       }
     },
