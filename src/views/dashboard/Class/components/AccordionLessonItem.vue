@@ -39,16 +39,22 @@
           <p>{{ lessonItem.shortDescription }}</p>
         </div>
         <div class="mt-6">
-          <file
-            v-for="file in lessonItem.files"
-            :key="file.id"
-            :has-edit-access="hasEditAccess"
-            :file-id="file.id"
-            :name="file.name"
-            :type="file.type"
-            :link="file.link"
-            class="mt-2 px-2"
-          />
+          <transition-group
+            name="list"
+            tag="p"
+          >
+            <file
+              v-for="file in files"
+              :key="file.id"
+              :has-edit-access="hasEditAccess"
+              :file-id="file.id"
+              :name="file.name"
+              :type="file.type"
+              :link="file.link"
+              class="mt-2 px-2"
+              @on-remove="onRemoveFile"
+            />
+          </transition-group>
         </div>
         <v-row
           v-if="hasEditAccess"
@@ -261,6 +267,18 @@
       :title="`Lesson ${lessonItem.lessonNumber}: ${lessonItem.title}`"
       @goto-response="confirmRemoveUnit"
     />
+    <confirm-dialog
+      :model="dialogConfirmDeleteFile"
+      :title="`File: ${remove_fileName}`"
+      text="Are you sure you want to remove this file?"
+      @goto-response="confirmRemoveFile"
+    />
+    <classic-dialog
+      :v-model="dialogError"
+      :title="error_dialogTitle"
+      :text="error_dialogMessage"
+      @close="dialogError = false"
+    />
   </v-expansion-panel>
 </template>
 
@@ -270,15 +288,8 @@
   import firebase from 'firebase'
   import { resourcesCollection, storageRef } from '@/fb'
   import File from '@/views/dashboard/components/component/File.vue'
-  import { extend } from 'vee-validate'
-  import { size } from 'vee-validate/dist/rules'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
-
-  extend('size', {
-    ...size,
-    message: 'The maximum size is 25 MB.',
-  })
 
   export default Vue.extend({
     components: {
@@ -302,6 +313,8 @@
       return {
         componentKey: 0,
 
+        files: [] as ClassFile[],
+
         dialogConfirmDeleteLesson: false,
 
         toggleUploadFile: false,
@@ -310,6 +323,14 @@
         activeFileType: '',
         activeAcceptFileType: '',
         uploadingInProgress: false,
+
+        remove_fileId: '',
+        remove_fileName: '',
+        dialogConfirmDeleteFile: false,
+
+        dialogError: false,
+        error_dialogTitle: '',
+        error_dialogMessage: '',
       }
     },
     computed: {
@@ -445,8 +466,39 @@
               )
               fetchFiles.push(newFile)
             })
-            this.lessonItem.files = fetchFiles
+            this.files = fetchFiles
           })
+      },
+      onRemoveFile (fileId: string, fileName: string): void {
+        this.remove_fileId = fileId
+        this.remove_fileName = fileName
+        this.dialogConfirmDeleteFile = true
+      },
+      confirmRemoveFile (response: boolean): void {
+        if (response) {
+          // delete on storage
+          const classId = this.unitDbRef.parent.parent?.id
+          const ref = `classes/${classId}/lesson-files/${this.lessonItem.id}/${this.remove_fileName}`
+          storageRef.child(ref).delete()
+            .then(() => {
+              // delete on firestore db
+              resourcesCollection.doc(this.lessonItem.id).collection('files')
+                .doc(this.remove_fileId).delete()
+                .then(() => {
+                  // delete complete
+                  console.log('File deleted completely.')
+                }).catch(() => {
+                  this.error_dialogTitle = 'File delete failed.'
+                  this.error_dialogMessage = 'Something went wrong. Please try again.'
+                  this.dialogError = true
+                })
+            }).catch(() => {
+              this.error_dialogTitle = 'File delete failed.'
+              this.error_dialogMessage = 'Something went wrong. Please try again.'
+              this.dialogError = true
+            })
+        }
+        this.dialogConfirmDeleteFile = false
       },
     },
   })
@@ -455,5 +507,16 @@
 <style scoped>
   .lesson-controls {
     height: 60px;
+  }
+  .list-item {
+  display: inline-block;
+  margin-right: 10px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(30px);
   }
 </style>

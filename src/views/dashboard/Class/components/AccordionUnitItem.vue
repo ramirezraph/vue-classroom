@@ -224,6 +224,7 @@
         showHideAddLesson: false,
         isUnitLive: false,
 
+        lessons: [] as Lesson[],
         // Add Lesson
         add_lessonNumber: null,
         add_lessonTitle: '',
@@ -235,9 +236,6 @@
     computed: {
       unitItem (): Unit {
         return this.unit
-      },
-      lessons (): Lesson[] {
-        return this.unitItem.lessons || []
       },
       liveDraftLabel (): string {
         return this.isUnitLive ? 'Live' : 'Draft'
@@ -296,7 +294,7 @@
                 }
               }
             })
-            this.unitItem.lessons = fetchLessons
+            this.lessons = fetchLessons
           })
       },
       unitOpened (): void {

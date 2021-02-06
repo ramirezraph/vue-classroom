@@ -106,6 +106,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Background Image"
+                      rules="size:25000"
                     >
                       <v-file-input
                         v-model="imageFile"

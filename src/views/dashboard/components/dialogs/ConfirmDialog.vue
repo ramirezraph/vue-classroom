@@ -21,19 +21,19 @@
 
       <v-card-text class="pb-6 pt-12 text-center">
         <v-btn
-          class="mr-3"
-          text
-          @click="nevermindClicked"
-        >
-          Nevermind
-        </v-btn>
-
-        <v-btn
-          color="success"
-          text
+          color="primary"
+          min-width="200"
           @click="yesClicked"
         >
           Yes
+        </v-btn>
+        <v-btn
+          class="mr-3"
+          text
+          depressed
+          @click="nevermindClicked"
+        >
+          Nevermind
         </v-btn>
       </v-card-text>
     </v-card>
