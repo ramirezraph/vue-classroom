@@ -40,7 +40,7 @@
         </div>
         <div class="mt-6">
           <file
-            v-for="file in lessonItem.files"
+            v-for="file in files"
             :key="file.id"
             :has-edit-access="hasEditAccess"
             :file-id="file.id"
@@ -315,6 +315,8 @@
       return {
         componentKey: 0,
 
+        files: [] as ClassFile[],
+
         dialogConfirmDeleteLesson: false,
 
         toggleUploadFile: false,
@@ -466,7 +468,7 @@
               )
               fetchFiles.push(newFile)
             })
-            this.lessonItem.files = fetchFiles
+            this.files = fetchFiles
           })
       },
       onRemoveFile (fileId: string, fileName: string): void {
