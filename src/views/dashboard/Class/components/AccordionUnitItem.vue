@@ -291,7 +291,7 @@
               if (this.hasEditAccess) {
                 fetchLessons.push(lesson)
               } else {
-                if (lesson.isLive === true) {
+                if (lesson.isLive) {
                   fetchLessons.push(lesson)
                 }
               }

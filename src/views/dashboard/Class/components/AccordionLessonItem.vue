@@ -1,5 +1,8 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel
+    :key="componentKey"
+    @click.once="lessonOpened"
+  >
     <v-expansion-panel-header color="#686868">
       <v-card
         flat
@@ -35,46 +38,17 @@
         >
           <p>{{ lessonItem.shortDescription }}</p>
         </div>
-        <div class="d-flex px-6 mt-6 mb-4">
-          <span
-            class="blue--text body-1"
-            style="cursor: pointer;"
-          >
-            <v-icon
-              left
-              color="blue"
-            >
-              mdi-video
-            </v-icon>
-            Introduction.mp4
-          </span>
-          <v-spacer />
-          <v-btn
-            icon
-            small
-          >
-            <v-icon class="blue--text">
-              mdi-download
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-if="hasEditAccess"
-            icon
-            small
-          >
-            <v-icon>
-              mdi-delete
-            </v-icon>
-          </v-btn>
-          <v-btn
-            v-if="hasEditAccess"
-            icon
-            small
-          >
-            <v-icon>
-              mdi-arrow-up-down
-            </v-icon>
-          </v-btn>
+        <div class="mt-6">
+          <file
+            v-for="file in lessonItem.files"
+            :key="file.id"
+            :has-edit-access="hasEditAccess"
+            :file-id="file.id"
+            :name="file.name"
+            :type="file.type"
+            :link="file.link"
+            class="mt-2 px-2"
+          />
         </div>
         <v-row
           v-if="hasEditAccess"
@@ -94,15 +68,17 @@
                   class="mr-2"
                   color="black"
                   v-bind="attrs"
+                  :disabled="toggleUploadFile"
                   v-on="on"
+                  @click="toggleUploadFileCard('Image','image/*')"
                 >
                   <v-icon>
-                    mdi-file-pdf
+                    mdi-file-image
                   </v-icon>
                 </v-btn>
               </template>
               <span>
-                PDF
+                Image
               </span>
             </v-tooltip>
             <v-tooltip top>
@@ -115,28 +91,9 @@
                   class="mr-2"
                   color="black"
                   v-bind="attrs"
+                  :disabled="toggleUploadFile"
                   v-on="on"
-                >
-                  <v-icon>
-                    mdi-file-powerpoint
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>
-                PowerPoint
-              </span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  outlined
-                  depressed
-                  tile
-                  class="mr-2"
-                  color="black"
-                  v-bind="attrs"
-                  v-on="on"
+                  @click="toggleUploadFileCard('Video','video/*')"
                 >
                   <v-icon>
                     mdi-file-video
@@ -157,36 +114,17 @@
                   class="mr-2"
                   color="black"
                   v-bind="attrs"
+                  :disabled="toggleUploadFile"
                   v-on="on"
+                  @click="toggleUploadFileCard('Other','.pdf,.doc,.docx,.ptx,.pptx,.xlsx')"
                 >
                   <v-icon>
-                    mdi-video
+                    mdi-link
                   </v-icon>
                 </v-btn>
               </template>
               <span>
-                Lecture
-              </span>
-            </v-tooltip>
-            <v-tooltip top>
-              <template #activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  outlined
-                  depressed
-                  tile
-                  class="mr-2"
-                  color="black"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <v-icon>
-                    mdi-format-text
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>
-                Text
+                Other File
               </span>
             </v-tooltip>
           </div>
@@ -232,6 +170,89 @@
             </v-tooltip>
           </div>
         </v-row>
+        <v-expand-transition>
+          <v-card
+            v-if="toggleUploadFile"
+            class="py-3 px-1"
+            min-width="100%"
+            elevation="6"
+          >
+            <v-card-title class="subtitle-2">
+              Upload a file
+            </v-card-title>
+            <v-card-text>
+              <validation-observer
+                ref="observer"
+                v-slot="{ invalid }"
+              >
+                <v-form @submit.prevent="submitUploadFile">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Title"
+                    rules="required"
+                  >
+                    <v-text-field
+                      v-model="uploadFileTitle"
+                      prepend-icon="mdi-format-text"
+                      label="Title"
+                      :error-messages="errors"
+                    />
+                  </validation-provider>
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="File"
+                    rules="required|size:25000"
+                  >
+                    <v-file-input
+                      id="fileInput"
+                      ref="fileInput"
+                      v-model="uploadFileFile"
+                      label="File Input"
+                      show-size
+                      :accept="activeAcceptFileType"
+                      :error-messages="errors"
+                      :hint="activeAcceptFileType"
+                      persistent-hint
+                    >
+                      <template #selection="{ text }">
+                        <v-chip
+                          small
+                          label
+                          color="blue"
+                          class="white--text"
+                        >
+                          {{ text }}
+                        </v-chip>
+                      </template>
+                    </v-file-input>
+                  </validation-provider>
+                  <div class="mt-3 ml-8">
+                    <v-btn
+                      type="submit"
+                      min-width="150"
+                      class="green mr-2"
+                      depressed
+                      :disabled="invalid"
+                      :loading="uploadingInProgress"
+                    >
+                      Submit
+                    </v-btn>
+                    <v-btn
+                      min-width="100"
+                      depressed
+                      text
+                      outlined
+                      :disabled="uploadingInProgress"
+                      @click="cancelUploadFile"
+                    >
+                      Cancel
+                    </v-btn>
+                  </div>
+                </v-form>
+              </validation-observer>
+            </v-card-text>
+          </v-card>
+        </v-expand-transition>
       </v-card>
     </v-expansion-panel-content>
 
@@ -245,12 +266,24 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { Lesson } from '@/model/Lesson'
+  import { ClassFile, Lesson } from '@/model/Lesson'
   import firebase from 'firebase'
+  import { resourcesCollection, storageRef } from '@/fb'
+  import File from '@/views/dashboard/components/component/File.vue'
+  import { extend } from 'vee-validate'
+  import { size } from 'vee-validate/dist/rules'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
 
+  extend('size', {
+    ...size,
+    message: 'The maximum size is 25 MB.',
+  })
+
   export default Vue.extend({
+    components: {
+      File,
+    },
     props: {
       hasEditAccess: {
         type: Boolean,
@@ -267,7 +300,16 @@
     },
     data () {
       return {
+        componentKey: 0,
+
         dialogConfirmDeleteLesson: false,
+
+        toggleUploadFile: false,
+        uploadFileTitle: '',
+        uploadFileFile: {} as File,
+        activeFileType: '',
+        activeAcceptFileType: '',
+        uploadingInProgress: false,
       }
     },
     computed: {
@@ -284,6 +326,13 @@
         return this.unitDbRef.collection('lessons').doc(this.lesson.id)
       },
     },
+    watch: {
+      '$route' () {
+        // force rerender the component to reset the @click.once event.
+        // everytime the router change.
+        this.componentKey += 1
+      },
+    },
     methods: {
       toggleLiveDraft (): void {
         const updatedLesson = {
@@ -296,6 +345,7 @@
           .catch(error => {
             console.log('toggle failed', error)
           })
+        this.lessonOpened()
       },
       removeLesson (): void {
         this.dialogConfirmDeleteLesson = true
@@ -311,6 +361,92 @@
             })
         }
         this.dialogConfirmDeleteLesson = false
+      },
+      toggleUploadFileCard (fileType?: string, accept?: string): void {
+        if (accept && fileType) {
+          this.activeAcceptFileType = accept
+          this.activeFileType = fileType
+        }
+        this.toggleUploadFile = !this.toggleUploadFile
+      },
+      cancelUploadFile (): void {
+        this.uploadFileTitle = ''
+        this.uploadFileFile = {} as File
+        this.activeFileType = ''
+
+        this.toggleUploadFileCard()
+      },
+      submitUploadFile (): void {
+        let fileExtension = ''
+        switch (this.uploadFileFile.type) {
+          case 'image/png':
+            fileExtension = '.png'
+            break
+          case 'image/jpeg':
+            fileExtension = '.jpg'
+            break
+          case 'video/mp4':
+            fileExtension = '.mp4'
+            break
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            fileExtension = '.docx'
+            break
+          case 'application/msword':
+            fileExtension = '.doc'
+            break
+          case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            fileExtension = '.pptx'
+            break
+          case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            fileExtension = '.xlsx'
+            break
+          case 'application/pdf':
+            fileExtension = '.pdf'
+            break
+        }
+        this.uploadingInProgress = true
+        const path = this.lessonDbRef.path.split('/')
+        const classId = path[1]
+        const resourceRef = storageRef.child('classes')
+          .child(classId)
+          .child('lesson-files')
+          .child(this.lessonItem.id)
+          .child(`${this.uploadFileTitle}${fileExtension}`)
+        // upload the file to storage
+        resourceRef.put(this.uploadFileFile)
+          .then(() => {
+            resourceRef.getDownloadURL().then(url => {
+              // save file location to firestore
+              resourcesCollection.doc(this.lessonItem.id).collection('files')
+                .add({
+                  link: url,
+                  name: `${this.uploadFileTitle}${fileExtension}`,
+                  type: this.activeFileType,
+                }).then(() => {
+                  this.uploadFileTitle = ''
+                  this.uploadFileFile = {} as File
+                  this.activeFileType = ''
+                  this.uploadingInProgress = false
+                })
+            })
+            this.toggleUploadFileCard()
+          })
+      },
+      lessonOpened (): void {
+        resourcesCollection.doc(this.lessonItem.id).collection('files')
+          .onSnapshot(snapshot => {
+            const fetchFiles: ClassFile[] = []
+            snapshot.forEach(doc => {
+              const newFile = new ClassFile(
+                doc.id,
+                doc.data().type,
+                doc.data().name,
+                doc.data().link,
+              )
+              fetchFiles.push(newFile)
+            })
+            this.lessonItem.files = fetchFiles
+          })
       },
     },
   })

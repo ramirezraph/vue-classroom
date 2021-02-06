@@ -1,20 +1,17 @@
 
-enum FileType {
-  PDF,
-  Document,
-  PowerPoint,
-  Video,
-  Text
-}
-
-interface File {
-  type: FileType;
-  name: string;
-  link: string;
+export class ClassFile {
+  // eslint-disable-next-line no-useless-constructor
+  constructor (
+    public id: string,
+    public type: string,
+    public name: string,
+    public link: string,
+  ) {
+  }
 }
 
 export class Lesson {
-  files?: File[] = []
+  files?: ClassFile[] = []
 
   // eslint-disable-next-line no-useless-constructor
   constructor (
