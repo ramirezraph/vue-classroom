@@ -1,10 +1,4 @@
 
-export enum FileType {
-  Image = 'image/*',
-  Video= 'video/*',
-  OtherFile= '.pdf,.doc,.docx,.ptx,.pptx'
-}
-
 export class ClassFile {
   // eslint-disable-next-line no-useless-constructor
   constructor (

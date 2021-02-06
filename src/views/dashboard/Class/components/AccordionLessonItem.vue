@@ -345,6 +345,7 @@
           .catch(error => {
             console.log('toggle failed', error)
           })
+        this.lessonOpened()
       },
       removeLesson (): void {
         this.dialogConfirmDeleteLesson = true
@@ -377,7 +378,6 @@
       },
       submitUploadFile (): void {
         let fileExtension = ''
-        console.log(this.uploadFileFile.type)
         switch (this.uploadFileFile.type) {
           case 'image/png':
             fileExtension = '.png'
