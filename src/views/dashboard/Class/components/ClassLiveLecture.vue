@@ -17,19 +17,17 @@
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <v-tabs-items>
-        <live-lecture-item
-          v-for="item in lectures"
-          :key="item.classId"
-          :class-id="item.classId"
-          :title="item.title"
-          :description="item.description"
-          :date="item.date"
-          :time-start="item.timeStart"
-          :time-end="item.timeEnd"
-          :link="item.link"
-        />
-      </v-tabs-items>
+      <live-lecture-item
+        v-for="item in lectures"
+        :key="item.classId"
+        :class-id="item.classId"
+        :title="item.title"
+        :description="item.description"
+        :date="item.date"
+        :time-start="item.timeStart"
+        :time-end="item.timeEnd"
+        :link="item.link"
+      />
     </v-card-text>
   </v-card>
 </template>
