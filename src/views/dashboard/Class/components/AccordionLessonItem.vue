@@ -39,17 +39,22 @@
           <p>{{ lessonItem.shortDescription }}</p>
         </div>
         <div class="mt-6">
-          <file
-            v-for="file in files"
-            :key="file.id"
-            :has-edit-access="hasEditAccess"
-            :file-id="file.id"
-            :name="file.name"
-            :type="file.type"
-            :link="file.link"
-            class="mt-2 px-2"
-            @on-remove="onRemoveFile"
-          />
+          <transition-group
+            name="list"
+            tag="p"
+          >
+            <file
+              v-for="file in files"
+              :key="file.id"
+              :has-edit-access="hasEditAccess"
+              :file-id="file.id"
+              :name="file.name"
+              :type="file.type"
+              :link="file.link"
+              class="mt-2 px-2"
+              @on-remove="onRemoveFile"
+            />
+          </transition-group>
         </div>
         <v-row
           v-if="hasEditAccess"
@@ -509,5 +514,16 @@
 <style scoped>
   .lesson-controls {
     height: 60px;
+  }
+  .list-item {
+  display: inline-block;
+  margin-right: 10px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(30px);
   }
 </style>
