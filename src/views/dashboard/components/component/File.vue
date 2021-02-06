@@ -13,33 +13,60 @@
       {{ name }}
     </span>
     <v-spacer />
-    <v-btn
-      icon
-      small
-    >
-      <v-icon class="blue--text">
-        mdi-download
-      </v-icon>
-    </v-btn>
-    <v-btn
-      v-if="hasEditAccess"
-      icon
-      small
-      @click="remove"
-    >
-      <v-icon>
-        mdi-delete
-      </v-icon>
-    </v-btn>
-    <v-btn
-      v-if="hasEditAccess"
-      icon
-      small
-    >
-      <v-icon>
-        mdi-arrow-up-down
-      </v-icon>
-    </v-btn>
+    <v-tooltip top>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          icon
+          small
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon class="blue--text">
+            mdi-download
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>
+        Download
+      </span>
+    </v-tooltip>
+    <v-tooltip top>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          v-if="hasEditAccess"
+          icon
+          small
+          v-bind="attrs"
+          v-on="on"
+          @click="remove"
+        >
+          <v-icon>
+            mdi-delete
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>
+        Remove
+      </span>
+    </v-tooltip>
+    <v-tooltip top>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          v-if="hasEditAccess"
+          icon
+          small
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-arrow-up-down
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>
+        Move
+      </span>
+    </v-tooltip>
   </div>
 </template>
 
