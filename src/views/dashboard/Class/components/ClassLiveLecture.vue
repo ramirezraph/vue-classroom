@@ -2,7 +2,7 @@
   <v-card
     flat
     outlined
-    class="mt-4"
+    class="mt-0"
   >
     <v-card-title>
       <v-btn
