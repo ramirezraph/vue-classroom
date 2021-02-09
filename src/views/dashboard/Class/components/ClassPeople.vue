@@ -1,15 +1,13 @@
 <template>
   <v-card
-    flat
-    color="white"
-    class="mt-0 pa-3"
+    class="mt-0 pa-8"
   >
     <v-card-title>
       <div>
         <v-btn
           color="blue"
           rounded
-          class="mt-5 ml-5 mb-4"
+          class="mt-1 ml-5 mb-4"
         >
           <v-icon left>
             mdi-account-plus-outline
@@ -32,44 +30,61 @@
         :teacher-name="item.teacherName"
         :actions="item.actions"
       />
-      <div>
-        <span class="display-2 blue--text ml-3 mt-2 ">
-          Classmates
-        </span>
-        <v-checkbox :input-value="active" />
-        <v-menu offset-y>
-          <template #activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              v-bind="attrs"
-              outlined
-              small
-              v-on="on"
-            >
-              Dropdown
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(item, index) in items"
-              :key="index"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+      <span class="display-2 blue--text ml-3">
+        Classmates
+      </span>
+      <v-list>
+        <v-list-item>
+          <v-checkbox
+            class="ml-3"
+          />
+          <v-menu offset-y>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                tile
+                v-bind="attrs"
+                outlined
+                small
+                text-none
+                v-on="on"
+              >
+                Actions<v-icon right>
+                  mdi-chevron-down
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="(item, index) in items"
+                :key="index"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-btn icon>
+            <v-icon>mdi-order-alphabetical-ascending</v-icon>
+          </v-btn>
+          <v-text-field
+            solo
+            dense
+            single-line
+            placeholder="Search"
+            append-icon="mdi-magnify"
+            style="max-width: 250px;"
+            class="mt-5 ml-auto"
+          />
+        </v-list-item>
         <v-divider />
-        <people-student-item
-          v-for="item in students"
-          :key="item.teacherId"
-          :student-id="item.studentId"
-          :student-avatar="item.studentAvatar"
-          :student-name="item.studentName"
-          :actions="item.actions"
-        />
-      </div>
-      <v-list />
+      </v-list>
+      <people-student-item
+        v-for="item in students"
+        :key="item.teacherId"
+        :student-id="item.studentId"
+        :student-avatar="item.studentAvatar"
+        :student-name="item.studentName"
+        :actions="item.actions"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -87,24 +102,18 @@
     data () {
       return {
         teachers: [
-          { teacherId: '', teacherAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', teacherName: 'Lorem ipsum dolor antem', actions: '' },
-          { teacherId: '', teacherAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', teacherName: 'Lorem ipsum dolor antem', actions: '' },
+          { teacherId: '1', teacherAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', teacherName: 'Lorem ipsum dolor antem', actions: '' },
+          { teacherId: '2', teacherAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', teacherName: 'Lorem ipsum dolor antem', actions: '' },
         ],
         students: [
           { studentId: '1', studentAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', studentName: 'Lorem ipsum dolor antem', actions: '' },
           { studentId: '2', studentAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', studentName: 'Lorem ipsum dolor antem', actions: '' },
         ],
         items: [
-          { title: 'Click Me' },
-          { title: 'Click Me' },
-          { title: 'Click Me' },
-          { title: 'Click Me 2' },
+          { title: 'Send an Email' },
+          { title: 'Remove' },
         ],
       }
     },
   })
 </script>
-
-<style scoped>
-
-</style>
