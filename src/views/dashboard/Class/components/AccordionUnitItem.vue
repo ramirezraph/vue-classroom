@@ -295,8 +295,9 @@
                 }
               }
             })
+            const classId = this.unitDbRef.path.split('/')[1]
             this.lessons = fetchLessons
-            this.$store.dispatch('classes/fetchLessons', { unit: this.unitItem, lessons: this.lessons })
+            this.$store.dispatch('classes/fetchLessons', { classId: classId, unitId: this.unitItem.id, lessons: this.lessons })
           })
       },
       unitOpened (): void {
@@ -329,7 +330,7 @@
         // this.dialogConfirmAddUnit = false
       },
       fileClicked (file: ClassFile): void {
-        this.$emit('file-clicked', file)
+        this.$emit('file-clicked', file, this.unitItem)
       },
     },
   })

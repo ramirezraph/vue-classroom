@@ -311,6 +311,8 @@
       :v-model="dialogViewContent"
       :class-data="selectedClass"
       :active-file="activeFile"
+      :active-unit="activeUnit"
+      :has-edit-access="hasEditAccess"
       @close="dialogViewContent = false"
     />
   </v-container>

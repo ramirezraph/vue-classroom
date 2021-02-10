@@ -34,14 +34,14 @@
           <span class="subtitle-2">Class Files</span>
           <v-expansion-panels
             class="mt-3"
-            multiple
           >
             <v-expansion-panel
               v-for="unit in units"
               :key="unit.id"
             >
               <v-expansion-panel-header
-                class="subtitle-1"
+                class="text-h4 font-weight-medium"
+                @click="unitOpened(unit.id)"
               >
                 Unit: {{ unit.title }}
               </v-expansion-panel-header>
@@ -74,7 +74,7 @@
                           <template
                             #title
                           >
-                            <span @click="fileClicked(file)">
+                            <span @click="fileClicked(file, unit)">
                               {{ file.name }}
                             </span>
                           </template>
@@ -94,12 +94,12 @@
           <div id="content-header">
             <div id="content-unit-info">
               <h1
-                class="display-2 blue--text"
+                class="display-3 blue--text mt-3"
               >
-                Introduction / Orientation
+                Unit: {{ computedUnitActive.title }}
               </h1>
               <div class="mt-3">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo autem animi quam numquam, laudantium velit consectetur sint quae aliquam temporibus odit, recusandae necessitatibus commodi corporis, dolores nemo fugiat iste porro iusto nobis? Voluptate pariatur nihil cum dolor necessitatibus magni facere.
+                {{ computedUnitActive.shortDescription }}
               </div>
             </div>
             <div
@@ -134,12 +134,13 @@
             </div>
             <div class="mt-6">
               <v-card
+                v-if="computedFileActive.type ==='Video'"
                 min-width="500"
                 class="player"
               >
                 <video-player
                   ref="videoPlayer"
-                  class="video-player-box"
+                  class="video-player-box vjs-big-play-centered"
                   :options="playerOptions"
                   :playsinline="true"
                   custom-event-name="customstatechangedeventname"
@@ -227,8 +228,8 @@
   import 'video.js/dist/video-js.css'
   import { Class } from '@/model/Class'
   import { Unit } from '@/model/Unit'
-  import { resourcesCollection } from '@/fb'
-  import { ClassFile } from '@/model/Lesson'
+  import { classesCollection, resourcesCollection } from '@/fb'
+  import { ClassFile, Lesson } from '@/model/Lesson'
 
   export default Vue.extend({
     components: {
@@ -249,10 +250,21 @@
         type: Object as PropType<ClassFile>,
         required: true,
       },
+      activeUnit: {
+        type: Object as PropType<Unit>,
+        required: true,
+      },
+      hasEditAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
         componentKey: 0,
+        activeUnitData: {} as Unit,
+        activeFileData: {} as ClassFile,
 
         items: [
           {
@@ -285,16 +297,7 @@
             subtitle: 'We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           },
         ],
-        playerOptions: {
-          // videojs options
-          language: 'en',
-          playbackRates: [0.7, 1.0, 1.5, 2.0],
-          fluid: true,
-          sources: [{
-            type: 'video/mp4',
-            src: this.activeFile.link,
-          }],
-        },
+        playerOptions: {},
       }
     },
     computed: {
@@ -312,8 +315,29 @@
       classItem (): Class {
         return this.$store.getters['classes/getClass'](this.classData.id)
       },
-      computedFileActive (): ClassFile {
-        return this.activeFile
+      computedFileActive: {
+        get (): ClassFile {
+          if (Object.keys(this.activeFileData).length === 0) {
+            return this.activeFile
+          } else {
+            return this.activeFileData
+          }
+        },
+        set (newValue: ClassFile):void {
+          this.activeFileData = newValue
+        },
+      },
+      computedUnitActive: {
+        get (): Unit {
+          if (Object.keys(this.activeUnitData).length === 0) {
+            return this.activeUnit
+          } else {
+            return this.activeUnitData
+          }
+        },
+        set (newValue: Unit):void {
+          this.activeUnitData = newValue
+        },
       },
     },
     watch: {
@@ -323,26 +347,55 @@
         this.componentKey += 1
       },
       'computedFileActive' () {
-        try {
-          this.playerOptions.sources = [{
-            type: 'video/mp4',
-            src: this.activeFile.link,
-          }]
-        } catch (error) {
-          console.log(error)
+        console.log(this.computedFileActive.type)
+        if (this.computedFileActive.type === 'Video') {
+          // videojs options
+          this.playerOptions = {
+            language: 'en',
+            playbackRates: [0.7, 1.0, 1.5, 2.0],
+            fluid: true,
+            sources: [{
+              type: 'video/mp4',
+              src: this.computedFileActive.link,
+            }],
+          }
         }
       },
     },
-    mounted () {
-      console.log(this.classData)
-    },
     methods: {
       close (): void {
-        this.player.pause()
+        // this.player.pause()
+        this.activeUnitData = {} as Unit
+        this.activeFileData = {} as ClassFile
         this.$emit('close')
       },
-      fileClicked (file: ClassFile): void {
-        this.computedFileActive = file
+      unitOpened (unitId: string): void {
+        const foundUnit = this.units.find(u => u.id === unitId)
+        if ((foundUnit?.lessons?.length || 0) <= 0) { // read only if empty
+          let fetchLessons: Lesson[] = []
+          classesCollection.doc(this.classItem.id).collection('units').doc(unitId).collection('lessons').orderBy('lessonNumber')
+            .onSnapshot(snapshot => {
+              fetchLessons = []
+              snapshot.forEach(doc => {
+                const lesson = new Lesson(
+                  doc.id,
+                  doc.data().lessonNumber,
+                  doc.data().title,
+                  doc.data().shortDescription,
+                  doc.data().isLive,
+                )
+                if (this.hasEditAccess) {
+                  fetchLessons.push(lesson)
+                } else {
+                  if (lesson.isLive) {
+                    fetchLessons.push(lesson)
+                  }
+                }
+              })
+              this.$store.dispatch('classes/fetchLessons', { classId: this.classItem.id, unitId: unitId, lessons: fetchLessons })
+            })
+          console.log('read lessons')
+        }
       },
       lessonOpened (unitId: string, lessonId: string): void {
         const foundUnit = this.units.find(u => u.id === unitId)
@@ -364,8 +417,12 @@
               const classId = this.classItem.id
               this.$store.dispatch('classes/fetchFiles', { classId: classId, unitId: unitId, lessonId: lessonId, files: fetchFiles })
             })
-          console.log('read')
+          console.log('read files')
         }
+      },
+      fileClicked (file: ClassFile, unit: Unit): void {
+        this.computedUnitActive = unit
+        this.computedFileActive = file
       },
     },
   })

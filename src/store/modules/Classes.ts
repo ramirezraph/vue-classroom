@@ -25,9 +25,9 @@ export default {
       const classIndex = state.classes.findIndex((c: Class) => c.id === payload.class.id)
       state.classes[classIndex].units = payload.units
     },
-    FETCH_LESSONS (state, payload: { unit: Unit, lessons: Lesson[] }): void {
-      const classIndex = state.classes.findIndex((c: Class) => c.units?.includes(payload.unit))
-      const unitIndex = state.classes[classIndex].units.findIndex((u: Unit) => u.id === payload.unit.id)
+    FETCH_LESSONS (state, payload: { classId: string, unitId: string, lessons: Lesson[] }): void {
+      const classIndex = state.classes.findIndex(c => c.id === payload.classId)
+      const unitIndex = state.classes[classIndex].units.findIndex((u: Unit) => u.id === payload.unitId)
       state.classes[classIndex].units[unitIndex].lessons = payload.lessons
     },
     FETCH_FILES (state, payload: { classId: string, unitId: string, lessonId: string, files: ClassFile[] }): void {
@@ -69,7 +69,7 @@ export default {
         context.commit('FETCH_UNITS', payload)
       }
     },
-    fetchLessons (context, payload: { unit: Unit, lessons: Lesson[] }): void {
+    fetchLessons (context, payload: { classId: string, unitId: string, lessons: Lesson[] }): void {
       if (payload) {
         context.commit('FETCH_LESSONS', payload)
       }

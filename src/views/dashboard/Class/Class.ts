@@ -85,6 +85,7 @@ export default Vue.extend({
 
       dialogViewContent: false,
       activeFile: {} as ClassFile,
+      activeUnit: {} as Unit,
     }
   },
   computed: {
@@ -277,7 +278,8 @@ export default Vue.extend({
       }
       this.dialogConfirmDeleteUnit = false
     },
-    fileClicked (file: ClassFile): void {
+    fileClicked (file: ClassFile, unit: Unit): void {
+      this.activeUnit = unit
       this.activeFile = file
       this.dialogViewContent = true
     },
