@@ -53,7 +53,15 @@
               :link="file.link"
               class="mt-2 px-2"
               @on-remove="onRemoveFile"
-            />
+            >
+              <template
+                #title
+              >
+                <span @click="fileClicked(file)">
+                  {{ file.name }}
+                </span>
+              </template>
+            </file>
           </transition-group>
         </div>
         <v-row
@@ -279,6 +287,11 @@
       :text="error_dialogMessage"
       @close="dialogError = false"
     />
+
+    <view-content
+      :v-model="dialogViewContent"
+      @close="dialogViewContent = false"
+    />
   </v-expansion-panel>
 </template>
 
@@ -288,12 +301,14 @@
   import firebase from 'firebase'
   import { resourcesCollection, storageRef } from '@/fb'
   import File from '@/views/dashboard/components/component/File.vue'
+  import ViewContent from './ViewContent.vue'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
 
   export default Vue.extend({
     components: {
       File,
+      ViewContent,
     },
     props: {
       hasEditAccess: {
@@ -331,6 +346,8 @@
         dialogError: false,
         error_dialogTitle: '',
         error_dialogMessage: '',
+
+        dialogViewContent: false,
       }
     },
     computed: {
@@ -499,6 +516,10 @@
             })
         }
         this.dialogConfirmDeleteFile = false
+      },
+      fileClicked (file: ClassFile): void {
+        this.dialogViewContent = true
+        console.log('File clicked! ' + file.id)
       },
     },
   })
