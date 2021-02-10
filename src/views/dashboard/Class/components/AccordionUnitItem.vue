@@ -40,6 +40,7 @@
             :has-edit-access="hasEditAccess"
             :lesson="lesson"
             :unit-db-ref="unitDbRef"
+            @file-clicked="fileClicked"
           />
         </v-expansion-panels>
       </v-card>
@@ -174,7 +175,7 @@
 </template>
 
 <script lang="ts">
-  import { Lesson } from '@/model/Lesson'
+  import { ClassFile, Lesson } from '@/model/Lesson'
   import { Unit } from '@/model/Unit'
   import Vue, { PropType } from 'vue'
   import AccordionLessonItem from './AccordionLessonItem.vue'
@@ -326,6 +327,9 @@
           this.toggleAddNewLesson()
         }
         // this.dialogConfirmAddUnit = false
+      },
+      fileClicked (file: ClassFile): void {
+        this.$emit('file-clicked', file)
       },
     },
   })

@@ -287,11 +287,6 @@
       :text="error_dialogMessage"
       @close="dialogError = false"
     />
-
-    <view-content
-      :v-model="dialogViewContent"
-      @close="dialogViewContent = false"
-    />
   </v-expansion-panel>
 </template>
 
@@ -301,14 +296,12 @@
   import firebase from 'firebase'
   import { resourcesCollection, storageRef } from '@/fb'
   import File from '@/views/dashboard/components/component/File.vue'
-  import ViewContent from './ViewContent.vue'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference
 
   export default Vue.extend({
     components: {
       File,
-      ViewContent,
     },
     props: {
       hasEditAccess: {
@@ -346,8 +339,6 @@
         dialogError: false,
         error_dialogTitle: '',
         error_dialogMessage: '',
-
-        dialogViewContent: false,
       }
     },
     computed: {
@@ -484,6 +475,11 @@
               fetchFiles.push(newFile)
             })
             this.files = fetchFiles
+            const path = this.lessonDbRef.path.split('/')
+            const classId = path[1]
+            const unitId = path[3]
+            const lessonId = path[5]
+            this.$store.dispatch('classes/fetchFiles', { classId: classId, unitId: unitId, lessonId: lessonId, files: this.files })
           })
       },
       onRemoveFile (fileId: string, fileName: string): void {
@@ -518,8 +514,7 @@
         this.dialogConfirmDeleteFile = false
       },
       fileClicked (file: ClassFile): void {
-        this.dialogViewContent = true
-        console.log('File clicked! ' + file.id)
+        this.$emit('file-clicked', file)
       },
     },
   })

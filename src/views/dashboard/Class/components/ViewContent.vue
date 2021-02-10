@@ -1,5 +1,6 @@
 <template>
   <v-dialog
+    :key="componentKey"
     v-model="dialog"
     fullscreen
     transition="dialog-bottom-transition"
@@ -33,33 +34,55 @@
           <span class="subtitle-2">Class Files</span>
           <v-expansion-panels
             class="mt-3"
-            focusable
             multiple
           >
             <v-expansion-panel
-              v-for="(item,i) in 5"
-              :key="i"
+              v-for="unit in units"
+              :key="unit.id"
             >
-              <v-expansion-panel-header class="subtitle-1">
-                Introduction / Orientation
+              <v-expansion-panel-header
+                class="subtitle-1"
+              >
+                Unit: {{ unit.title }}
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                <div class="py-4">
-                  <file
-                    :has-edit-access="false"
-                    file-id="asdfasf"
-                    name="Introduction.mp4"
-                    type="Video"
-                    link="asdfasdfafs"
-                  />
-                  <file
-                    :has-edit-access="false"
-                    file-id="asdfasf"
-                    name="Introduction.pdf"
-                    type="PDF"
-                    link="asdfasdfafs"
-                  />
-                </div>
+                <v-expansion-panels
+                  class="ma-0 pa-0"
+                  multiple
+                >
+                  <v-expansion-panel
+                    v-for="lesson in unit.lessons"
+                    :key="lesson.id"
+                  >
+                    <v-expansion-panel-header
+                      class="subtitle-1"
+                      @click="lessonOpened(unit.id, lesson.id)"
+                    >
+                      Lesson: {{ lesson.title }}
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <div class="py-4">
+                        <file
+                          v-for="file in lesson.files"
+                          :key="file.id"
+                          :has-edit-access="false"
+                          file-id="asdfasf"
+                          :name="file.name"
+                          :type="file.type"
+                          :link="file.link"
+                        >
+                          <template
+                            #title
+                          >
+                            <span @click="fileClicked(file)">
+                              {{ file.name }}
+                            </span>
+                          </template>
+                        </file>
+                      </div>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -91,7 +114,7 @@
                   <h1
                     class="display-1"
                   >
-                    Introduction.mp4
+                    {{ computedFileActive.name }}
                   </h1>
                 </v-col>
                 <v-spacer />
@@ -108,6 +131,20 @@
                   </v-btn>
                 </v-col>
               </v-row>
+            </div>
+            <div class="mt-6">
+              <v-card
+                min-width="500"
+                class="player"
+              >
+                <video-player
+                  ref="videoPlayer"
+                  class="video-player-box"
+                  :options="playerOptions"
+                  :playsinline="true"
+                  custom-event-name="customstatechangedeventname"
+                />
+              </v-card>
             </div>
           </div>
         </v-col>
@@ -182,11 +219,21 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import Vue, { PropType } from 'vue'
   import File from '@/views/dashboard/components/component/File.vue'
+  import { videoPlayer } from 'vue-video-player'
+
+  // require styles
+  import 'video.js/dist/video-js.css'
+  import { Class } from '@/model/Class'
+  import { Unit } from '@/model/Unit'
+  import { resourcesCollection } from '@/fb'
+  import { ClassFile } from '@/model/Lesson'
+
   export default Vue.extend({
     components: {
       File,
+      videoPlayer,
     },
     props: {
       vModel: {
@@ -194,9 +241,19 @@
         required: false,
         default: false,
       },
+      classData: {
+        type: Object as PropType<Class>,
+        required: true,
+      },
+      activeFile: {
+        type: Object as PropType<ClassFile>,
+        required: true,
+      },
     },
     data () {
       return {
+        componentKey: 0,
+
         items: [
           {
             avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -228,16 +285,87 @@
             subtitle: 'We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
           },
         ],
+        playerOptions: {
+          // videojs options
+          language: 'en',
+          playbackRates: [0.7, 1.0, 1.5, 2.0],
+          fluid: true,
+          sources: [{
+            type: 'video/mp4',
+            src: this.activeFile.link,
+          }],
+        },
       }
     },
     computed: {
       dialog (): boolean {
         return this.vModel
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      player (): any {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (this.$refs.videoPlayer as any).player
+      },
+      units (): Unit[] {
+        return this.classItem.units || []
+      },
+      classItem (): Class {
+        return this.$store.getters['classes/getClass'](this.classData.id)
+      },
+      computedFileActive (): ClassFile {
+        return this.activeFile
+      },
+    },
+    watch: {
+      '$route' () {
+        // force rerender the component to reset the @click.once event.
+        // everytime the router change.
+        this.componentKey += 1
+      },
+      'computedFileActive' () {
+        try {
+          this.playerOptions.sources = [{
+            type: 'video/mp4',
+            src: this.activeFile.link,
+          }]
+        } catch (error) {
+          console.log(error)
+        }
+      },
+    },
+    mounted () {
+      console.log(this.classData)
     },
     methods: {
       close (): void {
+        this.player.pause()
         this.$emit('close')
+      },
+      fileClicked (file: ClassFile): void {
+        this.computedFileActive = file
+      },
+      lessonOpened (unitId: string, lessonId: string): void {
+        const foundUnit = this.units.find(u => u.id === unitId)
+        const foundLesson = foundUnit?.lessons?.find(l => l.id === lessonId)
+        if ((foundLesson?.files?.length || 0) <= 0) { // read only if empty
+          resourcesCollection.doc(lessonId).collection('files')
+            .onSnapshot(snapshot => {
+              const fetchFiles: ClassFile[] = []
+              snapshot.forEach(doc => {
+                const newFile = new ClassFile(
+                  doc.id,
+                  doc.data().type,
+                  doc.data().name,
+                  doc.data().link,
+                )
+                fetchFiles.push(newFile)
+              })
+              // this.files = fetchFiles
+              const classId = this.classItem.id
+              this.$store.dispatch('classes/fetchFiles', { classId: classId, unitId: unitId, lessonId: lessonId, files: fetchFiles })
+            })
+          console.log('read')
+        }
       },
     },
   })
