@@ -155,6 +155,7 @@ export default Vue.extend({
               fetchUnit.push(unit)
             })
             this.units = fetchUnit
+            this.$store.dispatch('classes/fetchUnits', { class: this.selectedClass, units: this.units })
           })
       } finally {
         this.unitDataLoading = false

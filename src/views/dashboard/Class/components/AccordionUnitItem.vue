@@ -295,6 +295,7 @@
               }
             })
             this.lessons = fetchLessons
+            this.$store.dispatch('classes/fetchLessons', { unit: this.unitItem, lessons: this.lessons })
           })
       },
       unitOpened (): void {
