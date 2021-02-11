@@ -20,6 +20,7 @@
           small
           v-bind="attrs"
           v-on="on"
+          @click="download"
         >
           <v-icon class="blue--text">
             mdi-download
@@ -72,6 +73,8 @@
 
 <script lang="ts">
   import Vue from 'vue'
+  import axios from 'axios'
+
   export default Vue.extend({
     name: 'File',
     props: {
@@ -116,6 +119,27 @@
       },
     },
     methods: {
+      forceFileDownload (response) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', this.name) // or any other extension
+        document.body.appendChild(link)
+        link.click()
+      },
+      download (): void {
+        axios({
+          method: 'get',
+          url: this.link,
+          responseType: 'arraybuffer',
+        })
+          .then(response => {
+            this.forceFileDownload(response)
+          })
+          .catch(() => console.log('error occured'))
+
+        // window.open(this.link, '_blank')
+      },
       remove (): void {
         this.$emit('on-remove', this.fileId, this.name)
       },
