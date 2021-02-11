@@ -6,6 +6,7 @@
     transition="dialog-bottom-transition"
     scrollable
     height="auto"
+    persistent
   >
     <v-card
       flat
@@ -163,6 +164,13 @@
                   max-width="100%"
                   position="center center"
                   :placeholder="computedFileActive.name"
+                  @click="imgIndex = 0"
+                />
+
+                <cool-light-box
+                  :items="[computedFileActive.link]"
+                  :index="imgIndex"
+                  @close="imgIndex = null"
                 />
               </v-card>
               <v-card
@@ -275,6 +283,8 @@
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import pdf from 'vue-pdf'
+  import CoolLightBox from 'vue-cool-lightbox'
+  import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 
   // require styles
   import 'video.js/dist/video-js.css'
@@ -290,6 +300,7 @@
       videoPlayer,
       VueDocPreview,
       pdf,
+      CoolLightBox,
     },
     props: {
       vModel: {
@@ -325,6 +336,9 @@
         docValue: '',
         docType: '',
         showDocPreview: false,
+
+        imgIndex: null,
+        imgItem: [],
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         pdfValue: null as any,
@@ -412,7 +426,6 @@
         this.componentKey += 1
       },
       'computedFileActive' () {
-        console.log(this.computedFileActive.type)
         if (this.computedFileActive.type === 'Video') {
           // videojs options
           this.playerOptions = {
