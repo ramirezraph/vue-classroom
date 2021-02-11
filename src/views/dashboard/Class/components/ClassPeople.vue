@@ -66,10 +66,10 @@
             <v-icon>mdi-order-alphabetical-ascending</v-icon>
           </v-btn>
           <v-text-field
+            placeholder="Search"
             solo
             dense
             single-line
-            placeholder="Search"
             append-icon="mdi-magnify"
             style="max-width: 250px;"
             class="mt-5 ml-auto"
@@ -79,7 +79,7 @@
       </v-list>
       <people-student-item
         v-for="item in students"
-        :key="item.teacherId"
+        :key="item.studentId"
         :student-id="item.studentId"
         :student-avatar="item.studentAvatar"
         :student-name="item.studentName"
@@ -91,8 +91,8 @@
 
 <script lang="ts">
   import Vue from 'vue'
-  import PeopleTeacherItem from './PeopleTeacherItem.vue'
   import PeopleStudentItem from './PeopleStudentItem.vue'
+  import PeopleTeacherItem from './PeopleTeacherItem.vue'
   export default Vue.extend({
     name: 'ClassPeople',
     components: {
@@ -105,13 +105,13 @@
           { teacherId: '1', teacherAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', teacherName: 'Lorem ipsum dolor antem', actions: '' },
           { teacherId: '2', teacherAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', teacherName: 'Lorem ipsum dolor antem', actions: '' },
         ],
-        students: [
-          { studentId: '1', studentAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', studentName: 'Lorem ipsum dolor antem', actions: '' },
-          { studentId: '2', studentAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', studentName: 'Lorem ipsum dolor antem', actions: '' },
-        ],
         items: [
           { title: 'Send an Email' },
           { title: 'Remove' },
+        ],
+        students: [
+          { studentId: '3', studentAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', studentName: 'Lorem ipsum dolor antem', actions: '' },
+          { studentId: '4', studentAvatar: 'https://cdn.vuetifyjs.com/images/john.jpg', studentName: 'ops', actions: '' },
         ],
       }
     },
