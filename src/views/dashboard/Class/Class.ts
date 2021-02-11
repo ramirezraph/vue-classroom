@@ -15,6 +15,8 @@ import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
 import firebase from 'firebase'
 import { User, UserType } from '@/model/User'
+import ViewContent from './components/ViewContent.vue'
+import { ClassFile } from '@/model/Lesson'
 import DocumentReference = firebase.firestore.DocumentReference;
 
 extend('required', {
@@ -45,6 +47,7 @@ export default Vue.extend({
     AccordionUnitItem,
     ValidationProvider,
     ValidationObserver,
+    ViewContent,
   },
   props: {
     id: { // from router params
@@ -79,6 +82,10 @@ export default Vue.extend({
       delete_unitTitle: '',
 
       dbRef: classesCollection.doc(this.id),
+
+      dialogViewContent: false,
+      activeFile: {} as ClassFile,
+      activeUnit: {} as Unit,
     }
   },
   computed: {
@@ -155,6 +162,7 @@ export default Vue.extend({
               fetchUnit.push(unit)
             })
             this.units = fetchUnit
+            this.$store.dispatch('classes/fetchUnits', { class: this.selectedClass, units: this.units })
           })
       } finally {
         this.unitDataLoading = false
@@ -269,6 +277,11 @@ export default Vue.extend({
         this.delete_unitTitle = ''
       }
       this.dialogConfirmDeleteUnit = false
+    },
+    fileClicked (file: ClassFile, unit: Unit): void {
+      this.activeUnit = unit
+      this.activeFile = file
+      this.dialogViewContent = true
     },
   },
 })

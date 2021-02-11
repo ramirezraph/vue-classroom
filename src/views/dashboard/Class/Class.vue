@@ -57,6 +57,7 @@
                       :class-db-ref="computed_dbRef"
                       :unit="unitItem"
                       @remove-unit="removeUnit"
+                      @file-clicked="fileClicked"
                     />
                   </v-expansion-panels>
                 </div>
@@ -305,6 +306,14 @@
       :model="dialogConfirmDeleteUnit"
       :title="`Unit ${delete_unitNumber}: ${delete_unitTitle}`"
       @goto-response="confirmRemoveUnit"
+    />
+    <view-content
+      :v-model="dialogViewContent"
+      :class-data="selectedClass"
+      :active-file="activeFile"
+      :active-unit="activeUnit"
+      :has-edit-access="hasEditAccess"
+      @close="dialogViewContent = false"
     />
   </v-container>
 </template>

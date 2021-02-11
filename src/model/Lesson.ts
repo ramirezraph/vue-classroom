@@ -11,6 +11,8 @@ export class ClassFile {
 }
 
 export class Lesson {
+  public files?: ClassFile[] = []
+
   // eslint-disable-next-line no-useless-constructor
   constructor (
     public id: string,

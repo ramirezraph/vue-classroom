@@ -53,7 +53,15 @@
               :link="file.link"
               class="mt-2 px-2"
               @on-remove="onRemoveFile"
-            />
+            >
+              <template
+                #title
+              >
+                <span @click="fileClicked(file)">
+                  {{ file.name }}
+                </span>
+              </template>
+            </file>
           </transition-group>
         </div>
         <v-row
@@ -467,6 +475,11 @@
               fetchFiles.push(newFile)
             })
             this.files = fetchFiles
+            const path = this.lessonDbRef.path.split('/')
+            const classId = path[1]
+            const unitId = path[3]
+            const lessonId = path[5]
+            this.$store.dispatch('classes/fetchFiles', { classId: classId, unitId: unitId, lessonId: lessonId, files: this.files })
           })
       },
       onRemoveFile (fileId: string, fileName: string): void {
@@ -499,6 +512,9 @@
             })
         }
         this.dialogConfirmDeleteFile = false
+      },
+      fileClicked (file: ClassFile): void {
+        this.$emit('file-clicked', file)
       },
     },
   })

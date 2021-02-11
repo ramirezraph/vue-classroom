@@ -10,7 +10,7 @@
       >
         {{ fileIcon }}
       </v-icon>
-      {{ name }}
+      <slot name="title">{{ name }}</slot>
     </span>
     <v-spacer />
     <v-tooltip top>
