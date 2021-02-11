@@ -5,6 +5,7 @@
     fullscreen
     transition="dialog-bottom-transition"
     scrollable
+    height="auto"
   >
     <v-card
       flat
@@ -164,6 +165,35 @@
                   :placeholder="computedFileActive.name"
                 />
               </v-card>
+              <v-card
+                v-if="showDocPreview"
+                max-width="100%"
+                min-width="500"
+                max-height="700"
+                align="center"
+                class="scroll"
+              >
+                <vue-doc-preview
+                  :url="docValue"
+                  :type="docType"
+                  max-height="700"
+                />
+              </v-card>
+              <v-card
+                v-if="showPdfPreview"
+                max-width="100%"
+                min-width="500"
+                max-height="700"
+                align="center"
+                class="scroll"
+              >
+                <pdf
+                  v-for="i in pdfValueNumPage"
+                  :key="i"
+                  :src="pdfValue"
+                  :page="i"
+                />
+              </v-card>
             </div>
           </div>
         </v-col>
@@ -241,6 +271,10 @@
   import Vue, { PropType } from 'vue'
   import File from '@/views/dashboard/components/component/File.vue'
   import { videoPlayer } from 'vue-video-player'
+  import VueDocPreview from 'vue-doc-preview'
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  import pdf from 'vue-pdf'
 
   // require styles
   import 'video.js/dist/video-js.css'
@@ -254,6 +288,8 @@
     components: {
       File,
       videoPlayer,
+      VueDocPreview,
+      pdf,
     },
     props: {
       vModel: {
@@ -285,6 +321,15 @@
         activeUnitData: {} as Unit,
         activeFileData: {} as ClassFile,
         downloadBtnLoading: false,
+
+        docValue: '',
+        docType: '',
+        showDocPreview: false,
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        pdfValue: null as any,
+        pdfValueNumPage: 0,
+        showPdfPreview: false,
 
         items: [
           {
@@ -379,6 +424,46 @@
               src: this.computedFileActive.link,
             }],
           }
+          this.showPdfPreview = false
+          this.showDocPreview = false
+        } else if (this.computedFileActive.type === 'Other') {
+          const docType = this.computedFileActive.name.split('.').reverse()[0]
+          if (
+            docType === 'docx' ||
+            docType === 'pptx' ||
+            docType === 'xlsx'
+          ) {
+            this.showPdfPreview = false
+            axios({
+              method: 'get',
+              url: this.computedFileActive.link,
+              responseType: 'arraybuffer',
+            })
+              .then(response => {
+                this.docValue = window.URL.createObjectURL(new Blob([response.data]))
+                this.docType = 'office'
+                this.showDocPreview = true
+              })
+              .catch(() => console.log('error occured'))
+              .finally(() => {
+                this.downloadBtnLoading = false
+              })
+          } else {
+            if (docType === 'pdf') {
+              this.showDocPreview = false
+              const loadingTask = pdf.createLoadingTask(this.computedFileActive.link)
+              if (loadingTask) {
+                this.pdfValue = loadingTask
+                this.pdfValue.promise.then(p => {
+                  this.pdfValueNumPage = p.numPages
+                })
+                this.showPdfPreview = true
+              }
+            }
+          }
+        } else {
+          this.showDocPreview = false
+          this.showPdfPreview = false
         }
       },
     },
@@ -387,6 +472,9 @@
         // this.player.pause()
         this.activeUnitData = {} as Unit
         this.activeFileData = {} as ClassFile
+        this.pdfValue = null
+        this.pdfValueNumPage = 0
+        this.showPdfPreview = false
         this.$emit('close')
       },
       unitOpened (unitId: string): void {
@@ -466,8 +554,6 @@
           .finally(() => {
             this.downloadBtnLoading = false
           })
-
-        // window.open(this.link, '_blank')
       },
     },
   })
@@ -477,5 +563,8 @@
   #viewFileSection {
     width: 100%;
     height: 93.4vh;
+  }
+  .scroll {
+    overflow-y: scroll
   }
 </style>
