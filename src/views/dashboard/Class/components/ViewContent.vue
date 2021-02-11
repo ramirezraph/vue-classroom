@@ -139,6 +139,7 @@
                 v-if="computedFileActive.type ==='Video'"
                 min-width="500"
                 class="player"
+                flat
               >
                 <video-player
                   ref="videoPlayer"
@@ -146,6 +147,21 @@
                   :options="playerOptions"
                   :playsinline="true"
                   custom-event-name="customstatechangedeventname"
+                />
+              </v-card>
+              <v-card
+                v-if="computedFileActive.type ==='Image'"
+                max-width="100%"
+                min-width="500"
+                align="center"
+              >
+                <v-img
+                  contain
+                  :src="computedFileActive.link"
+                  max-height="700"
+                  max-width="100%"
+                  position="center center"
+                  :placeholder="computedFileActive.name"
                 />
               </v-card>
             </div>
