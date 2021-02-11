@@ -1,0 +1,12 @@
+[
+  {
+    "origin": ["http://localhost:8080/"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  },
+  {
+    "origin": ["https://happy-bay-0a4841e00.azurestaticapps.net/"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  },
+]

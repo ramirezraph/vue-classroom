@@ -123,6 +123,8 @@
                     color="blue"
                     class="white--text"
                     height="30"
+                    :loading="downloadBtnLoading"
+                    @click="download"
                   >
                     <v-icon left>
                       mdi-download
@@ -230,6 +232,7 @@
   import { Unit } from '@/model/Unit'
   import { classesCollection, resourcesCollection } from '@/fb'
   import { ClassFile, Lesson } from '@/model/Lesson'
+  import axios from 'axios'
 
   export default Vue.extend({
     components: {
@@ -265,6 +268,7 @@
         componentKey: 0,
         activeUnitData: {} as Unit,
         activeFileData: {} as ClassFile,
+        downloadBtnLoading: false,
 
         items: [
           {
@@ -423,6 +427,31 @@
       fileClicked (file: ClassFile, unit: Unit): void {
         this.computedUnitActive = unit
         this.computedFileActive = file
+      },
+      forceFileDownload (response) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', this.computedFileActive.name) // or any other extension
+        document.body.appendChild(link)
+        link.click()
+      },
+      download (): void {
+        this.downloadBtnLoading = true
+        axios({
+          method: 'get',
+          url: this.computedFileActive.link,
+          responseType: 'arraybuffer',
+        })
+          .then(response => {
+            this.forceFileDownload(response)
+          })
+          .catch(() => console.log('error occured'))
+          .finally(() => {
+            this.downloadBtnLoading = false
+          })
+
+        // window.open(this.link, '_blank')
       },
     },
   })
