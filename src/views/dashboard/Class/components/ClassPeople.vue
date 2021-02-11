@@ -33,58 +33,67 @@
       <span class="display-2 blue--text ml-3">
         Classmates
       </span>
-      <v-list>
-        <v-list-item>
-          <v-checkbox
-            class="ml-3"
+      <v-card
+        flat
+        class="pa-0 ma-0 mt-3 d-flex align-center"
+        max-height="50"
+      >
+        <v-checkbox
+          class="ml-3"
+        />
+        <v-menu offset-y>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              tile
+              v-bind="attrs"
+              outlined
+              small
+              text-none
+              v-on="on"
+            >
+              Actions<v-icon right>
+                mdi-chevron-down
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in items"
+              :key="index"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-btn icon>
+          <v-icon>mdi-order-alphabetical-ascending</v-icon>
+        </v-btn>
+        <v-text-field
+          placeholder="Search"
+          solo
+          dense
+          single-line
+          append-icon="mdi-magnify"
+          style="max-width: 250px;"
+          class="mt-5 ml-auto"
+        />
+      </v-card>
+      <v-card
+        flat
+        class="ma-0 pa-0"
+      >
+        <v-list>
+          <people-student-item
+            v-for="item in students"
+            :key="item.studentId"
+            :student-id="item.studentId"
+            :student-avatar="item.studentAvatar"
+            :student-name="item.studentName"
+            :actions="item.actions"
+            class="ma-0 pa-0"
           />
-          <v-menu offset-y>
-            <template #activator="{ on, attrs }">
-              <v-btn
-                tile
-                v-bind="attrs"
-                outlined
-                small
-                text-none
-                v-on="on"
-              >
-                Actions<v-icon right>
-                  mdi-chevron-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(item, index) in items"
-                :key="index"
-              >
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-btn icon>
-            <v-icon>mdi-order-alphabetical-ascending</v-icon>
-          </v-btn>
-          <v-text-field
-            placeholder="Search"
-            solo
-            dense
-            single-line
-            append-icon="mdi-magnify"
-            style="max-width: 250px;"
-            class="mt-5 ml-auto"
-          />
-        </v-list-item>
-        <v-divider />
-      </v-list>
-      <people-student-item
-        v-for="item in students"
-        :key="item.studentId"
-        :student-id="item.studentId"
-        :student-avatar="item.studentAvatar"
-        :student-name="item.studentName"
-        :actions="item.actions"
-      />
+        </v-list>
+      </v-card>
     </v-card-text>
   </v-card>
 </template>
