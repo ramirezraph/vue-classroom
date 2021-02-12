@@ -5,10 +5,13 @@
       class="ml-3"
     />
     <v-list-item-avatar class="mr-3">
-      <v-img :src="studentAvatar" />
+      <v-img :src="profile" />
     </v-list-item-avatar>
     <v-list-item-content>
-      <v-list-item-title v-html="studentName" />
+      <v-list-item-title>
+        {{ fullName }}
+        {{ type }}
+      </v-list-item-title>
     </v-list-item-content>
     <v-tooltip bottom>
       <template #activator="{ on, attrs }">
@@ -46,6 +49,7 @@
           icon
           text
           v-bind="attrs"
+          class="mr-2"
           v-on="on"
         >
           <v-icon>
@@ -61,29 +65,42 @@
 <script lang="ts">
   import Vue from 'vue'
   export default Vue.extend({
-    name: 'PeopleStudentItem',
+    name: 'PeopleItem',
     props: {
-      studentId: {
+      id: {
         type: String,
         required: true,
         default: '',
       },
-      studentAvatar: {
+      firstName: {
         type: String,
         required: true,
       },
-      studentName: {
+      middleName: {
         type: String,
         required: true,
       },
-      actions: {
+      lastName: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+      profile: {
+        type: String,
+        required: true,
+      },
+      type: {
         type: String,
         required: true,
       },
     },
-    data () {
-      return {
-      }
+    computed: {
+      fullName () {
+        return `${this.firstName} ${this.middleName} ${this.lastName}`
+      },
     },
   })
 </script>
