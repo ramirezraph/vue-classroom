@@ -90,7 +90,6 @@
     name: 'Announcements',
     data () {
       return {
-        tab: 0,
         tabs: [
           'School',
           'Classes',

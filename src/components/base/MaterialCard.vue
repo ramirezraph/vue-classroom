@@ -131,6 +131,10 @@
         type: String,
         default: '',
       },
+      click: {
+        type: String,
+        default: '',
+      },
     },
 
     computed: {

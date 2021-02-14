@@ -6,7 +6,7 @@
       sm="6"
     >
       <base-material-stats-card
-        color="blue lighten-1"
+        color="red lighten-1"
         icon="mdi-notebook"
         title="Subject"
         :value="numberOfSubjects"
