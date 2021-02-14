@@ -1,16 +1,20 @@
 
 <template>
   <v-list-item>
-    <v-checkbox
-      class="ml-3"
-    />
+    <div
+      v-if="type === 'student'"
+    >
+      <v-checkbox
+        class="
+      ml-3"
+      />
+    </div>
     <v-list-item-avatar class="mr-3">
       <v-img :src="profile" />
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>
         {{ fullName }}
-        {{ type }}
       </v-list-item-title>
     </v-list-item-content>
     <v-tooltip bottom>

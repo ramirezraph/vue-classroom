@@ -31,7 +31,7 @@
         :last-name="item.lastName"
         :email="item.email"
         :profile="item.profile"
-        :type="item.teacher"
+        :type="item.type"
       />
       <span class="display-2 blue--text ml-2">
         Classmates
@@ -63,11 +63,11 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item
-              v-for="(item, index) in items"
-              :key="index"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item>
+              <v-list-item-title>Send an Email</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Remove</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
