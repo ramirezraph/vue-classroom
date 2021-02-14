@@ -10,7 +10,7 @@
         rounded
         class="mt-4 ml-5"
       >
-        <v-icon>
+        <v-icon left>
           mdi-video-outline
         </v-icon>
         <span class="text-none">New Meeting</span>
