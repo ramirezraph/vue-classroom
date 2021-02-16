@@ -7,7 +7,7 @@
     <div>
       <small>{{ teacherName }}</small>
     </div>
-    <div class="display-1 red--text">
+    <div class="display-1 primary--text">
       {{ className }}
     </div>
     <div class="d-flex mt-3 pb-6">

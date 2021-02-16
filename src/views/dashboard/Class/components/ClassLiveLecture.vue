@@ -6,7 +6,7 @@
   >
     <v-card-title>
       <v-btn
-        color="blue"
+        color="info"
         rounded
         class="mt-4 ml-5"
       >

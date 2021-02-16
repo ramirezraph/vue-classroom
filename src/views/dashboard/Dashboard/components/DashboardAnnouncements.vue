@@ -1,10 +1,10 @@
 <template>
   <base-material-card
-    color="blue"
+    color="primary"
     title="Announcements"
   >
     <v-card-text>
-      <base-material-tabs color="blue lighten-2">
+      <base-material-tabs color="primary lighten-2">
         <v-tab
           v-for="(tab, i) in tabs"
           :key="i"
@@ -23,7 +23,7 @@
             >
               <v-list-item class="pa-0">
                 <v-card-text>
-                  <p class="display-1 red--text">
+                  <p class="display-1 primary--text">
                     {{ item.topic }}
                   </p>
                   <small>
@@ -34,7 +34,7 @@
                 <v-list-item-subtitle class="text-right">
                   <v-chip
                     class="ma-2"
-                    color="red"
+                    color="primary"
                     text-color="white"
                   >
                     {{ item.date }}

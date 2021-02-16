@@ -4,7 +4,7 @@
     outlined
     class="ma-0 py-6"
   >
-    <v-card-title class="blue--text">
+    <v-card-title class="primary--text">
       <div class="d-flex align-center">
         <div class="ml-4">
           <span class="display-2">Class Meeting/s</span>
@@ -73,7 +73,7 @@
 
 <style lang="scss" scoped>
   div.v-tab.v-tab--active {
-    background-color: rgb(33, 150, 243);
+    background-color: #2C5F2D;
     color: whitesmoke;
     border-radius: 25px;
   }

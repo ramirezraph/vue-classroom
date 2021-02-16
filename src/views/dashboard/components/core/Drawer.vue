@@ -29,7 +29,7 @@
           color="primary"
           class="mt-3 text-none text-h5"
         >
-          BulSu Classroom
+          Klasse LMS
         </v-btn>
       </template>
       <template v-else>
@@ -39,7 +39,7 @@
           color="primary"
           class="mt-3 text-none text-h5 pa-3"
         >
-          B
+          K
         </v-btn>
       </template>
     </v-list>

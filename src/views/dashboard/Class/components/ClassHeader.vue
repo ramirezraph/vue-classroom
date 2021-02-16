@@ -30,7 +30,8 @@
       <v-card-text class="px-8 text-left">
         <v-card
           flat
-          class="transparent white--text caption mt-16"
+          class="transparent white--text caption"
+          :class="marginTop"
         >
           <v-row
             dense
@@ -94,6 +95,20 @@
     computed: {
       imageSource (): string {
         return this.image || ''
+      },
+      marginTop (): string {
+        console.log('title' + this.title.length)
+        console.log('desc' + this.description.length)
+
+        if (this.title.length > 43 && this.description.length > 90) {
+          return 'mt-0'
+        } else if (this.title.length > 43 && this.description.length <= 90) {
+          return 'mt-6'
+        } else if (this.title.length <= 43 && this.description.length > 90) {
+          return 'mt-8'
+        } else {
+          return 'mt-16'
+        }
       },
     },
   })

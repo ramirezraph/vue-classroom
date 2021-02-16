@@ -70,7 +70,8 @@
             <v-spacer />
             <v-col>
               <v-btn
-                color="blue"
+                color="info"
+                min-width="150"
               >
                 Post
               </v-btn>

@@ -30,7 +30,7 @@
             class="pb-6"
           >
             <v-card-title>
-              <span>Flip Class</span>
+              <span>Class Material/s</span>
             </v-card-title>
             <v-skeleton-loader
               :loading="unitDataLoading"
@@ -115,7 +115,7 @@
                           label="Unit Number"
                           type="number"
                           :error-messages="errors"
-                          color="blue"
+                          color="info"
                           outlined
                           rounded
                           dense
@@ -130,7 +130,7 @@
                         <v-text-field
                           v-model="add_unitTitle"
                           label="Unit Title"
-                          color="blue"
+                          color="info"
                           :error-messages="errors"
                           outlined
                           rounded
@@ -145,7 +145,7 @@
                         <v-textarea
                           v-model="add_unitShortDescription"
                           label="Short Description"
-                          color="blue"
+                          color="info"
                           :error-messages="errors"
                           outlined
                           rounded
@@ -157,7 +157,7 @@
                       </validation-provider>
                       <v-btn
                         type="submit"
-                        class="green mr-2"
+                        class="info mr-2"
                         :disabled="invalid"
                       >
                         Submit
@@ -191,12 +191,12 @@
             v-model="tabs"
             fixed-tabs
           >
-            <v-tabs-slider color="blue" />
+            <v-tabs-slider color="info" />
             <v-tooltip bottom>
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#discussion"
-                  class="text-none blue--text"
+                  class="text-none primary--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -213,7 +213,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#classwork"
-                  class="text-none blue--text"
+                  class="text-none info--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -228,7 +228,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#people"
-                  class="text-none blue--text"
+                  class="text-none info--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -243,7 +243,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#livelecture"
-                  class="text-none blue--text"
+                  class="text-none info--text"
                   v-bind="attrs"
                   v-on="on"
                 >

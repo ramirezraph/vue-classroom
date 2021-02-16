@@ -10,7 +10,7 @@
         flat
       >
         <v-toolbar-title>
-          <span class="blue--text headline">{{ title }}</span>
+          <span class="info--text headline">{{ title }}</span>
           <p class="caption">
             {{ description }}
           </p>
@@ -25,7 +25,7 @@
       </v-toolbar>
     </v-card-title>
     <v-card-text>
-      <div class="mx-7 mb-3">
+      <div class="mx-7 mb-3 mt-3">
         <v-icon>mdi-calendar</v-icon>
         <v-chip
           small
@@ -58,10 +58,10 @@
           {{ timeEnd }}
         </v-chip>
       </div>
-      <div class="px-7">
+      <div class="px-7 mt-6">
         <v-btn
           class="text-none"
-          color="blue"
+          color="info"
         >
           <v-icon
             left
@@ -73,6 +73,7 @@
           Join Meeting
         </v-btn>
         <v-btn
+          v-if="false"
           class="ml-3 text-none"
           color="red lighten-1"
         >

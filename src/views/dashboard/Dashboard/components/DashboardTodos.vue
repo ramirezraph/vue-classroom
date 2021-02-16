@@ -2,7 +2,7 @@
   <v-row>
     <v-col>
       <base-material-card
-        color="green lighten-1"
+        color="primary"
         icon="mdi-format-list-checks"
         title="Todos"
       >
@@ -25,7 +25,7 @@
                 flat
               >
                 <div>
-                  <span class="d-block display-1 blue--text">
+                  <span class="d-block display-1 primary--text">
                     Experiment 1 Logic Gates
                   </span>
                   <small class="d-block">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="ml-auto">
                   <v-chip
-                    color="blue"
+                    color="accent"
                     text-color="white"
                   >
                     Tommorow, 11:59PM
@@ -46,7 +46,7 @@
                 flat
               >
                 <div>
-                  <span class="d-block display-1 blue--text">
+                  <span class="d-block display-1 primary--text">
                     Experiment 2 Logic Gates
                   </span>
                   <small class="d-block">
@@ -55,7 +55,7 @@
                 </div>
                 <div class="ml-auto">
                   <v-chip
-                    color="blue"
+                    color="accent"
                     text-color="white"
                   >
                     Tommorow, 11:59PM

@@ -11,7 +11,7 @@ import ClassicDialog from '@/views/dashboard/components/dialogs/ClassicDialog.vu
 
 extend('joinClass_required', {
   ...required,
-  message: 'You need a class code to join a class.',
+  message: 'You need a class key to join a class.',
 })
 
 export default Vue.extend({
