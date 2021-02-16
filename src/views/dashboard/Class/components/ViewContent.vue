@@ -160,7 +160,7 @@
                 <v-img
                   contain
                   :src="computedFileActive.link"
-                  max-height="700"
+                  max-height="680"
                   max-width="100%"
                   position="center center"
                   :placeholder="computedFileActive.name"
@@ -177,21 +177,21 @@
                 v-if="showDocPreview"
                 max-width="100%"
                 min-width="500"
-                max-height="700"
+                max-height="680"
                 align="center"
                 class="scroll"
               >
                 <vue-doc-preview
                   :url="docValue"
                   :type="docType"
-                  max-height="700"
+                  max-height="680"
                 />
               </v-card>
               <v-card
                 v-if="showPdfPreview"
                 max-width="100%"
                 min-width="500"
-                max-height="700"
+                max-height="680"
                 align="center"
                 class="scroll"
               >
