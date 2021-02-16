@@ -193,13 +193,17 @@
                 min-width="500"
                 max-height="680"
                 align="center"
-                class="scroll"
               >
-                <pdf
+                <!-- <pdf
                   v-for="i in pdfValueNumPage"
                   :key="i"
                   :src="pdfValue"
                   :page="i"
+                /> -->
+                <object
+                  :data="pdfValue"
+                  width="670px"
+                  height="680px"
                 />
               </v-card>
             </div>
@@ -280,9 +284,6 @@
   import File from '@/views/dashboard/components/component/File.vue'
   import { videoPlayer } from 'vue-video-player'
   import VueDocPreview from 'vue-doc-preview'
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  import pdf from 'vue-pdf'
   import CoolLightBox from 'vue-cool-lightbox'
   import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 
@@ -299,7 +300,6 @@
       File,
       videoPlayer,
       VueDocPreview,
-      pdf,
       CoolLightBox,
     },
     props: {
@@ -340,10 +340,8 @@
         imgIndex: null,
         imgItem: [],
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        pdfValue: null as any,
-        pdfValueNumPage: 0,
         showPdfPreview: false,
+        pdfValue: '',
 
         items: [
           {
@@ -464,14 +462,8 @@
           } else {
             if (docType === 'pdf') {
               this.showDocPreview = false
-              const loadingTask = pdf.createLoadingTask(this.computedFileActive.link)
-              if (loadingTask) {
-                this.pdfValue = loadingTask
-                this.pdfValue.promise.then(p => {
-                  this.pdfValueNumPage = p.numPages
-                })
-                this.showPdfPreview = true
-              }
+              this.pdfValue = this.computedFileActive.link
+              this.showPdfPreview = true
             }
           }
         } else {
@@ -485,8 +477,7 @@
         // this.player.pause()
         this.activeUnitData = {} as Unit
         this.activeFileData = {} as ClassFile
-        this.pdfValue = null
-        this.pdfValueNumPage = 0
+        this.pdfValue = ''
         this.showPdfPreview = false
         this.$emit('close')
       },
