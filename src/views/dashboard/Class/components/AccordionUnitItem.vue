@@ -52,7 +52,7 @@
           no-gutters
         >
           <v-btn
-            color="blue lighten-1"
+            color="info"
             :disabled="showHideAddLesson"
             @click="toggleAddNewLesson"
           >
@@ -109,7 +109,7 @@
                   <v-text-field
                     v-model="add_lessonNumber"
                     label="Lesson Number"
-                    color="blue"
+                    color="info"
                     outlined
                     rounded
                     type="number"
@@ -126,7 +126,7 @@
                   <v-text-field
                     v-model="add_lessonTitle"
                     label="Title"
-                    color="blue"
+                    color="info"
                     outlined
                     rounded
                     :error-messages="errors"
@@ -141,7 +141,7 @@
                   <v-textarea
                     v-model="add_lessonDescription"
                     label="Description"
-                    color="blue"
+                    color="info"
                     outlined
                     rounded
                     optional
@@ -154,7 +154,7 @@
                 <v-btn
                   type="submit"
                   :disabled="invalid"
-                  class="green mr-2"
+                  class="info mr-2"
                 >
                   Save Lesson
                 </v-btn>

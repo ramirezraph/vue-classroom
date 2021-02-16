@@ -72,7 +72,7 @@
           </v-btn>
         </v-card-title>
         <v-card-text class="pb-6">
-          <p>Ask your teacher for the class code, then enter it here:</p>
+          <p>Ask your teacher for the class key, then enter it here:</p>
           <validation-observer
             ref="observer"
             v-slot="{ invalid }"
@@ -80,7 +80,7 @@
             <v-form @submit.prevent="submitJoinClass">
               <validation-provider
                 v-slot="{ errors }"
-                name="Class Code"
+                name="Class Key"
                 rules="joinClass_required"
               >
                 <v-text-field
@@ -88,7 +88,7 @@
                   width="150"
                   single-line
                   :error-messages="errors"
-                  label="Class Code"
+                  label="Class Key"
                   color="blue"
                   outlined
                   style="width: 600px"
@@ -96,7 +96,7 @@
               </validation-provider>
               <v-btn
                 min-width="200px"
-                color="blue"
+                color="info"
                 :disabled="invalid"
                 type="submit"
               >
@@ -147,7 +147,7 @@
     <classic-dialog
       :v-model="dialogClassNotFound"
       title="Class not found"
-      text="No class with that class code"
+      text="No class with that key"
       @close="dialogClassNotFound = false"
     />
     <create-class-dialog

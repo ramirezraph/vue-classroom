@@ -11,7 +11,7 @@ import ClassicDialog from '@/views/dashboard/components/dialogs/ClassicDialog.vu
 
 extend('joinClass_required', {
   ...required,
-  message: 'You need a class code to join a class.',
+  message: 'You need a class key to join a class.',
 })
 
 export default Vue.extend({
@@ -49,11 +49,6 @@ export default Vue.extend({
             classesCollection.doc(doc.id).collection('people')
               .doc(currentUser.id)
               .set({
-                email: currentUser.email,
-                firstname: currentUser.firstName,
-                imgProfile: 'test.jpg',
-                lastName: currentUser.lastName,
-                middleName: currentUser.middleName,
                 type: 'Student',
               }).then(() => {
                 classesCollection.doc(doc.id).update({

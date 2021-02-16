@@ -12,6 +12,7 @@ export default new Vuex.Store({
     user: User
   },
   state: {
+    // barColor: 'rgba(47, 47, 43, .8), rgba(0, 0, 0, .8)',
     barColor: 'rgba(0, 0, 0, .8), rgba(0, 0, 0, .8)',
     barImage: 'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
     drawer: null,

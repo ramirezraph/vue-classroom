@@ -8,7 +8,7 @@
     <v-card id="createDialog">
       <v-toolbar
         dark
-        color="blue"
+        color="primary"
       >
         <v-btn
           icon
@@ -53,38 +53,39 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Code"
-                      rules="createClass_required"
+                      rules="createClass_required|max:10"
                     >
                       <v-text-field
                         v-model="code"
                         :error-messages="errors"
                         label="Class Code"
-                        color="blue"
+                        color="info"
                         outlined
                       />
                     </validation-provider>
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Title"
-                      rules="createClass_required"
+                      rules="createClass_required|max:88"
                     >
                       <v-text-field
                         v-model="title"
                         :error-messages="errors"
                         label="Class Title"
-                        color="blue"
+                        color="info"
                         outlined
                       />
                     </validation-provider>
                     <validation-provider
                       v-slot="{ errors }"
                       name="Class Description"
+                      rules="max:186"
                     >
                       <v-text-field
                         v-model="description"
                         :error-messages="errors"
                         label="Class Description"
-                        color="blue"
+                        color="info"
                         outlined
                         hint="Optional"
                       />
@@ -98,7 +99,7 @@
                         v-model="teacherName"
                         :error-messages="errors"
                         label="Class Teacher"
-                        color="blue"
+                        color="info"
                         outlined
                         disabled
                       />
@@ -114,7 +115,7 @@
                         accept="image/*"
                         label="Class Background Image"
                         type="file"
-                        color="blue"
+                        color="info"
                         hint="Optional"
                         prepend-icon=""
                         prepend-inner-icon="mdi-image"
@@ -133,14 +134,14 @@
                         :error-messages="errors"
                         :items="classColors"
                         label="Class Color"
-                        color="blue"
+                        color="info"
                         outlined
                       />
                     </validation-provider>
                     <div class="mt-6">
                       <v-btn
                         min-width="200px"
-                        color="blue"
+                        color="info"
                         :disabled="invalid"
                         type="submit"
                       >
@@ -174,7 +175,7 @@
   import Vue from 'vue'
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
-  import { required } from 'vee-validate/dist/rules'
+  import { max, required } from 'vee-validate/dist/rules'
   import { classesCollection, storageRef } from '@/fb'
   import { User } from '@/model/User'
   import firebase from 'firebase'
@@ -196,6 +197,11 @@
   extend('createClass_required', {
     ...required,
     message: '{_field_} is required.',
+  })
+
+  extend('max', {
+    ...max,
+    message: '{_field_} too long.',
   })
 
   export default Vue.extend({
@@ -220,7 +226,7 @@
         code: '',
         imageFile: {} as File,
         imageSource: '',
-        color: ClassColor.Blue,
+        color: ClassColor.Green,
 
         dialogConfirmAddClass: false,
       }
@@ -287,11 +293,6 @@
               classesCollection.doc(newClassId).collection('people')
                 .doc(currentUser.id)
                 .set({
-                  email: currentUser.email,
-                  firstname: currentUser.firstName,
-                  imgProfile: '',
-                  lastName: currentUser.lastName,
-                  middleName: currentUser.middleName,
                   type: 'Teacher',
                 }).then(() => {
                   // update userList Array
@@ -327,7 +328,7 @@
         this.code = ''
         this.imageFile = {} as File
         this.imageSource = ''
-        this.color = ClassColor.Blue
+        this.color = ClassColor.Green
         this.$emit('cancel')
       },
     },

@@ -9,7 +9,7 @@
       <v-btn
         rounded
         depressed
-        color="blue"
+        color="info"
         class="ml-6"
       >
         <v-icon left>
@@ -20,7 +20,7 @@
     </v-card-title>
     <v-card-text>
       <base-material-tabs
-        color="blue"
+        color="info"
         icons-and-text
         vertical
       >
