@@ -49,11 +49,6 @@ export default Vue.extend({
             classesCollection.doc(doc.id).collection('people')
               .doc(currentUser.id)
               .set({
-                email: currentUser.email,
-                firstname: currentUser.firstName,
-                imgProfile: 'test.jpg',
-                lastName: currentUser.lastName,
-                middleName: currentUser.middleName,
                 type: 'Student',
               }).then(() => {
                 classesCollection.doc(doc.id).update({

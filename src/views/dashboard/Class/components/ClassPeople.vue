@@ -23,15 +23,11 @@
     </div>
     <v-card-text>
       <people-item
-        v-for="item in people"
-        :id="item.id"
+        v-for="item in teachers"
         :key="item.id"
-        :first-name="item.firstName"
-        :middle-name="item.middleName"
-        :last-name="item.lastName"
-        :email="item.email"
-        :profile="item.profile"
-        :type="item.type"
+        :user="item"
+        :has-edit-access="hasEditAccess"
+        class="my-0 mr-1 pa-0"
       />
       <span class="display-2 blue--text ml-2">
         Classmates
@@ -88,19 +84,21 @@
         flat
         class="my-0 mx-3 pa-0"
       >
-        <v-list>
+        <v-list v-if="students.length > 0">
           <people-item
-            v-for="item in people"
-            :id="item.id"
+            v-for="item in students"
             :key="item.id"
-            :first-name="item.firstName"
-            :middle-name="item.middleName"
-            :last-name="item.lastName"
-            :email="item.email"
-            :profile="item.profile"
-            :type="item.type"
+            :user="item"
+            :has-edit-access="hasEditAccess"
             class="my-0 mr-1 pa-0"
           />
+        </v-list>
+        <v-list v-else>
+          <v-list-item>
+            <v-list-item-title class="grey--text caption">
+              No students enrolled.
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-card>
     </v-card-text>
@@ -108,20 +106,36 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import { User, UserType } from '@/model/User'
+  import Vue, { PropType } from 'vue'
   import PeopleItem from './PeopleItem.vue'
   export default Vue.extend({
     name: 'ClassPeople',
     components: {
       PeopleItem,
     },
+    props: {
+      people: {
+        type: Array as PropType<User[]>,
+        required: true,
+      },
+      hasEditAccess: {
+        type: Boolean,
+        required: true,
+      },
+    },
     data () {
       return {
-        people: [
-          { id: '', firstName: 'Lorem', middleName: 'Ipsum', lastName: 'Dolor', email: 'Lorem@gmail.com', profile: 'https://cdn.vuetifyjs.com/images/john.jpg', type: 'teacher' },
-          { id: '', firstName: 'Lorem', middleName: 'Ipsum', lastName: 'Dolor', email: 'Lorem@yahoo.com', profile: 'https://cdn.vuetifyjs.com/images/john.jpg', type: 'student' },
-        ],
+
       }
+    },
+    computed: {
+      teachers (): User[] {
+        return this.people.filter(p => p.userType === UserType.Teacher)
+      },
+      students (): User[] {
+        return this.people.filter(p => p.userType === UserType.Student)
+      },
     },
   })
 </script>

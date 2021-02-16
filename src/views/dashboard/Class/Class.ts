@@ -9,7 +9,7 @@ import ClassLiveLecture from './components/ClassLiveLecture.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
-import { classesCollection } from '@/fb'
+import { classesCollection, usersCollection } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 // eslint-disable-next-line camelcase
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
@@ -201,16 +201,22 @@ export default Vue.extend({
             fetchPeople = []
             snapshot.forEach(doc => {
               if (doc.exists) {
-                const people = new User(
-                  doc.id,
-                  doc.data().firstName,
-                  doc.data().middleName,
-                  doc.data().lastName,
-                  doc.data().email,
-                  doc.data().imgProfile,
-                )
-                people.userType = doc.data().type
-                fetchPeople.push(people)
+                let people: User
+                usersCollection.doc(doc.id).get().then(user => {
+                  if (user.exists) {
+                    people = new User(
+                      doc.id,
+                      user.data()?.firstName,
+                      user.data()?.middleName,
+                      user.data()?.lastName,
+                      user.data()?.email,
+                      user.data()?.imgProfile,
+                    )
+
+                    people.userType = doc.data().type
+                    fetchPeople.push(people)
+                  }
+                })
               }
             })
             this.people = fetchPeople

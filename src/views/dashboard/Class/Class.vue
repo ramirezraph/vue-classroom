@@ -272,7 +272,10 @@
             <v-tab-item
               value="people"
             >
-              <class-people />
+              <class-people
+                :people="people"
+                :has-edit-access="hasEditAccess"
+              />
             </v-tab-item>
             <v-tab-item
               value="livelecture"

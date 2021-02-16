@@ -1,8 +1,7 @@
-
 <template>
   <v-list-item>
     <div
-      v-if="type === 'student'"
+      v-if="user.userType === 'Student'"
     >
       <v-checkbox
         class="
@@ -10,7 +9,9 @@
       />
     </div>
     <v-list-item-avatar class="mr-3">
-      <v-img :src="profile" />
+      <v-img
+        :src="user.profile"
+      />
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title>
@@ -33,7 +34,10 @@
       </template>
       <span>Send an Email</span>
     </v-tooltip>
-    <v-tooltip bottom>
+    <v-tooltip
+      v-if="hasEditAccess"
+      bottom
+    >
       <template #activator="{ on, attrs }">
         <v-btn
           icon
@@ -47,7 +51,10 @@
         </v-btn>
       </template>
       <span>View Info</span>
-    </v-tooltip><v-tooltip bottom>
+    </v-tooltip><v-tooltip
+      v-if="hasEditAccess"
+      bottom
+    >
       <template #activator="{ on, attrs }">
         <v-btn
           icon
@@ -67,43 +74,38 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import { User } from '@/model/User'
+  import Vue, { PropType } from 'vue'
   export default Vue.extend({
     name: 'PeopleItem',
     props: {
-      id: {
-        type: String,
-        required: true,
-        default: '',
-      },
-      firstName: {
-        type: String,
+      user: {
+        type: Object as PropType<User>,
         required: true,
       },
-      middleName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-      },
-      profile: {
-        type: String,
-        required: true,
-      },
-      type: {
-        type: String,
-        required: true,
+      hasEditAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
+    data () {
+      return {
+
+      }
+    },
     computed: {
-      fullName () {
-        return `${this.firstName} ${this.middleName} ${this.lastName}`
+      fullName (): string {
+        return `${this.user.firstName} ${this.middleInitial} ${this.user.lastName}`
+      },
+      middleInitial (): string {
+        const midName: string[] = this.user.middleName.split(' ')
+        let middleInitial = ''
+        for (let i = 0; i < midName.length; i++) {
+          middleInitial += midName[i].substring(0, 1) + '.'
+        }
+
+        return middleInitial
       },
     },
   })

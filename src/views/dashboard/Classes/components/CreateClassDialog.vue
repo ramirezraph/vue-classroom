@@ -287,11 +287,6 @@
               classesCollection.doc(newClassId).collection('people')
                 .doc(currentUser.id)
                 .set({
-                  email: currentUser.email,
-                  firstname: currentUser.firstName,
-                  imgProfile: '',
-                  lastName: currentUser.lastName,
-                  middleName: currentUser.middleName,
                   type: 'Teacher',
                 }).then(() => {
                   // update userList Array
