@@ -97,9 +97,6 @@
         return this.image || ''
       },
       marginTop (): string {
-        console.log('title' + this.title.length)
-        console.log('desc' + this.description.length)
-
         if (this.title.length > 43 && this.description.length > 90) {
           return 'mt-0'
         } else if (this.title.length > 43 && this.description.length <= 90) {
