@@ -18,13 +18,5 @@
       PagesCoreFooter: () => import('./components/core/Footer.vue'),
       PagesCoreView: () => import('./components/core/View.vue'),
     },
-
-    created () {
-      this.$vuetify.theme.dark = true
-    },
-
-    beforeDestroy () {
-      this.$vuetify.theme.dark = false
-    },
   })
 </script>
