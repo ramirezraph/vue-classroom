@@ -1,16 +1,14 @@
 <template>
-  <v-container
-    id="register"
-    class="pt-1"
-    tag="section"
+  <v-card
+    class="ma-0 pa-0 px-12"
+    flat
   >
     <v-row>
       <v-col cols="3">
         <v-img
-          class="pa-10"
+          class="fill-height pa-10"
           src="../../assets/login-bg-3.jpg"
           position="center center"
-          min-height="100%"
         >
           <div
             id="appMotto"
@@ -30,10 +28,9 @@
       </v-col>
       <v-col cols="3">
         <v-img
-          class="pa-10"
+          class="fill-height pa-10"
           src="../../assets/login-bg-2.jpg"
           position="center center"
-          min-height="100%"
         >
           <div class="white--text">
             <h1 class="text-h1 font-weight-bold">
@@ -48,11 +45,11 @@
           class="pa-10"
           src="../../assets/login-bg-1.jpg"
           position="center center"
+          max-height="900"
           min-height="100%"
         >
           <v-card
-            class="mt-0"
-            min-height="100%"
+            class="fill-height mt-0"
             rounded
             flat
           >
@@ -63,7 +60,7 @@
         </v-img>
       </v-col>
     </v-row>
-  </v-container>
+  </v-card>
 </template>
 
 <script label="ts">
@@ -78,9 +75,6 @@
 </script>
 
 <style lang="scss" scoped>
-  #register {
-    height: 98vh;
-  }
   #appMotto {
     position: absolute;
     bottom: 3%;
