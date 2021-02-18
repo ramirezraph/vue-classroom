@@ -1,11 +1,9 @@
 <template>
   <v-main
     id="pages"
+    class="ma-0 pa-0"
   >
-    <v-responsive
-      min-height="100vh"
-      class="d-flex align-center"
-    >
+    <v-responsive>
       <router-view />
     </v-responsive>
   </v-main>
