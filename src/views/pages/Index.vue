@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <pages-core-view />
-    <pages-core-footer />
+    <!--    <pages-core-footer />-->
   </v-app>
 </template>
 

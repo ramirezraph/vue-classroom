@@ -3,7 +3,10 @@
     id="pages"
     class="ma-0 pa-0"
   >
-    <v-responsive>
+    <v-responsive
+      min-height="100vh"
+      class="d-flex align-center"
+    >
       <router-view />
     </v-responsive>
   </v-main>
