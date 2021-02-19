@@ -137,6 +137,7 @@
                   depressed
                   width="200"
                   class="text-h4 primary--text text-none"
+                  to="/pages/register"
                 >
                   Sign Up
                 </v-btn>
