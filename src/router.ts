@@ -12,19 +12,9 @@ export default new Router({
       component: () => import('@/views/pages/Index.vue'),
       children: [
         {
-          name: 'Lock',
-          path: 'lock',
-          component: () => import('@/views/pages/Lock.vue'),
-        },
-        {
           name: 'Login',
           path: 'login',
           component: () => import('@/views/pages/Login.vue'),
-        },
-        {
-          name: 'Pricing',
-          path: 'pricing',
-          component: () => import('@/views/pages/Pricing.vue'),
         },
         {
           name: 'Register',
