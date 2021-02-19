@@ -162,7 +162,7 @@
     },
     methods: {
       onLogin (): void {
-        console.log('login submit')
+        this.$router.push('/')
       },
     },
   })
