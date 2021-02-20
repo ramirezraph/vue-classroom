@@ -25,6 +25,7 @@ import ClassicDialog from '@/views/dashboard/components/dialogs/ClassicDialog.vu
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
 import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
 import axios from 'axios'
+import { firebaseAuth } from '@/fb'
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
@@ -33,10 +34,25 @@ Vue.component('ClassicDialog', ClassicDialog)
 Vue.component('ConfirmDialog', ConfirmDialog)
 Vue.component('DeleteConfirmDialog', DeleteConfirmDialog)
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  i18n,
-  render: h => h(App),
-}).$mount('#app')
+let app
+
+firebaseAuth.onAuthStateChanged(user => {
+  console.log('user', user)
+  if (!app) {
+    app = new Vue({
+      router,
+      store,
+      vuetify,
+      i18n,
+      render: h => h(App),
+    }).$mount('#app')
+  }
+})
+
+// new Vue({
+//   router,
+//   store,
+//   vuetify,
+//   i18n,
+//   render: h => h(App),
+// }).$mount('#app')

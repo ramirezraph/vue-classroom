@@ -6,6 +6,7 @@
     :to="item.to"
     exact
     :active-class="`primary ${!isDark ? 'black' : 'white'}--text`"
+    @click="onClick"
   >
     <v-list-item-icon
       v-if="text"
@@ -47,6 +48,7 @@
           subtitle: undefined,
           title: undefined,
           to: undefined,
+          onClick: undefined,
         }),
       },
       text: {
@@ -71,6 +73,15 @@
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       href () {
         return this.item.href || (!this.item.to ? '#' : undefined)
+      },
+
+      onClick () {
+        return this.item.onClick || this.defaultClick
+      },
+    },
+    methods: {
+      defaultClick () {
+        // empty
       },
     },
   }

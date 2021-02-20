@@ -107,6 +107,7 @@
 <script>
 // Utilities
   import { mapState } from 'vuex'
+  import { firebaseAuth } from '../../../../fb'
 
   export default {
     name: 'DashboardCoreDrawer',
@@ -180,19 +181,17 @@
         return {
           avatar: true,
           group: '',
-          title: `${currentUser.firstName} ${currentUser.lastName}`,
+          title: `${currentUser?.firstName} ${currentUser?.lastName}`,
           children: [
             {
-              href: '',
               title: this.$t('my-profile'),
             },
             {
-              to: '',
               title: this.$t('edit-profile'),
             },
             {
-              to: '',
               title: this.$t('Sign Out'),
+              onClick: this.signOut,
             },
           ],
         }
@@ -214,6 +213,12 @@
           children: link.children ? link.children.map(this.mapItemLinks) : undefined,
           title: this.$t(link.title),
         }
+      },
+      signOut () {
+        firebaseAuth.signOut().then(() => {
+          this.$store.dispatch('user/userSignOut')
+          this.$router.replace({ name: 'Login' })
+        })
       },
     },
   }

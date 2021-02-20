@@ -20,7 +20,7 @@ export default {
     }
   },
   actions: {
-    userSignIn(context, payload: { email: string, password: string }) {
+     userSignIn(context, payload: { email: string, password: string }) {
       return new Promise((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
           .then((userCredential: UserCredential) => {
@@ -48,6 +48,9 @@ export default {
             reject()
           })
       })
+    },
+    userSignOut (context) {
+      context.commit('SET_CURRENT_USER', null)
     },
     userRegister (context, payload: {
       user: {

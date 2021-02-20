@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Classes from '@/store/modules/Classes'
 import User from "@/store/modules/User";
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     barImage: 'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-1.jpg',
     drawer: null,
   },
+  plugins: [createPersistedState({
+    paths: ['user']
+  })],
   getters: {
     drawer (state) {
       return state.drawer
