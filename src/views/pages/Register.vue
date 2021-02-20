@@ -40,11 +40,19 @@
                 v-slot="{ invalid }"
               >
                 <v-form
-                  class="mt-6"
+                  class="mt-3"
                   @submit.prevent="onRegister"
                 >
                   <v-row>
                     <v-col cols="6">
+                      <v-expand-transition>
+                        <div
+                          v-if="errorMessage"
+                          class="error--text caption d-block mb-3 ml-8"
+                        >
+                          {{ errorMessage }}
+                        </div>
+                      </v-expand-transition>
                       <validation-provider
                         v-slot="{ errors }"
                         name="First Name"
@@ -247,6 +255,7 @@
                           class="subtitle-1 text-none"
                           type="submit"
                           :disabled="invalid || !acceptTermsConditions"
+                          :loading="loading"
                         >
                           Sign Up
                         </v-btn>
@@ -269,6 +278,13 @@
         </v-img>
       </v-col>
     </v-row>
+
+    <classic-dialog
+      :v-model="successDialog"
+      title="Registered sucessfully."
+      text="You can now login using your new account."
+      @close="onCloseSuccessDialog"
+    />
   </v-card>
 </template>
 
@@ -280,6 +296,7 @@
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import Password from 'vue-password-strength-meter'
+  import { User } from '@/model/User'
 
   extend('signUp_required', {
     ...required,
@@ -306,6 +323,10 @@
 
         showPassword: false,
         showConfirmPassword: false,
+
+        loading: false,
+        successDialog: false,
+        errorMessage: '',
       }
     },
     watch: {
@@ -314,13 +335,41 @@
       },
     },
     methods: {
-      onRegister (): void {
-        // this.$store.dispatch('user/userRegister', {}).then(() => {
-        //
-        // }).catch(() => {
-        //
-        // })
-        console.log('sign up submit')
+      async onRegister (): void {
+        this.loading = true
+        this.errorMessage = ''
+
+        try {
+          if (this.password !== this.confirmPassword) {
+            this.errorMessage = 'Register failed: Passwords do not match.'
+            this.password = ''
+            this.confirmPassword = ''
+            return
+          }
+
+          const newUser = {
+            firstName: this.firstName,
+            middleName: this.middleName,
+            lastName: this.lastName,
+            email: this.email,
+            birthdate: this.birthdate,
+          }
+
+          await this.$store.dispatch('user/userRegister', { user: newUser, password: this.confirmPassword }).then(() => {
+            console.log('registered successfully')
+            this.successDialog = true
+          }).catch(() => {
+            console.log('register failed')
+          })
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loading = false
+        }
+      },
+      onCloseSuccessDialog (): void {
+        this.successDialog = false
+        this.$router.push('/pages/login')
       },
       onCancel (): void {
         this.$router.push('/pages/login')

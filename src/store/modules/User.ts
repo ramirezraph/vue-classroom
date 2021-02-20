@@ -6,18 +6,11 @@ import UserCredential = firebase.auth.UserCredential;
 export default {
   namespaced: true,
   state: {
-    currentUser: new User(
-      'u65UaYYgNGccqlsFUVGC',
-      'Raphael',
-      'Legaspi',
-      'Ramirez',
-      '1999-05-19',
-      'ramirez.raph@yahoo.com',
-      'https://firebasestorage.googleapis.com/v0/b/lorem-classroom.appspot.com/o/users%2Fdefault_profile.jpg?alt=media&token=47adcd7a-be7b-4067-9d57-a0b173a91bd5',
-    ),
+    currentUser: null,
   },
   getters: {
     getCurrentUser (state): User {
+      console.log(state.currentUser)
       return state.currentUser
     }
   },
@@ -31,17 +24,39 @@ export default {
       return new Promise((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
           .then((userCredential: UserCredential) => {
-            console.log(userCredential)
             // set current user
-
-            resolve()
+            usersCollection.doc(userCredential.user?.uid).get().then(doc => {
+              if (doc.exists) {
+                let user = new User(
+                  doc.id,
+                  doc.data()?.firstName,
+                  doc.data()?.middleName,
+                  doc.data()?.lastName,
+                  doc.data()?.birthdate,
+                  doc.data()?.email,
+                  doc.data()?.imgProfile
+                )
+                console.log(user)
+                context.commit('SET_CURRENT_USER', user)
+                resolve()
+              } else {
+                reject()
+              }
+            })
           })
           .catch(() => {
             reject()
           })
       })
     },
-    userRegister (context, payload: { user: User, password: string }) {
+    userRegister (context, payload: {
+      user: {
+        firstName: string,
+        middleName: string,
+        lastName: string,
+        email: string,
+        birthdate: string
+      }, password: string }) {
       return new Promise((resolve, reject) => {
         firebaseAuth.createUserWithEmailAndPassword(payload.user.email, payload.password)
           .then((userCredential: UserCredential) => {

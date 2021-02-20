@@ -17,8 +17,5 @@
     data () {
       return {}
     },
-    created () {
-      this.$store.dispatch('classes/fetchClasses', this.$store.getters['user/getCurrentUser'])
-    },
   })
 </script>
