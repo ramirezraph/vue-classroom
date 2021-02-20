@@ -209,6 +209,7 @@ export default Vue.extend({
                       user.data()?.firstName,
                       user.data()?.middleName,
                       user.data()?.lastName,
+                      user.data()?.birthdate,
                       user.data()?.email,
                       user.data()?.imgProfile,
                     )
