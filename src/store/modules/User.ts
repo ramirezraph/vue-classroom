@@ -72,8 +72,8 @@ export default {
               }).then(() => {
               resolve()
             })
-          }).catch(() => {
-            reject()
+          }).catch((error) => {
+            reject(error)
         })
       })
     }
