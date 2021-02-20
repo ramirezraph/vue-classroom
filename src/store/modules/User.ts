@@ -1,5 +1,5 @@
 import { User } from "@/model/User";
-import {firebaseAuth} from "@/fb";
+import {firebaseAuth, usersCollection} from "@/fb";
 import firebase from "firebase";
 import UserCredential = firebase.auth.UserCredential;
 
@@ -11,8 +11,9 @@ export default {
       'Raphael',
       'Legaspi',
       'Ramirez',
+      '1999-05-19',
       'ramirez.raph@yahoo.com',
-      'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
+      'https://firebasestorage.googleapis.com/v0/b/lorem-classroom.appspot.com/o/users%2Fdefault_profile.jpg?alt=media&token=47adcd7a-be7b-4067-9d57-a0b173a91bd5',
     ),
   },
   getters: {
@@ -30,14 +31,34 @@ export default {
       return new Promise((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
           .then((userCredential: UserCredential) => {
-
+            console.log(userCredential)
             // set current user
 
-            resolve(userCredential)
+            resolve()
           })
-          .catch(error => {
-            reject(error)
+          .catch(() => {
+            reject()
           })
+      })
+    },
+    userRegister (context, payload: { user: User, password: string }) {
+      return new Promise((resolve, reject) => {
+        firebaseAuth.createUserWithEmailAndPassword(payload.user.email, payload.password)
+          .then((userCredential: UserCredential) => {
+            usersCollection.doc(userCredential.user?.uid)
+              .set({
+                firstName: payload.user.firstName,
+                middleName: payload.user.middleName,
+                lastName: payload.user.lastName,
+                imgProfile: 'https://firebasestorage.googleapis.com/v0/b/lorem-classroom.appspot.com/o/users%2Fdefault_profile.jpg?alt=media&token=47adcd7a-be7b-4067-9d57-a0b173a91bd5',
+                email: payload.user.email,
+                birthdate: payload.user.birthdate,
+              }).then(() => {
+              resolve()
+            })
+          }).catch(() => {
+            reject()
+        })
       })
     }
   },

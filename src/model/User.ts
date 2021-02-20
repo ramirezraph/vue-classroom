@@ -14,6 +14,7 @@ export class User {
     public firstName: string,
     public middleName: string,
     public lastName: string,
+    public birthdate: string,
     public email: string,
     public profile: string = '',
   ) {}

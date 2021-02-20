@@ -117,7 +117,7 @@
                       <validation-provider
                         v-slot="{ errors }"
                         name="Email"
-                        rules="signUp_required"
+                        rules="signUp_required|email"
                       >
                         <v-text-field
                           v-model="email"
@@ -127,6 +127,27 @@
                           :error-messages="errors"
                         />
                       </validation-provider>
+                      <div class="mt-6">
+                        <v-tooltip
+                          top
+                          color="primary"
+                        >
+                          <template #activator="{on, attrs}">
+                            <div
+                              v-bind="attrs"
+                              style="width: 91%"
+                              class="ml-8"
+                              v-on="on"
+                            >
+                              <password
+                                v-model="password"
+                                :strength-meter-only="true"
+                              />
+                            </div>
+                          </template>
+                          <span>Password strength</span>
+                        </v-tooltip>
+                      </div>
                       <validation-provider
                         v-slot="{ errors }"
                         name="Password"
@@ -134,10 +155,12 @@
                       >
                         <v-text-field
                           v-model="password"
-                          type="password"
                           label="Password"
                           prepend-icon="mdi-lock-outline"
                           :error-messages="errors"
+                          :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                          :type="showPassword ? 'text' : 'password'"
+                          @click:append="showPassword = !showPassword"
                         />
                       </validation-provider>
                       <validation-provider
@@ -147,10 +170,12 @@
                       >
                         <v-text-field
                           v-model="confirmPassword"
-                          type="password"
-                          label="Confirm Password"
                           prepend-icon="mdi-lock-outline"
+                          label="Confirm Password"
                           :error-messages="errors"
+                          :append-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                          :type="showConfirmPassword ? 'text' : 'password'"
+                          @click:append="showConfirmPassword = !showConfirmPassword"
                         />
                       </validation-provider>
                       <v-checkbox
@@ -252,6 +277,10 @@
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import { required } from 'vee-validate/dist/rules'
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  import Password from 'vue-password-strength-meter'
+
   extend('signUp_required', {
     ...required,
     message: '{_field_} is required.',
@@ -261,6 +290,7 @@
     components: {
       ValidationProvider,
       ValidationObserver,
+      Password,
     },
     data () {
       return {
@@ -273,6 +303,9 @@
         confirmPassword: '',
         acceptTermsConditions: false,
         menuBirthdate: false,
+
+        showPassword: false,
+        showConfirmPassword: false,
       }
     },
     watch: {
@@ -282,12 +315,17 @@
     },
     methods: {
       onRegister (): void {
+        // this.$store.dispatch('user/userRegister', {}).then(() => {
+        //
+        // }).catch(() => {
+        //
+        // })
         console.log('sign up submit')
       },
       onCancel (): void {
         this.$router.push('/pages/login')
       },
-      saveBirthdate (date) {
+      saveBirthdate (date): void {
         (this.$refs.menuBirthdate as any).save(date)
       },
     },
