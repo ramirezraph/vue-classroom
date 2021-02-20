@@ -55,21 +55,31 @@
             class="fill-height mt-0 px-12"
             flat
           >
-            <v-card-title class="py-12">
+            <v-card-title class="pt-12 pb-10">
               <span class="text-h3 ma-auto mt-12 black--text">Login to your account</span>
             </v-card-title>
             <v-card-text>
+              <v-expand-transition>
+                <div
+                  v-if="errorMessage"
+                  class="error--text caption d-block text-center mb-3"
+                >
+                  {{ errorMessage }}
+                </div>
+              </v-expand-transition>
               <v-form @submit.prevent="onLogin">
                 <v-text-field
                   v-model="email"
                   prepend-icon="mdi-email-outline"
                   label="Email"
+                  clearable
                 />
                 <v-text-field
                   v-model="password"
                   label="Password"
                   prepend-icon="mdi-lock-outline"
                   type="password"
+                  clearable
                 />
                 <div
                   class="d-flex"
@@ -100,6 +110,7 @@
                   class="subtitle-1 text-none mt-6"
                   min-height="50"
                   type="submit"
+                  :loading="loading"
                 >
                   Login
                 </v-btn>
@@ -158,11 +169,33 @@
         email: '',
         password: '',
         rememberMe: false,
+        errorMessage: '',
+        loading: false,
       }
     },
     methods: {
-      onLogin (): void {
-        this.$router.push('/')
+      async onLogin () {
+        try {
+          this.loading = true
+          this.errorMessage = ''
+
+          if (!(this.email.length > 0 && this.password.length > 0)) {
+            this.errorMessage = 'Please complete the form to login.'
+            return
+          }
+
+          await this.$store.dispatch('user/userSignIn', { email: this.email, password: this.password })
+            .then(() => {
+              this.$router.push('/')
+            }).catch(() => {
+              this.errorMessage = 'Invalid user credentials.'
+              this.password = ''
+            })
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loading = false
+        }
       },
     },
   })

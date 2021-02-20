@@ -24,7 +24,9 @@ import i18n from './i18n'
 import ClassicDialog from '@/views/dashboard/components/dialogs/ClassicDialog.vue'
 import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vue'
 import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
+import axios from 'axios'
 
+Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 Vue.component('ClassicDialog', ClassicDialog)

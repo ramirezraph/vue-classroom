@@ -1,4 +1,7 @@
 import { User } from "@/model/User";
+import {firebaseAuth} from "@/fb";
+import firebase from "firebase";
+import UserCredential = firebase.auth.UserCredential;
 
 export default {
   namespaced: true,
@@ -22,7 +25,20 @@ export default {
       state.currentUser = payload
     }
   },
-  action: {
-    // set user once logged in
+  actions: {
+    userSignIn(context, payload: { email: string, password: string }) {
+      return new Promise((resolve, reject) => {
+        firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
+          .then((userCredential: UserCredential) => {
+
+            // set current user
+
+            resolve(userCredential)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    }
   },
 }
