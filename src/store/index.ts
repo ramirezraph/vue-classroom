@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Classes from '@/store/modules/Classes'
-import createPersistedState from 'vuex-persistedstate'
 import User from "@/store/modules/User";
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
@@ -18,7 +18,7 @@ export default new Vuex.Store({
     drawer: null,
   },
   plugins: [createPersistedState({
-    paths: ['classes', 'user']
+    paths: ['user']
   })],
   getters: {
     drawer (state) {

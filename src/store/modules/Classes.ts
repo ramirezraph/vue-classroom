@@ -42,27 +42,29 @@ export default {
   },
   actions: {
      fetchClasses (context, payload: User): void {
-       classesCollection.where('userList', 'array-contains', payload.id)
-         .onSnapshot(snapshot => {
-           const classes: Class[] = []
-           snapshot.forEach(doc => {
-             if (doc.exists) {
-               const generatedClass = new Class(
-                 doc.id,
-                 doc.data().title,
-                 doc.data().description,
-                 doc.data().code,
-                 doc.data().teacherName,
-                 doc.data().imageSource,
-                 doc.data().color,
-                 doc.data().ownerId,
-               )
-               classes.push(generatedClass)
-             }
-           })
+       if (payload) {
+         classesCollection.where('userList', 'array-contains', payload.id)
+           .onSnapshot(snapshot => {
+             const classes: Class[] = []
+             snapshot.forEach(doc => {
+               if (doc.exists) {
+                 const generatedClass = new Class(
+                   doc.id,
+                   doc.data().title,
+                   doc.data().description,
+                   doc.data().code,
+                   doc.data().teacherName,
+                   doc.data().imageSource,
+                   doc.data().color,
+                   doc.data().ownerId,
+                 )
+                 classes.push(generatedClass)
+               }
+             })
 
-           context.commit('SET_CLASSES', classes)
-         })
+             context.commit('SET_CLASSES', classes)
+           })
+       }
     },
     fetchUnits (context, payload: { class: Class, units: Unit[] }): void {
       if (payload) {

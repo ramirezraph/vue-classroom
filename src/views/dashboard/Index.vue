@@ -23,5 +23,8 @@
     data: () => ({
       expandOnHover: false,
     }),
+    mounted () {
+      this.$store.dispatch('classes/fetchClasses', this.$store.getters['user/getCurrentUser'])
+    },
   })
 </script>
