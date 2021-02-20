@@ -10,7 +10,6 @@ export default {
   },
   getters: {
     getCurrentUser (state): User {
-      console.log(state.currentUser)
       return state.currentUser
     }
   },
@@ -36,7 +35,6 @@ export default {
                   doc.data()?.email,
                   doc.data()?.imgProfile
                 )
-                console.log(user)
                 context.commit('SET_CURRENT_USER', user)
                 resolve()
               } else {
