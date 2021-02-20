@@ -61,6 +61,7 @@
     <v-list
       expand
       nav
+      class="mt-3"
     >
       <template v-for="(item, i) in moduleLinks">
         <base-item-group
@@ -184,10 +185,8 @@
           title: `${currentUser?.firstName} ${currentUser?.lastName}`,
           children: [
             {
-              title: this.$t('my-profile'),
-            },
-            {
-              title: this.$t('edit-profile'),
+              to: 'settings',
+              title: this.$t('Settings'),
             },
             {
               title: this.$t('Sign Out'),
