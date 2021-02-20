@@ -335,7 +335,7 @@
       },
     },
     methods: {
-      async onRegister (): void {
+      async onRegister () {
         this.loading = true
         this.errorMessage = ''
 
