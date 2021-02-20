@@ -159,7 +159,7 @@
                       <validation-provider
                         v-slot="{ errors }"
                         name="Password"
-                        rules="signUp_required"
+                        rules="signUp_required|signUp_min:8"
                       >
                         <v-text-field
                           v-model="password"
@@ -174,7 +174,7 @@
                       <validation-provider
                         v-slot="{ errors }"
                         name="Confirm Password"
-                        rules="signUp_required"
+                        rules="signUp_required|signUp_min:8"
                       >
                         <v-text-field
                           v-model="confirmPassword"
@@ -291,16 +291,20 @@
 <script lang="ts">
   import Vue from 'vue'
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
-  import { required } from 'vee-validate/dist/rules'
+  import { min, required } from 'vee-validate/dist/rules'
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import Password from 'vue-password-strength-meter'
-  import { User } from '@/model/User'
 
   extend('signUp_required', {
     ...required,
     message: '{_field_} is required.',
+  })
+
+  extend('signUp_min', {
+    ...min,
+    message: '{_field_} too short.',
   })
 
   export default Vue.extend({
@@ -358,8 +362,8 @@
           await this.$store.dispatch('user/userRegister', { user: newUser, password: this.confirmPassword }).then(() => {
             console.log('registered successfully')
             this.successDialog = true
-          }).catch(() => {
-            console.log('register failed')
+          }).catch((error) => {
+            console.log('register failed', error)
           })
         } catch (error) {
           console.log(error)
