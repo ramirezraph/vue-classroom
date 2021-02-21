@@ -150,6 +150,7 @@
                               <password
                                 v-model="password"
                                 :strength-meter-only="true"
+                                @score="showScore"
                               />
                             </div>
                           </template>
@@ -254,7 +255,7 @@
                           color="primary"
                           class="subtitle-1 text-none"
                           type="submit"
-                          :disabled="invalid || !acceptTermsConditions"
+                          :disabled="invalid || !acceptTermsConditions || passwordStrength <= 1"
                           :loading="loading"
                         >
                           Sign Up
@@ -327,6 +328,7 @@
 
         showPassword: false,
         showConfirmPassword: false,
+        passwordStrength: 0,
 
         loading: false,
         successDialog: false,
@@ -380,6 +382,9 @@
       },
       saveBirthdate (date): void {
         (this.$refs.menuBirthdate as any).save(date)
+      },
+      showScore (score) {
+        this.passwordStrength = score
       },
     },
   })

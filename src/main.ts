@@ -37,7 +37,12 @@ Vue.component('DeleteConfirmDialog', DeleteConfirmDialog)
 let app
 
 firebaseAuth.onAuthStateChanged(user => {
-  console.log('user', user)
+  if (user) {
+    store.dispatch('user/setCurrentUser', { uid: user?.uid })
+      .catch(() => {
+      firebaseAuth.signOut()
+    })
+  }
   if (!app) {
     app = new Vue({
       router,
