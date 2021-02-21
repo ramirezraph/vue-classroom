@@ -3,6 +3,7 @@ import { classesCollection } from '@/fb'
 import { User } from '@/model/User';
 import { Unit } from '@/model/Unit';
 import { ClassFile, Lesson } from '@/model/Lesson';
+import Vue from "vue";
 
 export default {
   namespaced: true,

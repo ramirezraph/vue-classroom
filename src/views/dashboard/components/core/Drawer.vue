@@ -158,6 +158,7 @@
 
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       drawerClassLinks () {
+        this.$store.dispatch('classes/fetchClasses', this.$store.getters['user/getCurrentUser'])
         const classes = this.$store.getters['classes/classes']
         const classLinks = []
         classes.map(c => {

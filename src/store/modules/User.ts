@@ -47,7 +47,7 @@ export default {
      userSignIn(context, payload: { email: string, password: string }) {
       return new Promise((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
-          .then((userCredential: UserCredential) => {
+          .then(() => {
             resolve()
           })
           .catch(() => {
