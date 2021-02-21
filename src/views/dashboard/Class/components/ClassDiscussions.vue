@@ -17,6 +17,7 @@
         <v-card-text>
           <v-row class="px-6">
             <v-textarea
+              v-model="post_message"
               label="Type your message here"
               outlined
               color="blue"
@@ -72,6 +73,8 @@
               <v-btn
                 color="info"
                 min-width="150"
+                :loading="postLoading"
+                @click="postDiscussion"
               >
                 Post
               </v-btn>
@@ -106,17 +109,22 @@
           align-top
           dense
         >
-          <v-timeline-item
-            v-for="(post, i) in posts"
-            :key="i"
-            class="ml-n6"
-            color="green"
-            icon="mdi-forum"
-            fill-dot
-            medium
+          <transition-group
+            name="list"
+            tag="p"
           >
-            <post-item :post="post" />
-          </v-timeline-item>
+            <v-timeline-item
+              v-for="(post, i) in posts"
+              :key="i"
+              class="ml-n6"
+              color="green"
+              icon="mdi-forum"
+              fill-dot
+              medium
+            >
+              <post-item :post="post" />
+            </v-timeline-item>
+          </transition-group>
         </v-timeline>
       </v-card-text>
     </v-card>
@@ -127,6 +135,11 @@
   import Vue, { PropType } from 'vue'
   import PostItem from './PostItem.vue'
   import { Post } from '@/model/Post'
+  import { User } from '@/model/User'
+  import firebase from 'firebase'
+  import { classesCollection } from '@/fb'
+  // eslint-disable-next-line no-undef
+  import Timestamp = firebase.firestore.Timestamp;
 
   export default Vue.extend({
     components: {
@@ -140,12 +153,36 @@
     },
     data () {
       return {
-
+        post_message: '',
+        postLoading: false,
       }
     },
     computed: {
       posts (): Post[] {
         return this.discussions || []
+      },
+      user (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
+    },
+    methods: {
+      async postDiscussion () {
+        this.postLoading = true
+        const newPost = {
+          userId: this.user.id,
+          time: Timestamp.now(),
+          message: this.post_message,
+        }
+        const path = this.$route.path.split('/')
+        const classId = path[path.length - 1]
+        await classesCollection.doc(classId).collection('discussions')
+          .add(newPost).then(() => {
+            this.post_message = ''
+          }).catch(addError => {
+            console.log(addError, addError.message)
+          }).finally(() => {
+            this.postLoading = false
+          })
       },
     },
   })
@@ -154,5 +191,16 @@
 <style lang="scss" scoped>
     #discussions {
         background-color: #eeeeee;
+    }
+    .list-item {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .list-enter-active, .list-leave-active {
+      transition: all 1s;
+    }
+    .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+      opacity: 0;
+      transform: translateY(30px);
     }
 </style>

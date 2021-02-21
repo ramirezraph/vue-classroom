@@ -8,7 +8,7 @@
         <div>
           <v-avatar>
             <img
-              src="https://cdn.vuetifyjs.com/images/john.jpg"
+              :src="userProfile"
               alt="John"
             >
           </v-avatar>
@@ -16,9 +16,8 @@
         <div class="ml-3">
           <div
             class="d-block subtitle-2 font-weight-medium"
-            color="grey"
           >
-            {{ postItem.userName }}
+            {{ userName }}
           </div>
           <div class="d-block caption grey--text">
             <v-icon
@@ -84,6 +83,7 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { Post } from '@/model/Post.ts'
+  import { usersCollection } from '@/fb'
 
   export default Vue.extend({
     props: {
@@ -95,6 +95,8 @@
     data () {
       return {
         commentToggle: false,
+        userName: '',
+        userProfile: '',
       }
     },
     computed: {
@@ -107,9 +109,29 @@
         return theDate.toLocaleDateString('en-US', options)
       },
     },
+    mounted () {
+      usersCollection.doc(this.postItem.userId).get().then(doc => {
+        if (doc.exists) {
+          this.userName = this.getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+          this.userProfile = doc.data()?.imgProfile
+        }
+      })
+    },
     methods: {
       postComment (id: string): void {
         console.log(id, 'send button clicked')
+      },
+      getFullName (firstName: string, middleName: string, lastName: string): string {
+        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
+      },
+      middleInitial (middleName: string): string {
+        const midName: string[] = middleName.split(' ')
+        let middleInitial = ''
+        for (let i = 0; i < midName.length; i++) {
+          middleInitial += midName[i].substring(0, 1) + '.'
+        }
+
+        return middleInitial
       },
     },
   })

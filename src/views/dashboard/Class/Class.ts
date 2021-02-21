@@ -172,6 +172,8 @@ export default Vue.extend({
       try {
         let fetchDiscussions: Post[] = []
         classesCollection.doc(this.id).collection('discussions')
+          .orderBy('time', 'desc')
+          .limit(3)
           .onSnapshot(snapshot => {
             fetchDiscussions = []
             snapshot.forEach(doc => {
@@ -179,11 +181,12 @@ export default Vue.extend({
                 const post = new Post(
                   doc.id,
                   doc.data().userId,
-                  doc.data().userName,
                   doc.data().time,
                   doc.data().message,
                 )
+
                 post.comments = doc.data().comments
+
                 fetchDiscussions.push(post)
               }
             })
