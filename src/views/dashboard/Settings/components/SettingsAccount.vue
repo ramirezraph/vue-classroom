@@ -492,7 +492,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_firstName = newValue
+          this.input_firstName = newValue.trim()
         },
       },
       middleName: {
@@ -504,7 +504,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_middleName = newValue
+          this.input_middleName = newValue.trim()
         },
       },
       lastName: {
@@ -516,7 +516,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_lastName = newValue
+          this.input_lastName = newValue.trim()
         },
       },
       birthdate: {
@@ -540,7 +540,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_email = newValue
+          this.input_email = newValue.trim()
         },
       },
       phoneNumber: {
@@ -552,7 +552,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_phoneNumber = newValue
+          this.input_phoneNumber = newValue.trim()
         },
       },
       school: {
@@ -564,7 +564,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_school = newValue
+          this.input_school = newValue.trim()
         },
       },
       homeAddress: {
@@ -576,7 +576,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_homeAddress = newValue
+          this.input_homeAddress = newValue.trim()
         },
       },
       studentNumber: {
@@ -588,7 +588,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_studentNumber = newValue
+          this.input_studentNumber = newValue.trim()
         },
       },
       course: {
@@ -600,7 +600,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_course = newValue
+          this.input_course = newValue.trim()
         },
       },
       section: {
@@ -612,7 +612,7 @@
           }
         },
         set (newValue: string):void {
-          this.input_section = newValue
+          this.input_section = newValue.trim()
         },
       },
       hasChangesNow: {
