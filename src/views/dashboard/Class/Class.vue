@@ -262,7 +262,10 @@
             <v-tab-item
               value="discussion"
             >
-              <class-discussions :discussions="discussions" />
+              <class-discussions
+                :discussions="discussions"
+                @show-more-post="showMorePosts"
+              />
             </v-tab-item>
             <v-tab-item
               value="classwork"

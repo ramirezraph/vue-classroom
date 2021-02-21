@@ -86,6 +86,8 @@ export default Vue.extend({
       dialogViewContent: false,
       activeFile: {} as ClassFile,
       activeUnit: {} as Unit,
+
+      numberOfPostLimit: 3,
     }
   },
   computed: {
@@ -105,11 +107,7 @@ export default Vue.extend({
     },
     isClassOwner (): boolean {
       const currentUser: User = this.$store.getters['user/getCurrentUser']
-      if (currentUser.id === this.selectedClass.ownerId) {
-        return true
-      } else {
-        return false
-      }
+      return currentUser.id === this.selectedClass.ownerId
     },
 
     hasEditAccess (): boolean {
@@ -171,10 +169,13 @@ export default Vue.extend({
     fetchDiscussions (): void {
       try {
         let fetchDiscussions: Post[] = []
-        classesCollection.doc(this.id).collection('discussions')
+
+        // paginate
+        const query = classesCollection.doc(this.id).collection('discussions')
           .orderBy('time', 'desc')
-          .limit(3)
-          .onSnapshot(snapshot => {
+          .limit(this.numberOfPostLimit)
+
+        query.onSnapshot(snapshot => {
             fetchDiscussions = []
             snapshot.forEach(doc => {
               if (doc.exists) {
@@ -292,6 +293,10 @@ export default Vue.extend({
       this.activeUnit = unit
       this.activeFile = file
       this.dialogViewContent = true
+    },
+    showMorePosts (): void {
+      this.numberOfPostLimit += 3
+      this.fetchDiscussions()
     },
   },
 })

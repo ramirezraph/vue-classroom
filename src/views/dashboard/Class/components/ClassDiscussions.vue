@@ -126,6 +126,17 @@
             </v-timeline-item>
           </transition-group>
         </v-timeline>
+        <div class="text-center">
+          <v-btn
+            text
+            small
+            depressed
+            class="px-12 ml-12"
+            @click="showMorePosts"
+          >
+            Show More
+          </v-btn>
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -183,6 +194,9 @@
           }).finally(() => {
             this.postLoading = false
           })
+      },
+      showMorePosts (): void {
+        this.$emit('show-more-post')
       },
     },
   })
