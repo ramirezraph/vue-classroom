@@ -42,6 +42,16 @@ export default Vue.extend({
   },
   methods: {
     submitJoinClass (): void {
+      // check if already enrolled
+      const foundClass = this.$store.getters['classes/getClass'](this.join_classCode)
+      if (foundClass) {
+        this.join_classCode = ''
+        this.joinClassCardVisible = false
+        this.notificationType = 'success'
+        this.notificationMessage = 'You are already enrolled in this class.'
+        this.notification = true
+        return
+      }
       const data = classesCollection.doc(this.join_classCode).get()
         data.then(doc => {
           if (doc.exists) {
@@ -64,7 +74,7 @@ export default Vue.extend({
               this.join_classCode = ''
               this.joinClassCardVisible = false
               this.notificationType = 'error'
-              this.notificationMessage = 'Something went wrong. \n' + error
+              this.notificationMessage = error.message
               this.notification = true
               })
           } else {
