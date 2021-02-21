@@ -354,18 +354,18 @@
           }
 
           const newUser = {
-            firstName: this.firstName,
-            middleName: this.middleName,
-            lastName: this.lastName,
-            email: this.email,
+            firstName: this.firstName.trim(),
+            middleName: this.middleName.trim(),
+            lastName: this.lastName.trim(),
+            email: this.email.trim(),
             birthdate: this.birthdate,
           }
 
           await this.$store.dispatch('user/userRegister', { user: newUser, password: this.confirmPassword }).then(() => {
             console.log('registered successfully')
             this.successDialog = true
-          }).catch((error) => {
-            console.log('register failed', error)
+          }).catch((registerError) => {
+            this.errorMessage = 'Register failed: ' + registerError.message
           })
         } catch (error) {
           console.log(error)
