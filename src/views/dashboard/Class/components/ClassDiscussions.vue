@@ -128,6 +128,7 @@
         </v-timeline>
         <div class="text-center">
           <v-btn
+            v-if="discussions.length > 0"
             text
             small
             depressed

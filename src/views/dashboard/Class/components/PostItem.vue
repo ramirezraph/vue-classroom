@@ -41,8 +41,9 @@
           text
           outlined
           rounded
-          color="blue"
-          @click="commentToggle = !commentToggle"
+          color="primary"
+          @click="toggleComments"
+          @click.once="fetchComments"
         >
           <v-icon left>
             mdi-comment-outline
@@ -50,42 +51,83 @@
           Comment
         </v-btn>
       </div>
-      <v-expand-transition>
-        <div v-show="commentToggle">
+      <div v-if="commentToggle">
+        <div>
           <v-divider />
-          <v-row>
-            <v-col cols="2">
-              <v-avatar class="ml-n3 ml-sm-3">
-                <img
-                  src="https://cdn.vuetifyjs.com/images/john.jpg"
-                  alt="John"
-                >
-              </v-avatar>
-            </v-col>
-            <v-col cols="10">
-              <v-textarea
-                rows="1"
-                outlined
-                clearable
-                label="Write a comment"
-                append-icon="mdi-send"
-                color="blue"
-                @click:append="postComment(postItem.id)"
+          <v-list
+            three-line
+            class="ma-0 pa-0"
+          >
+            <template v-for="comment in comments">
+              <comment-item
+                :key="comment.id"
+                :comment="comment"
               />
-            </v-col>
-          </v-row>
+            </template>
+            <v-btn
+              small
+              text
+              class="text-none"
+              color="primary"
+              @click="viewMoreComments"
+            >
+              View more comments.
+            </v-btn>
+          </v-list>
         </div>
-      </v-expand-transition>
+        <v-expand-transition>
+          <div>
+            <v-divider />
+            <v-row>
+              <v-col cols="2">
+                <v-avatar class="ml-n3 ml-sm-3">
+                  <img
+                    :src="currentUser.profile"
+                  >
+                </v-avatar>
+              </v-col>
+              <v-col cols="10">
+                <v-form @submit.prevent="postComment(postItem.id)">
+                  <v-textarea
+                    v-model="comment_message"
+                    outlined
+                    clearable
+                    rows="1"
+                    auto-grow
+                    label="Write a comment"
+                    append-icon="mdi-send"
+                    color="primary"
+                    @click:append="postComment(postItem.id)"
+                  />
+                  <v-btn
+                    v-show="false"
+                    type="submit"
+                  />
+                </v-form>
+              </v-col>
+            </v-row>
+          </div>
+        </v-expand-transition>
+      </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { Post } from '@/model/Post.ts'
-  import { usersCollection } from '@/fb'
+  import { Comment, Post } from '@/model/Post.ts'
+  import { classesCollection, usersCollection } from '@/fb'
+  import { User } from '@/model/User'
+  import firebase from 'firebase'
+  import CommentItem from './CommentItem.vue'
+  // eslint-disable-next-line no-undef
+  import Timestamp = firebase.firestore.Timestamp;
+  // eslint-disable-next-line no-undef
 
   export default Vue.extend({
+    components: {
+      CommentItem,
+    },
     props: {
       post: {
         type: Object as PropType<Post>,
@@ -97,6 +139,10 @@
         commentToggle: false,
         userName: '',
         userProfile: '',
+        comment_message: '',
+
+        comments: [] as Comment[],
+        commentLimit: 2,
       }
     },
     computed: {
@@ -108,6 +154,13 @@
         const theDate = this.postItem.time.toDate()
         return theDate.toLocaleDateString('en-US', options)
       },
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
+      classId (): string {
+        const path = this.$route.path.split('/')
+        return path[path.length - 1]
+      },
     },
     mounted () {
       usersCollection.doc(this.postItem.userId).get().then(doc => {
@@ -118,8 +171,46 @@
       })
     },
     methods: {
-      postComment (id: string): void {
-        console.log(id, 'send button clicked')
+      fetchComments (): void {
+        let fetchComm: Comment[] = []
+        classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+          .collection('comments')
+          .orderBy('time', 'desc')
+          .onSnapshot(querySnapshot => {
+            fetchComm = []
+            querySnapshot.forEach(commentItem => {
+              console.log('read here on fetch')
+              if (commentItem.exists) {
+                const comment = new Comment(
+                  commentItem.id,
+                  commentItem.data()?.userId,
+                  commentItem.data()?.time,
+                  commentItem.data()?.message,
+                )
+                fetchComm.push(comment)
+              }
+            })
+            this.comments = fetchComm
+          })
+      },
+      toggleComments (): void {
+        this.commentToggle = !this.commentToggle
+      },
+      postComment (postId: string): void {
+        const newComment = {
+          userId: this.currentUser.id,
+          time: Timestamp.now(),
+          message: this.comment_message,
+        }
+
+        classesCollection.doc(this.classId).collection('discussions')
+          .doc(postId).collection('comments').add(newComment)
+          .catch(error => {
+            console.log(error.message)
+          }).finally(() => {
+            this.comment_message = ''
+            this.commentToggle = false
+          })
       },
       getFullName (firstName: string, middleName: string, lastName: string): string {
         return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
@@ -132,6 +223,21 @@
         }
 
         return middleInitial
+      },
+      convertDate (time: Timestamp): string {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
+        const theDate = time.toDate()
+        return theDate.toLocaleDateString('en-US', options)
+      },
+      viewMoreComments (): void {
+        classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+          .collection('comments').get()
+          .then(querySnapshot => {
+            if (this.commentLimit < querySnapshot.size) {
+              console.log('extend limit!')
+              this.commentLimit += 5
+            }
+          })
       },
     },
   })

@@ -18,6 +18,7 @@ import { User, UserType } from '@/model/User'
 import ViewContent from './components/ViewContent.vue'
 import { ClassFile } from '@/model/Lesson'
 import DocumentReference = firebase.firestore.DocumentReference;
+import DocumentData = firebase.firestore.DocumentData;
 
 extend('required', {
   ...required,
@@ -171,13 +172,12 @@ export default Vue.extend({
         let fetchDiscussions: Post[] = []
 
         // paginate
-        const query = classesCollection.doc(this.id).collection('discussions')
+        classesCollection.doc(this.id).collection('discussions')
           .orderBy('time', 'desc')
-          .limit(this.numberOfPostLimit)
-
-        query.onSnapshot(snapshot => {
+          .limit(this.numberOfPostLimit).onSnapshot(snapshot => {
             fetchDiscussions = []
             snapshot.forEach(doc => {
+              console.log('read')
               if (doc.exists) {
                 const post = new Post(
                   doc.id,
@@ -185,8 +185,6 @@ export default Vue.extend({
                   doc.data().time,
                   doc.data().message,
                 )
-
-                post.comments = doc.data().comments
 
                 fetchDiscussions.push(post)
               }
