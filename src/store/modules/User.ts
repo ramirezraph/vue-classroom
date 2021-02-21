@@ -19,28 +19,36 @@ export default {
     }
   },
   actions: {
+     setCurrentUser (context, payload: { uid: string }) {
+       // set current user
+       usersCollection.doc(payload.uid).onSnapshot(doc => {
+           if (doc.exists) {
+             let user = new User(
+               doc.id,
+               doc.data()?.firstName,
+               doc.data()?.middleName,
+               doc.data()?.lastName,
+               doc.data()?.birthdate,
+               doc.data()?.email,
+               doc.data()?.imgProfile
+             )
+
+             user.phoneNumber = doc.data()?.phoneNumber
+             user.school = doc.data()?.school
+             user.homeAddress = doc.data()?.homeAddress
+             user.studentNumber = doc.data()?.studentNumber
+             user.course = doc.data()?.course
+             user.section = doc.data()?.section
+
+             context.commit('SET_CURRENT_USER', user)
+           }
+     })
+     },
      userSignIn(context, payload: { email: string, password: string }) {
       return new Promise((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
           .then((userCredential: UserCredential) => {
-            // set current user
-            usersCollection.doc(userCredential.user?.uid).get().then(doc => {
-              if (doc.exists) {
-                let user = new User(
-                  doc.id,
-                  doc.data()?.firstName,
-                  doc.data()?.middleName,
-                  doc.data()?.lastName,
-                  doc.data()?.birthdate,
-                  doc.data()?.email,
-                  doc.data()?.imgProfile
-                )
-                context.commit('SET_CURRENT_USER', user)
-                resolve()
-              } else {
-                reject()
-              }
-            })
+            resolve()
           })
           .catch(() => {
             reject()

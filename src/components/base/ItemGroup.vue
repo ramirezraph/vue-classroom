@@ -18,7 +18,7 @@
         class="align-self-center"
         color="grey"
       >
-        <v-img src="https://demos.creative-tim.com/material-dashboard-pro/assets/img/faces/avatar.jpg" />
+        <v-img :src="item.imageSrc" />
       </v-list-item-avatar>
 
       <v-list-item-content>
@@ -26,20 +26,22 @@
       </v-list-item-content>
     </template>
 
-    <template v-for="(child, i) in children">
-      <base-item-sub-group
-        v-if="child.children"
-        :key="`sub-group-${i}`"
-        :item="child"
-      />
+    <div class="pt-3">
+      <template v-for="(child, i) in children">
+        <base-item-sub-group
+          v-if="child.children"
+          :key="`sub-group-${i}`"
+          :item="child"
+        />
 
-      <base-item
-        v-else
-        :key="`item-${i}`"
-        :item="child"
-        text
-      />
-    </template>
+        <base-item
+          v-else
+          :key="`item-${i}`"
+          :item="child"
+          text
+        />
+      </template>
+    </div>
   </v-list-group>
 </template>
 
@@ -61,6 +63,7 @@
           avatar: undefined,
           group: undefined,
           title: undefined,
+          imageSrc: undefined,
           children: [],
         }),
       },

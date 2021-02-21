@@ -44,6 +44,29 @@ const routes = [
         component: () => import('@/views/dashboard/Class/Class.vue'),
         props: true,
       },
+      {
+        name: 'Settings',
+        path: 'settings',
+        redirect: 'settings/general',
+        component: () => import('@/views/dashboard/Settings/Settings.vue'),
+        children: [
+          {
+            name: 'General Settings',
+            path: 'general',
+            component: () => import('@/views/dashboard/Settings/components/SettingsGeneral.vue'),
+          },
+          {
+            name: 'Account Settings',
+            path: 'account',
+            component: () => import('@/views/dashboard/Settings/components/SettingsAccount.vue'),
+          },
+          {
+            name: 'Appearance Settings',
+            path: 'appearance',
+            component: () => import('@/views/dashboard/Settings/components/SettingsAppearance.vue'),
+          },
+        ],
+      },
     ],
   },
   {

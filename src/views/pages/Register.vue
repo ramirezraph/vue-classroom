@@ -150,6 +150,7 @@
                               <password
                                 v-model="password"
                                 :strength-meter-only="true"
+                                @score="showScore"
                               />
                             </div>
                           </template>
@@ -254,7 +255,7 @@
                           color="primary"
                           class="subtitle-1 text-none"
                           type="submit"
-                          :disabled="invalid || !acceptTermsConditions"
+                          :disabled="invalid || !acceptTermsConditions || passwordStrength <= 1"
                           :loading="loading"
                         >
                           Sign Up
@@ -327,6 +328,7 @@
 
         showPassword: false,
         showConfirmPassword: false,
+        passwordStrength: 0,
 
         loading: false,
         successDialog: false,
@@ -352,18 +354,18 @@
           }
 
           const newUser = {
-            firstName: this.firstName,
-            middleName: this.middleName,
-            lastName: this.lastName,
-            email: this.email,
+            firstName: this.firstName.trim(),
+            middleName: this.middleName.trim(),
+            lastName: this.lastName.trim(),
+            email: this.email.trim(),
             birthdate: this.birthdate,
           }
 
           await this.$store.dispatch('user/userRegister', { user: newUser, password: this.confirmPassword }).then(() => {
             console.log('registered successfully')
             this.successDialog = true
-          }).catch((error) => {
-            console.log('register failed', error)
+          }).catch((registerError) => {
+            this.errorMessage = 'Register failed: ' + registerError.message
           })
         } catch (error) {
           console.log(error)
@@ -380,6 +382,9 @@
       },
       saveBirthdate (date): void {
         (this.$refs.menuBirthdate as any).save(date)
+      },
+      showScore (score) {
+        this.passwordStrength = score
       },
     },
   })
