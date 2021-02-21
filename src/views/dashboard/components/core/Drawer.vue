@@ -181,7 +181,7 @@
         const currentUser = this.$store.getters['user/getCurrentUser']
         return {
           avatar: true,
-          imageSrc: currentUser.profile,
+          imageSrc: currentUser?.profile,
           group: '',
           title: `${currentUser?.firstName} ${currentUser?.lastName}`,
           children: [
