@@ -10,10 +10,12 @@
         <v-row class="d-block">
           <div class="d-block d-flex mt-6 align-center">
             <div>
-              <v-avatar size="128">
+              <v-avatar
+                size="128"
+                style="border: 1px solid grey"
+              >
                 <img
                   :src="displayProfile"
-                  alt="img"
                 >
               </v-avatar>
             </div>
@@ -40,6 +42,8 @@
               small
               outlined
               :disabled="toggleUploadProfile"
+              :loading="removeProfilePhotoLoading"
+              @click="dialogConfirmRemovePhoto = true"
             >
               Remove
             </v-btn>
@@ -72,6 +76,8 @@
                 block
                 class="primary"
                 small
+                :loading="saveProfilePhotoLoading"
+                @click="saveProfilePhoto"
               >
                 Save
               </v-btn>
@@ -372,12 +378,18 @@
       :text="classicDialogText"
       @close="classicDialog = false"
     />
+    <confirm-dialog
+      :model="dialogConfirmRemovePhoto"
+      title="Remove Profile Photo"
+      text="Are you sure you want to remove your photo?"
+      @goto-response="removeProfile"
+    />
   </v-card>
 </template>
 <script lang="ts">
   import Vue from 'vue'
   import { User } from '@/model/User'
-  import { firebaseAuth, usersCollection } from '@/fb'
+  import { firebaseAuth, storageRef, usersCollection } from '@/fb'
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -386,6 +398,7 @@
   import { min, required } from 'vee-validate/dist/rules'
   import ClassicDialog from '@/views/dashboard/components/dialogs/ClassicDialog.vue'
   import firebase from 'firebase/app'
+  import Login from '@/views/pages/Login.vue'
 
   extend('changePassword_required', {
     ...required,
@@ -445,6 +458,10 @@
         classicDialog: false,
         classicDialogTitle: '',
         classicDialogText: '',
+
+        saveProfilePhotoLoading: false,
+        removeProfilePhotoLoading: false,
+        dialogConfirmRemovePhoto: false,
       }
     },
     computed: {
@@ -670,6 +687,51 @@
           this.imageSource = URL.createObjectURL(this.imageFile)
         } else {
           this.imageSource = ''
+        }
+      },
+      async saveProfilePhoto () {
+        this.saveProfilePhotoLoading = true
+        if (!this.imageSource) {
+          this.classicDialogTitle = 'Save Failed'
+          this.classicDialogText = 'Please select an image.'
+          this.classicDialog = true
+          return
+        }
+
+        const profileStorageRef = storageRef.child('users').child(this.user.id).child('profile')
+        await profileStorageRef.put(this.imageFile).then(() => {
+          profileStorageRef.getDownloadURL().then(url => {
+            usersCollection.doc(this.user.id).set({
+              imgProfile: url,
+            }, { merge: true })
+          })
+        }).finally(() => {
+          this.saveProfilePhotoLoading = false
+          this.toggleUploadProfile = false
+        }).catch(error => {
+          console.log(error.message)
+        })
+      },
+      async removeProfile (response: boolean) {
+        if (response) {
+          this.removeProfilePhotoLoading = true
+          // remove on storage
+          await storageRef.child('users').child(this.user.id).child('profile')
+            .delete().then(() => {
+              // set default on firestore
+              usersCollection.doc(this.user.id).set({
+                imgProfile: 'https://firebasestorage.googleapis.com/v0/b/lorem-classroom.appspot.com/o/users%2Fdefault_profile.jpg?alt=media&token=47adcd7a-be7b-4067-9d57-a0b173a91bd5',
+              }, { merge: true })
+            }).catch(error => {
+              this.classicDialogTitle = 'Remove Failed'
+              this.classicDialogText = error.message
+              this.classicDialog = true
+            }).finally(() => {
+              this.removeProfilePhotoLoading = false
+              this.dialogConfirmRemovePhoto = false
+            })
+        } else {
+          this.dialogConfirmRemovePhoto = false
         }
       },
       async submitChanges () {
