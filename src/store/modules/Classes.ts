@@ -3,7 +3,6 @@ import { classesCollection } from '@/fb'
 import { User } from '@/model/User';
 import { Unit } from '@/model/Unit';
 import { ClassFile, Lesson } from '@/model/Lesson';
-import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -36,9 +35,6 @@ export default {
       const unitIndex = state.classes[classIndex].units.findIndex((u: Unit) => u.id === payload.unitId)
       const lessonIndex = state.classes[classIndex].units[unitIndex].lessons.findIndex((l: Lesson) => l.id === payload.lessonId)
       state.classes[classIndex].units[unitIndex].lessons[lessonIndex].files = payload.files
-    },
-    ADD_CLASSES (state, payload: Class): void {
-      state.classes.push(payload)
     },
   },
   actions: {

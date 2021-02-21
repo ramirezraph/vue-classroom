@@ -18,7 +18,6 @@ import { User, UserType } from '@/model/User'
 import ViewContent from './components/ViewContent.vue'
 import { ClassFile } from '@/model/Lesson'
 import DocumentReference = firebase.firestore.DocumentReference;
-import DocumentData = firebase.firestore.DocumentData;
 
 extend('required', {
   ...required,
@@ -162,7 +161,7 @@ export default Vue.extend({
             })
             this.units = fetchUnit
             this.$store.dispatch('classes/fetchUnits', { class: this.selectedClass, units: this.units })
-          })
+           })
       } finally {
         this.unitDataLoading = false
       }

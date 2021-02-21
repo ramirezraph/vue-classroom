@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { firebaseAuth } from '@/fb'
-import DoneCallback = jest.DoneCallback;
 
 Vue.use(Router)
 

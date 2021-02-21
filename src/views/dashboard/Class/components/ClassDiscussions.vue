@@ -114,8 +114,8 @@
             tag="p"
           >
             <v-timeline-item
-              v-for="(post, i) in posts"
-              :key="i"
+              v-for="post in posts"
+              :key="post.id"
               class="ml-n6"
               color="green"
               icon="mdi-forum"

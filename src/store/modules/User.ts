@@ -39,7 +39,6 @@ export default {
              user.studentNumber = doc.data()?.studentNumber
              user.course = doc.data()?.course
              user.section = doc.data()?.section
-
              context.commit('SET_CURRENT_USER', user)
            }
      })

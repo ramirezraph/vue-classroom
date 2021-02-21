@@ -39,9 +39,6 @@ let app
 firebaseAuth.onAuthStateChanged(user => {
   if (user) {
     store.dispatch('user/setCurrentUser', { uid: user?.uid })
-      .catch(() => {
-      firebaseAuth.signOut()
-    })
   }
   if (!app) {
     app = new Vue({

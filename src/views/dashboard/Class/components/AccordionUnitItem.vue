@@ -274,7 +274,7 @@
         // confirm
         this.$emit('remove-unit', this.unit)
       },
-      fetchLessons (): void {
+      fetchLessons () {
         let fetchLessons: Lesson[] = []
         this.unitDbRef.collection('lessons').orderBy('lessonNumber')
           .onSnapshot(snapshot => {

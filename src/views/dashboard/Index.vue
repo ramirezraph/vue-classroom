@@ -10,6 +10,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
+  import { mapGetters } from 'vuex'
   export default Vue.extend({
     name: 'DashboardIndex',
     components: {
@@ -20,8 +21,13 @@
     data: () => ({
       expandOnHover: false,
     }),
+    computed: {
+      ...mapGetters({
+        currentUser: 'user/getCurrentUser',
+      }),
+    },
     mounted () {
-      this.$store.dispatch('classes/fetchClasses', this.$store.getters['user/getCurrentUser'])
+      this.$store.dispatch('classes/fetchClasses', this.currentUser)
     },
   })
 </script>
