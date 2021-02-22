@@ -4,6 +4,7 @@
     fullscreen
     hide-overlay
     transition="dialog-bottom-transition"
+    persistent
   >
     <v-card id="createDialog">
       <v-toolbar
@@ -17,7 +18,7 @@
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Create Class</v-toolbar-title>
+        <v-toolbar-title>{{ dialogTitle }}</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-row>
@@ -140,6 +141,7 @@
                     </validation-provider>
                     <div class="mt-6">
                       <v-btn
+                        v-if="dialogTitle === 'Create Class'"
                         min-width="200px"
                         color="info"
                         :disabled="invalid"
@@ -148,14 +150,102 @@
                         Create Class
                       </v-btn>
                       <v-btn
+                        v-if="dialogTitle === 'Class Settings'"
+                        min-width="200px"
+                        color="primary"
+                        :loading="submitChangesLoading"
+                        @click="submitEditClass"
+                      >
+                        Submit Changes
+                      </v-btn>
+                      <v-btn
                         text
                         @click="cancel"
                       >
-                        Cancel
+                        {{ dialogTitle === 'Class Settings' ? 'Back to Class' : 'Cancel' }}
                       </v-btn>
                     </div>
                   </v-form>
                 </validation-observer>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-if="dialogTitle === 'Class Settings'">
+          <v-col
+            cols="6"
+            class="ma-auto pa-auto"
+          >
+            <v-card>
+              <v-card-title class="text-left grey--text">
+                <span class="caption">Additional Class Settings</span>
+              </v-card-title>
+              <v-card-text class="pa-6 text-none">
+                <v-row
+                  no-gutters
+                  align="center"
+                >
+                  <v-col
+                    cols="6"
+                  >
+                    <v-subheader v-text="'Set who can post and comment'" />
+                  </v-col>
+                  <v-col
+                    cols="6"
+                  >
+                    <v-select
+                      v-model="selectDiscussionMode"
+                      class="text-none"
+                      :items="discussionModes"
+                      item-text="mode"
+                      item-value="mode"
+                      label="select mode"
+                      return-object
+                      single-line
+                    />
+                  </v-col>
+                </v-row>
+                <v-row
+                  no-gutters
+                  align="center"
+                >
+                  <v-col
+                    cols="6"
+                  >
+                    <v-subheader v-text="'Manage class invites'" />
+                  </v-col>
+                  <v-col
+                    cols="6"
+                  >
+                    <v-select
+                      v-model="selectClassInviteMode"
+                      class="text-none"
+                      :items="classInviteMode"
+                      item-text="mode"
+                      item-value="mode"
+                      label="select mode"
+                      return-object
+                      single-line
+                    />
+                  </v-col>
+                </v-row>
+
+                <div class="mt-6">
+                  <v-btn
+                    min-width="200px"
+                    color="error"
+                    class="text-none"
+                  >
+                    Archive
+                  </v-btn>
+                  <v-btn
+                    min-width="200px"
+                    color="info"
+                    class="text-none"
+                  >
+                    Pass Class Ownership
+                  </v-btn>
+                </div>
               </v-card-text>
             </v-card>
           </v-col>
@@ -172,13 +262,14 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import Vue, { PropType } from 'vue'
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { max, required } from 'vee-validate/dist/rules'
   import { classesCollection, storageRef } from '@/fb'
   import { User } from '@/model/User'
   import firebase from 'firebase'
+  import { Class } from '@/model/Class'
 
   export enum ClassColor {
     Red = 'red',
@@ -216,19 +307,54 @@
         type: Boolean,
         required: true,
       },
+      dialogTitle: {
+        type: String,
+        required: false,
+        default: 'Create Class',
+      },
+      classEdit: {
+        type: Object as PropType<Class>,
+        required: false,
+        default: function () {
+          return new Class(
+            '', '', '',
+            '', '', '',
+            'green', '')
+        },
+      },
+      teacher: {
+        type: Object as PropType<User>,
+        required: false,
+        default: function () {
+          return this.$store.getters['user/getCurrentUser']
+        },
+      },
     },
     data () {
       return {
-        currentUser: this.$store.getters['user/getCurrentUser'],
-
         title: '',
         description: '',
         code: '',
         imageFile: {} as File,
         imageSource: '',
-        color: ClassColor.Green,
+        color: '',
 
         dialogConfirmAddClass: false,
+
+        selectDiscussionMode: { mode: 'Students can post and comments' },
+        discussionModes: [
+          { mode: 'Students can post and comments' },
+          { mode: 'Students can only comment' },
+          { mode: 'Only teachers can post or comment' },
+        ],
+
+        selectClassInviteMode: { mode: 'Turn on' },
+        classInviteMode: [
+          { mode: 'Turn on' },
+          { mode: 'Turn off' },
+        ],
+
+        submitChangesLoading: false,
       }
     },
     computed: {
@@ -236,7 +362,7 @@
         return this.vModel
       },
       teacherName (): string {
-        return `${this.currentUser.firstName} ${this.currentUser.middleName.substr(0, 1)}. ${this.currentUser.lastName}`
+        return this.fullName(this.teacher)
       },
       displayTitle (): string {
         return this.title || 'Class Title'
@@ -261,6 +387,15 @@
         return colors
       },
     },
+    mounted () {
+      if (this.classEdit.id.length > 0) {
+        this.title = this.classEdit.title
+        this.description = this.classEdit.description
+        this.code = this.classEdit.code
+        this.color = this.classEdit.color
+        this.imageSource = this.classEdit.imageSource
+      }
+    },
     methods: {
       onImageSelect () {
         if (this.imageFile) {
@@ -283,7 +418,7 @@
             ownerId: currentUser.id,
             title: this.title,
             userList: [
-              this.currentUser.id,
+              this.teacher.id,
             ],
           }
           classesCollection.add(newClass)
@@ -317,7 +452,12 @@
                 })
             })
             .catch(error => {
-              console.log('adding class failed', error)
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Add Class Failed',
+                text: error.message,
+                type: 'error',
+              })
             })
         }
         this.dialogConfirmAddClass = false
@@ -330,6 +470,61 @@
         this.imageSource = ''
         this.color = ClassColor.Green
         this.$emit('cancel')
+      },
+      fullName (teacher: User): string {
+        return `${teacher.firstName} ${this.middleInitial(teacher)} ${teacher.lastName}`
+      },
+      middleInitial (teacher: User): string {
+        const midName: string[] = teacher.middleName.split(' ')
+        let middleInitial = ''
+        for (let i = 0; i < midName.length; i++) {
+          middleInitial += midName[i].substring(0, 1) + '.'
+        }
+
+        return middleInitial
+      },
+      async submitEditClass () {
+        this.submitChangesLoading = true
+        await classesCollection.doc(this.classEdit.id).update({
+          code: this.code,
+          color: this.color,
+          description: this.description,
+          title: this.title,
+        }).then(() => {
+          if (this.imageSource && this.imageSource !== this.classEdit.imageSource) {
+            storageRef.child('classes').child(this.classEdit.id)
+              .child('classImage')
+              .delete().then(() => {
+                if (this.imageSource) {
+                  // upload the class image on storage
+                  const classImageRef = storageRef.child('classes').child(this.classEdit.id).child('classImage')
+                  classImageRef.put(this.imageFile).then(() => {
+                    // and update the imgSource url in firestore db
+                    classImageRef.getDownloadURL().then(url => {
+                      classesCollection.doc(this.classEdit.id).set({
+                        imageSource: url,
+                      }, { merge: true })
+                    })
+                  })
+                }
+              })
+          }
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Success',
+            text: 'Class information has been updated successfully.',
+            type: 'success',
+          })
+        }).catch(error => {
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Failed',
+            text: error.message,
+            type: 'error',
+          })
+        }).finally(() => {
+          this.submitChangesLoading = false
+        })
       },
     },
   })

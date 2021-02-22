@@ -30,8 +30,31 @@
             outlined
             class="pb-6"
           >
-            <v-card-title>
-              <span>Class Material/s</span>
+            <v-card-title class="d-flex">
+              <div>
+                <span class="subtitle-2">Class Material/s</span>
+              </div>
+              <div
+                v-if="isClassOwner"
+                class="ml-auto"
+              >
+                <v-tooltip
+                  color="info"
+                  bottom
+                >
+                  <template #activator="{attrs, on}">
+                    <v-btn
+                      icon
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="editClass"
+                    >
+                      <v-icon>mdi-cog</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Class Settings</span>
+                </v-tooltip>
+              </div>
             </v-card-title>
             <v-skeleton-loader
               :loading="unitDataLoading"
@@ -292,17 +315,7 @@
       </v-col>
     </v-row>
 
-    <!--  Dialogs & Notifications -->
-    <base-material-snackbar
-      v-model="unitNotification"
-      :type="unitNotificationType"
-      v-bind="{
-        'top': true,
-        'center': true
-      }"
-    >
-      {{ unitNotificationMessage }}
-    </base-material-snackbar>
+    <!--  Dialogs -->
 
     <confirm-dialog
       :model="dialogConfirmAddUnit"
@@ -322,6 +335,14 @@
       :active-unit="activeUnit"
       :has-edit-access="hasEditAccess"
       @close="dialogViewContent = false"
+    />
+    <create-class-dialog
+      v-if="!destroyClassDialog"
+      :v-model="dialogEditClass"
+      dialog-title="Class Settings"
+      :class-edit="selectedClass"
+      :teacher="selectedClassOwner"
+      @cancel="closeEditClass"
     />
   </v-container>
 </template>
