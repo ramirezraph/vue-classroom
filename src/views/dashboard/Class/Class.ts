@@ -93,11 +93,15 @@ export default Vue.extend({
 
       dialogEditClass: false,
       destroyClassDialog: false,
+      selectedClassTeacher: {} as User,
     }
   },
   computed: {
     selectedClass (): Class {
       return this.getSelectedClass(this.id)
+    },
+    selectedClassOwner (): User {
+      return this.getSelectedClassOwner(this.selectedClass.ownerId)
     },
     unitNumberAlreadyExistsRule (): string {
       let unitNumbers = ''
@@ -314,6 +318,10 @@ export default Vue.extend({
       setTimeout(() => {
         this.destroyClassDialog = true
       }, 1000)
+    },
+    getSelectedClassOwner (ownerId: string): User {
+      const index = this.people.findIndex(user => user.id === ownerId)
+      return this.people[index]
     },
   },
 })

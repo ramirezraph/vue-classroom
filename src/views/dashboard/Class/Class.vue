@@ -348,6 +348,7 @@
       :v-model="dialogEditClass"
       dialog-title="Class Settings"
       :class-edit="selectedClass"
+      :teacher="selectedClassOwner"
       @cancel="closeEditClass"
     />
   </v-container>
