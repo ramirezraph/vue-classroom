@@ -319,7 +319,7 @@
           return new Class(
             '', '', '',
             '', '', '',
-            '', '')
+            'green', '')
         },
       },
       teacher: {
