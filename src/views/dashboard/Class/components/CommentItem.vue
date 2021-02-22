@@ -53,6 +53,7 @@
             <v-btn
               icon
               v-bind="attrs"
+              class="mt-n8"
               v-on="on"
             >
               <v-icon>
@@ -86,7 +87,7 @@
         </v-menu>
       </div>
     </v-card-title>
-    <v-card-text class="ma-0 pa-0 pl-12 mt-n4">
+    <v-card-text class="ma-0 pa-0 pl-12">
       <v-textarea
         v-model="commentItem.message"
         rows="1"
@@ -96,6 +97,7 @@
         readonly
         solo
         dense
+        class="mt-n8"
       />
     </v-card-text>
   </v-card>
