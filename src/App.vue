@@ -1,9 +1,11 @@
 <template>
   <div>
     <notifications
-      class="notification-style"
+      classes="notification-style"
       group="appWideNotification"
       position="bottom left"
+      animation-type="velocity"
+      width="400"
     />
     <router-view />
   </div>
@@ -30,10 +32,13 @@
 <style lang="scss">
 .notification-style {
 // Style of the notification itself
-  min-width: 450px;
-  padding: 2%;
-  margin: 0 5px 5px;
+  padding: 5%;
+  margin: 0 15px 15px;
   font-family: "Segoe UI",serif;
+  color: white;
+
+  background: #078282;
+  border-left: 5px solid #B3CC8D;
 
   .notification-title {
     font-size: 16px;
@@ -44,12 +49,17 @@
     font-size: 14px;
   }
 
-&.my-type {
-   /*
-   Style for specific type of notification, will be applied when you
-   call notification with "type" parameter:
-   this.$notify({ type: 'my-type', message: 'Foo' })
-   */
- }
+  &.success {
+    background: #2C5F2D;
+    border-left-color: #078282;
+  }
+  &.warn {
+    background: #ffbb33;
+    border-left-color: #078282;
+  }
+  &.error {
+    background: #ff4444;
+    border-left-color: #078282;
+  }
 }
 </style>
