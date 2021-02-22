@@ -51,31 +51,31 @@
           Comment
         </v-btn>
       </div>
-      <div v-if="commentToggle">
-        <div>
-          <v-divider />
-          <v-list
-            three-line
-            class="ma-0 pa-0"
-          >
-            <template v-for="comment in comments">
-              <comment-item
-                :key="comment.id"
-                :comment="comment"
-              />
-            </template>
-            <v-btn
-              small
-              text
-              class="text-none"
-              color="primary"
-              @click="viewMoreComments"
+      <v-expand-transition>
+        <div v-if="commentToggle">
+          <div>
+            <v-divider />
+            <v-list
+              three-line
+              class="ma-0 pa-0"
             >
-              View more comments.
-            </v-btn>
-          </v-list>
-        </div>
-        <v-expand-transition>
+              <template v-for="comment in comments">
+                <comment-item
+                  :key="comment.id"
+                  :comment="comment"
+                />
+              </template>
+              <v-btn
+                small
+                text
+                class="text-none"
+                color="primary"
+                @click="viewMoreComments"
+              >
+                View more comments.
+              </v-btn>
+            </v-list>
+          </div>
           <div>
             <v-divider />
             <v-row>
@@ -107,8 +107,8 @@
               </v-col>
             </v-row>
           </div>
-        </v-expand-transition>
-      </div>
+        </div>
+      </v-expand-transition>
     </v-card-text>
   </v-card>
 </template>
