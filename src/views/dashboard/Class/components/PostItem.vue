@@ -55,11 +55,13 @@
             </v-list-item>
             <v-list-item
               link
+              @click="editPost"
             >
               <span>Edit</span>
             </v-list-item>
             <v-list-item
               link
+              @click="deletePost"
             >
               <span>Remove</span>
             </v-list-item>
@@ -298,6 +300,12 @@
       deleteComment (commentId: string): void {
         this.commentIdToBeDeleted = commentId
         this.dialogConfirmDeleteComment = true
+      },
+      editPost () {
+        this.$emit('edit-post', this.postItem.id)
+      },
+      deletePost () {
+        this.$emit('delete-post', this.postItem.id)
       },
       confirmDeleteComment (response: boolean): void {
         if (response) {

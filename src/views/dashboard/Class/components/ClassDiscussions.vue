@@ -122,7 +122,11 @@
               fill-dot
               medium
             >
-              <post-item :post="post" />
+              <post-item
+                :post="post"
+                @edit-post="editPost"
+                @delete-post="deletePost"
+              />
             </v-timeline-item>
           </transition-group>
         </v-timeline>
@@ -140,6 +144,12 @@
         </div>
       </v-card-text>
     </v-card>
+    <confirm-dialog
+      :model="dialogConfirmDeletePost"
+      title="Delete post?"
+      text="Are you sure you want to delete this post?"
+      @goto-response="confirmDeletePost"
+    />
   </div>
 </template>
 
@@ -167,6 +177,9 @@
       return {
         post_message: '',
         postLoading: false,
+
+        dialogConfirmDeletePost: false,
+        postIdToBeDeleted: '',
       }
     },
     computed: {
@@ -175,6 +188,10 @@
       },
       user (): User {
         return this.$store.getters['user/getCurrentUser']
+      },
+      classId (): string {
+        const path = this.$route.path.split('/')
+        return path[path.length - 1]
       },
     },
     methods: {
@@ -198,6 +215,35 @@
       },
       showMorePosts (): void {
         this.$emit('show-more-post')
+      },
+      editPost (postId: string): void {
+        console.log(postId)
+      },
+      deletePost (postId: string): void {
+        this.postIdToBeDeleted = postId
+        this.dialogConfirmDeletePost = true
+      },
+      confirmDeletePost (response: boolean) {
+        if (response) {
+          const postRef = classesCollection.doc(this.classId).collection('discussions').doc(this.postIdToBeDeleted)
+          postRef.delete()
+            .then(() => {
+              postRef.collection('comments').get()
+                .then(comments => {
+                  comments.forEach(comment => {
+                    postRef.collection('comments').doc(comment.id)
+                      .delete()
+                      .then(() => {
+                        console.log('success')
+                      })
+                  })
+                })
+            })
+            .catch((deleteError) => {
+              console.log(deleteError)
+            })
+        }
+        this.dialogConfirmDeletePost = false
       },
     },
   })
