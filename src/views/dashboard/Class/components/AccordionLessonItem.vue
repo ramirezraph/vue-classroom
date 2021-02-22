@@ -46,7 +46,7 @@
             readonly
             solo
             dense
-            class="ma-0 mb-n12"
+            class="ma-0 mb-n6"
           />
         </div>
         <div class="mt-6">
