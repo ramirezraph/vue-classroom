@@ -36,9 +36,6 @@ export default {
       const lessonIndex = state.classes[classIndex].units[unitIndex].lessons.findIndex((l: Lesson) => l.id === payload.lessonId)
       state.classes[classIndex].units[unitIndex].lessons[lessonIndex].files = payload.files
     },
-    ADD_CLASSES (state, payload: Class): void {
-      state.classes.push(payload)
-    },
   },
   actions: {
      fetchClasses (context, payload: User): void {

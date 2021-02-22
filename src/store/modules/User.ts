@@ -39,15 +39,15 @@ export default {
              user.studentNumber = doc.data()?.studentNumber
              user.course = doc.data()?.course
              user.section = doc.data()?.section
-
              context.commit('SET_CURRENT_USER', user)
+             context.dispatch('classes/fetchClasses', user, { root: true })
            }
      })
      },
      userSignIn(context, payload: { email: string, password: string }) {
       return new Promise((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
-          .then((userCredential: UserCredential) => {
+          .then(() => {
             resolve()
           })
           .catch(() => {

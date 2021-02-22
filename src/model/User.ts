@@ -26,4 +26,18 @@ export class User {
     public email: string,
     public profile: string = '',
   ) {}
+
+  get fullName (): string {
+    return `${this.firstName} ${this.middleInitial} ${this.lastName}`
+  }
+
+  get middleInitial (): string {
+    const midName: string[] = this.middleName.split(' ')
+    let middleInitial = ''
+    for (let i = 0; i < midName.length; i++) {
+      middleInitial += midName[i].substring(0, 1) + '.'
+    }
+
+    return middleInitial
+  }
 }
