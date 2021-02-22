@@ -179,7 +179,6 @@
           .onSnapshot(querySnapshot => {
             fetchComm = []
             querySnapshot.forEach(commentItem => {
-              console.log('read here on fetch')
               if (commentItem.exists) {
                 const comment = new Comment(
                   commentItem.id,

@@ -176,7 +176,6 @@ export default Vue.extend({
           .limit(this.numberOfPostLimit).onSnapshot(snapshot => {
             fetchDiscussions = []
             snapshot.forEach(doc => {
-              console.log('read')
               if (doc.exists) {
                 const post = new Post(
                   doc.id,
