@@ -8,18 +8,28 @@
       <v-card>
         <v-card-title class="pb-3">
           <div class="d-flex">
-            <div class="headline">
-              Edit Post
+            <div>
+              <v-avatar class="mt-0">
+                <img
+                  :src="userProfile"
+                >
+              </v-avatar>
             </div>
-            <div class="ml-auto">
-              <v-btn
-                text
-                outlined
-                class="px-6 text-none"
-                @click="close"
+            <div class="ml-3">
+              <div
+                class="d-block subtitle-2 font-weight-medium"
               >
-                Cancel
-              </v-btn>
+                {{ userName }}
+              </div>
+              <div class="d-block caption grey--text">
+                <v-icon
+                  small
+                  color="grey"
+                >
+                  mdi-clock-time-eight-outline
+                </v-icon>
+                {{ convertedDate }}
+              </div>
             </div>
           </div>
         </v-card-title>

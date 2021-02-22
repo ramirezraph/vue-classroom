@@ -114,10 +114,7 @@
           <div>
             <v-divider />
 
-            <v-list
-              three-line
-              class="ma-0 pa-0 pt-3"
-            >
+            <div>
               <v-btn
                 small
                 text
@@ -127,22 +124,24 @@
               >
                 View more comments
               </v-btn>
-              <transition-group
-                name="list"
-                tag="p"
-              >
-                <template v-for="comment in comments">
-                  <comment-item
-                    :key="comment.id"
-                    :comment="comment"
-                    @edit-comment="editComment"
-                    @remove-comment="deleteComment"
-                  />
-                </template>
-              </transition-group>
-            </v-list>
+              <div class="mt-6">
+                <transition-group
+                  name="list"
+                  tag="p"
+                >
+                  <template v-for="comment in comments">
+                    <comment-item
+                      :key="comment.id"
+                      :comment="comment"
+                      @edit-comment="editComment"
+                      @remove-comment="deleteComment"
+                    />
+                  </template>
+                </transition-group>
+              </div>
+            </div>
           </div>
-          <div>
+          <div class="mt-n6">
             <v-divider />
             <v-row>
               <v-col cols="2">
@@ -163,6 +162,7 @@
                     label="Write a comment"
                     append-icon="mdi-send"
                     color="primary"
+                    style="white-space: pre"
                     @click:append="postComment(postItem.id)"
                   />
                   <v-btn

@@ -191,7 +191,7 @@
         postLoading: false,
 
         dialogEditPost: false,
-        postToEdit: null,
+        postToEdit: {} as Post,
 
         dialogConfirmDeletePost: false,
         postIdToBeDeleted: '',

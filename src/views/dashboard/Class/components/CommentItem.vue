@@ -1,16 +1,23 @@
 <template>
-  <v-list-item
-    class="pa-0 ma-0 mb-n3"
+  <v-card
+    flat
+    class="ma-0 pa-0"
   >
-    <v-list-item-avatar class="mt-6">
-      <v-img :src="userProfile" />
-    </v-list-item-avatar>
-
-    <v-list-item-content>
+    <v-card-title class="ma-0 pa-0">
       <div class="d-flex">
         <div>
-          <div class="d-flex">
-            <v-list-item-title v-html="userName" />
+          <v-avatar>
+            <img
+              :src="userProfile"
+              alt="John"
+            >
+          </v-avatar>
+        </div>
+        <div class="ml-3 mt-0">
+          <div
+            class="d-block subtitle-2 font-weight-medium"
+          >
+            {{ userName }}
             <v-tooltip
               right
               color="info"
@@ -31,64 +38,63 @@
               <span>{{ convertedDate }}</span>
             </v-tooltip>
           </div>
-          <div class="mt-0">
-            <v-list-item-subtitle
-              v-html="comment.message"
-            />
-          </div>
-        </div>
-        <div class="ml-auto">
-          <v-menu
-            rounded
-            offset-y
-          >
-            <template #activator="{ attrs, on }">
-              <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon>
-                  mdi-dots-vertical
-                </v-icon>
-              </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-item
-                link
-              >
-                <v-icon left>
-                  mdi-pin-outline
-                </v-icon>
-                <span>Pin to top</span>
-              </v-list-item>
-              <v-list-item
-                link
-                @click="editComment"
-              >
-                <v-icon left>
-                  mdi-pencil-outline
-                </v-icon>
-                <span>Edit</span>
-              </v-list-item>
-              <v-list-item
-                link
-                @click="removeComment"
-              >
-                <v-icon left>
-                  mdi-delete-outline
-                </v-icon>
-                <span>Remove</span>
-              </v-list-item>
-            </v-list>
-          </v-menu>
         </div>
       </div>
-    </v-list-item-content>
-  </v-list-item>
-</template>
+      <div class="ml-auto">
+        <v-menu
+          rounded
+          offset-y
+        >
+          <template #activator="{ attrs, on }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
+          </template>
 
+          <v-list>
+            <v-list-item
+              link
+              @click="editComment"
+            >
+              <v-icon left>
+                mdi-pencil-outline
+              </v-icon>
+              <span>Edit</span>
+            </v-list-item>
+            <v-list-item
+              link
+              @click="removeComment"
+            >
+              <v-icon left>
+                mdi-delete-outline
+              </v-icon>
+              <span>Remove</span>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </v-card-title>
+    <v-card-text class="ma-0 pa-0 pl-12 mt-n4">
+      <v-textarea
+        v-model="commentItem.message"
+        class="transparent"
+        rows="1"
+        auto-grow
+        flat
+        style="white-space: pre"
+        readonly
+        solo
+        dense
+      />
+    </v-card-text>
+  </v-card>
+</template>
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { Comment } from '@/model/Post'
@@ -109,6 +115,9 @@
       }
     },
     computed: {
+      commentItem (): Comment {
+        return this.comment
+      },
       convertedDate (): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = this.comment.time.toDate()
