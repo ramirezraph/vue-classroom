@@ -80,6 +80,7 @@
                       :has-edit-access="hasEditAccess"
                       :class-db-ref="computed_dbRef"
                       :unit="unitItem"
+                      :units="units"
                       @remove-unit="removeUnit"
                       @file-clicked="fileClicked"
                     />

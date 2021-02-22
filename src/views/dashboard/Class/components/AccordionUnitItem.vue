@@ -66,6 +66,23 @@
             <template #activator="{ on, attrs }">
               <v-btn
                 icon
+                v-bind="attrs"
+                v-on="on"
+                @click="toggleEditUnit"
+              >
+                <v-icon size="25">
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>
+              Edit Unit
+            </span>
+          </v-tooltip>
+          <v-tooltip left>
+            <template #activator="{ on, attrs }">
+              <v-btn
+                icon
                 color="error"
                 v-bind="attrs"
                 v-on="on"
@@ -170,6 +187,95 @@
           </v-card-text>
         </v-card>
       </v-expand-transition>
+      <v-expand-transition>
+        <v-card
+          v-if="showHideEditUnit"
+          elevation="6"
+          class="pa-2"
+          outlined
+        >
+          <v-card-title class="text-h4">
+            Edit Unit
+          </v-card-title>
+          <v-card-text>
+            <validation-observer
+              ref="observer"
+              v-slot="{ invalid }"
+            >
+              <v-form
+                class="mt-4"
+                @submit.prevent="submitEditUnit"
+              >
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Unit Number"
+                  :rules="`required|min_value:0|${unitNumberAlreadyExistsRuleEdit}`"
+                >
+                  <v-text-field
+                    v-model="edit_unitNumber"
+                    label="Unit Number"
+                    color="info"
+                    outlined
+                    rounded
+                    type="number"
+                    :error-messages="errors"
+                    dense
+                    prepend-inner-icon="mdi-pencil-outline"
+                  />
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Unit Title"
+                  rules="required"
+                >
+                  <v-text-field
+                    v-model="edit_unitTitle"
+                    label="Unit Title"
+                    color="info"
+                    outlined
+                    rounded
+                    :error-messages="errors"
+                    dense
+                    prepend-inner-icon="mdi-pencil-outline"
+                  />
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Short Description"
+                >
+                  <v-textarea
+                    v-model="edit_unitDescription"
+                    label="Short Description"
+                    color="info"
+                    outlined
+                    rounded
+                    optional
+                    :error-messages="errors"
+                    hint="Optional"
+                    rows="3"
+                    prepend-inner-icon="mdi-card-text-outline"
+                  />
+                </validation-provider>
+                <v-btn
+                  type="submit"
+                  :disabled="invalid"
+                  class="info mr-2"
+                  :loading="editUnitLoading"
+                >
+                  Save Changes
+                </v-btn>
+                <v-btn
+                  text
+                  outlined
+                  @click="toggleEditUnit"
+                >
+                  Cancel
+                </v-btn>
+              </v-form>
+            </validation-observer>
+          </v-card-text>
+        </v-card>
+      </v-expand-transition>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -215,6 +321,10 @@
         type: Object as PropType<Unit>,
         required: true,
       },
+      units: {
+        type: Array as PropType<Unit[]>,
+        required: true,
+      },
       classDbRef: {
         type: Object as PropType<DocumentReference>,
         required: true,
@@ -230,6 +340,13 @@
         add_lessonNumber: null,
         add_lessonTitle: '',
         add_lessonDescription: '',
+
+        showHideEditUnit: false,
+        edit_unitNumberTemp: -1,
+        edit_unitNumber: -1,
+        edit_unitTitle: '',
+        edit_unitDescription: '',
+        editUnitLoading: false,
 
         componentKey: 0,
       }
@@ -255,6 +372,16 @@
         lessonNumbers = lessonNumbers.substring(0, lessonNumbers.length - 1)
         return `excluded:${lessonNumbers}`
       },
+      unitNumberAlreadyExistsRuleEdit (): string {
+        let unitNumbers = ''
+        this.units.forEach(unit => {
+          if (this.edit_unitNumberTemp !== unit.unitNumber) {
+            unitNumbers += unit.unitNumber + ','
+          }
+        })
+        unitNumbers = unitNumbers.substring(0, unitNumbers.length - 1)
+        return `excluded:${unitNumbers}`
+      },
     },
     watch: {
       '$route' () {
@@ -269,6 +396,40 @@
         this.add_lessonTitle = ''
         this.add_lessonDescription = ''
         this.showHideAddLesson = !this.showHideAddLesson
+      },
+      toggleEditUnit (): void {
+        this.edit_unitNumber = this.unitItem.unitNumber
+        this.edit_unitTitle = this.unitItem.title
+        this.edit_unitDescription = this.unitItem.shortDescription
+
+        this.edit_unitNumberTemp = this.unitItem.unitNumber
+
+        this.showHideEditUnit = !this.showHideEditUnit
+      },
+      async submitEditUnit () {
+        this.editUnitLoading = true
+        await this.unitDbRef.update({
+          number: this.edit_unitNumber,
+          title: this.edit_unitTitle,
+          shortDescription: this.edit_unitDescription,
+        }).then(() => {
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Success',
+            text: 'Unit has been updated successfully.',
+            type: 'success',
+          })
+        }).catch(error => {
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Failed',
+            text: error.message,
+            type: 'error',
+          })
+        }).finally(() => {
+          this.editUnitLoading = false
+        })
+        this.toggleEditUnit()
       },
       removeUnit (): void {
         // confirm
