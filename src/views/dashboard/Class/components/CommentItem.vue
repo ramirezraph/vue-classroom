@@ -2,7 +2,7 @@
   <v-list-item
     class="pa-0 ma-0 mb-n3"
   >
-    <v-list-item-avatar>
+    <v-list-item-avatar class="mt-6">
       <v-img :src="userProfile" />
     </v-list-item-avatar>
 
@@ -32,13 +32,48 @@
             </v-tooltip>
           </div>
           <div class="mt-0">
-            <v-list-item-subtitle v-html="comment.message" />
+            <v-list-item-subtitle
+              v-html="comment.message"
+            />
           </div>
         </div>
         <div class="ml-auto">
-          <v-btn icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
+          <v-menu
+            rounded
+            offset-y
+          >
+            <template #activator="{ attrs, on }">
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon>
+                  mdi-dots-vertical
+                </v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item
+                link
+              >
+                <span>Pin to top</span>
+              </v-list-item>
+              <v-list-item
+                link
+                @click="editComment"
+              >
+                <span>Edit</span>
+              </v-list-item>
+              <v-list-item
+                link
+                @click="removeComment"
+              >
+                <span>Remove</span>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </div>
     </v-list-item-content>
@@ -91,6 +126,12 @@
         }
 
         return middleInitial
+      },
+      editComment () {
+        this.$emit('edit-comment', this.comment.id)
+      },
+      removeComment () {
+        this.$emit('remove-comment', this.comment.id)
       },
     },
   })

@@ -30,6 +30,42 @@
           </div>
         </div>
       </div>
+      <div class="ml-auto">
+        <v-menu
+          rounded
+          offset-y
+        >
+          <template #activator="{ attrs, on }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              link
+            >
+              <span>Pin to top</span>
+            </v-list-item>
+            <v-list-item
+              link
+            >
+              <span>Edit</span>
+            </v-list-item>
+            <v-list-item
+              link
+            >
+              <span>Remove</span>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </v-card-title>
     <v-card-text class="pt-3 body-1">
       <div class="pb-6">
@@ -52,19 +88,16 @@
         </v-btn>
       </div>
       <v-expand-transition>
-        <div v-if="commentToggle">
+        <div
+          v-if="commentToggle"
+        >
           <div>
             <v-divider />
+
             <v-list
               three-line
-              class="ma-0 pa-0"
+              class="ma-0 pa-0 pt-3"
             >
-              <template v-for="comment in comments">
-                <comment-item
-                  :key="comment.id"
-                  :comment="comment"
-                />
-              </template>
               <v-btn
                 small
                 text
@@ -74,6 +107,19 @@
               >
                 View more comments.
               </v-btn>
+              <transition-group
+                name="list"
+                tag="p"
+              >
+                <template v-for="comment in comments">
+                  <comment-item
+                    :key="comment.id"
+                    :comment="comment"
+                    @edit-comment="editComment"
+                    @remove-comment="deleteComment"
+                  />
+                </template>
+              </transition-group>
             </v-list>
           </div>
           <div>
@@ -110,6 +156,12 @@
         </div>
       </v-expand-transition>
     </v-card-text>
+    <confirm-dialog
+      :model="dialogConfirmDeleteComment"
+      title="Delete comment?"
+      text="Are you sure you want to delete this comment?"
+      @goto-response="confirmDeleteComment"
+    />
   </v-card>
 </template>
 
@@ -143,6 +195,9 @@
 
         comments: [] as Comment[],
         commentLimit: 2,
+
+        dialogConfirmDeleteComment: false,
+        commentIdToBeDeleted: '',
       }
     },
     computed: {
@@ -175,7 +230,7 @@
         let fetchComm: Comment[] = []
         classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
           .collection('comments')
-          .orderBy('time', 'desc')
+          .orderBy('time', 'asc')
           .onSnapshot(querySnapshot => {
             fetchComm = []
             querySnapshot.forEach(commentItem => {
@@ -208,7 +263,6 @@
             console.log(error.message)
           }).finally(() => {
             this.comment_message = ''
-            this.commentToggle = false
           })
       },
       getFullName (firstName: string, middleName: string, lastName: string): string {
@@ -229,19 +283,47 @@
         return theDate.toLocaleDateString('en-US', options)
       },
       viewMoreComments (): void {
-        classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
-          .collection('comments').get()
-          .then(querySnapshot => {
-            if (this.commentLimit < querySnapshot.size) {
-              console.log('extend limit!')
-              this.commentLimit += 5
-            }
-          })
+        // classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+        //   .collection('comments').get()
+        //   .then(querySnapshot => {
+        //     if (this.commentLimit < querySnapshot.size) {
+        //       console.log('extend limit!')
+        //       this.commentLimit += 5
+        //     }
+        //   })
+      },
+      editComment (commentId: string): void {
+        console.log(commentId)
+      },
+      deleteComment (commentId: string): void {
+        this.commentIdToBeDeleted = commentId
+        this.dialogConfirmDeleteComment = true
+      },
+      confirmDeleteComment (response: boolean): void {
+        if (response) {
+          classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+            .collection('comments').doc(this.commentIdToBeDeleted)
+            .delete()
+            .catch((deleteError) => {
+              console.log(deleteError)
+            })
+        }
+        this.dialogConfirmDeleteComment = false
       },
     },
   })
 </script>
 
 <style lang="scss" scoped>
-
+  .list-item {
+    display: inline-block;
+    margin-right: 5px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 0.5s;
+  }
+  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(5px);
+  }
 </style>
