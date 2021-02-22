@@ -1,16 +1,25 @@
 <template>
-  <v-list-item
-    class="pa-0 ma-0 mb-n3"
+  <v-card
+    flat
+    class="ma-0 pa-0"
   >
-    <v-list-item-avatar>
-      <v-img :src="userProfile" />
-    </v-list-item-avatar>
-
-    <v-list-item-content>
+    <v-card-title class="ma-0 pa-0">
       <div class="d-flex">
         <div>
-          <div class="d-flex">
-            <v-list-item-title v-html="userName" />
+          <v-avatar
+            style="border: 1px solid lightgray"
+          >
+            <img
+              :src="userProfile"
+              alt="John"
+            >
+          </v-avatar>
+        </div>
+        <div class="ml-3 mt-0">
+          <div
+            class="d-block subtitle-2 font-weight-medium"
+          >
+            {{ userName }}
             <v-tooltip
               right
               color="info"
@@ -19,7 +28,6 @@
                 <v-btn
                   icon
                   x-small
-                  class="ml-2"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -31,24 +39,72 @@
               <span>{{ convertedDate }}</span>
             </v-tooltip>
           </div>
-          <div class="mt-0">
-            <v-list-item-subtitle v-html="comment.message" />
-          </div>
-        </div>
-        <div class="ml-auto">
-          <v-btn icon>
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
         </div>
       </div>
-    </v-list-item-content>
-  </v-list-item>
-</template>
+      <div
+        class="ml-auto"
+      >
+        <v-menu
+          v-if="editAccess || deleteAccess"
+          rounded
+          offset-y
+        >
+          <template #activator="{ attrs, on }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
+          </template>
 
+          <v-list>
+            <v-list-item
+              v-if="editAccess"
+              link
+              @click="editComment"
+            >
+              <v-icon left>
+                mdi-pencil-outline
+              </v-icon>
+              <span>Edit</span>
+            </v-list-item>
+            <v-list-item
+              v-if="deleteAccess"
+              link
+              @click="removeComment"
+            >
+              <v-icon left>
+                mdi-delete-outline
+              </v-icon>
+              <span>Remove</span>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </v-card-title>
+    <v-card-text class="ma-0 pa-0 pl-12 mt-n4">
+      <v-textarea
+        v-model="commentItem.message"
+        rows="1"
+        auto-grow
+        flat
+        style="white-space: pre"
+        readonly
+        solo
+        dense
+      />
+    </v-card-text>
+  </v-card>
+</template>
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { Comment } from '@/model/Post'
   import { usersCollection } from '@/fb'
+  import { User } from '@/model/User'
 
   export default Vue.extend({
     name: 'CommentItem',
@@ -56,6 +112,11 @@
       comment: {
         type: Object as PropType<Comment>,
         required: true,
+      },
+      teacherAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
     data () {
@@ -65,10 +126,25 @@
       }
     },
     computed: {
+      commentItem (): Comment {
+        return this.comment
+      },
       convertedDate (): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = this.comment.time.toDate()
         return theDate.toLocaleDateString('en-US', options)
+      },
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
+      deleteAccess (): boolean {
+        if (this.teacherAccess) {
+          return true
+        }
+        return this.currentUser.id === this.commentItem.userId
+      },
+      editAccess (): boolean {
+        return this.currentUser.id === this.commentItem.userId
       },
     },
     mounted () {
@@ -91,6 +167,12 @@
         }
 
         return middleInitial
+      },
+      editComment () {
+        this.$emit('edit-comment', this.comment.id)
+      },
+      removeComment () {
+        this.$emit('remove-comment', this.comment.id)
       },
     },
   })

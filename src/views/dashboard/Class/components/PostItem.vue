@@ -6,7 +6,9 @@
     <v-card-title>
       <div class="d-flex">
         <div>
-          <v-avatar>
+          <v-avatar
+            style="border: 1px solid lightgray"
+          >
             <img
               :src="userProfile"
               alt="John"
@@ -30,10 +32,70 @@
           </div>
         </div>
       </div>
+      <div class="ml-auto">
+        <v-menu
+          v-if="deleteAccess || editAccess || teacherAccess"
+          rounded
+          offset-y
+        >
+          <template #activator="{ attrs, on }">
+            <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-if="teacherAccess"
+              link
+            >
+              <v-icon left>
+                mdi-pin-outline
+              </v-icon>
+              <span>Pin to top</span>
+            </v-list-item>
+            <v-list-item
+              v-if="editAccess"
+              link
+              @click="editPost"
+            >
+              <v-icon left>
+                mdi-pencil-outline
+              </v-icon>
+              <span>Edit</span>
+            </v-list-item>
+            <v-list-item
+              v-if="deleteAccess"
+              link
+              @click="deletePost"
+            >
+              <v-icon left>
+                mdi-delete-outline
+              </v-icon>
+              <span>Remove</span>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </v-card-title>
     <v-card-text class="pt-3 body-1">
-      <div class="pb-6">
-        {{ postItem.message }}
+      <div>
+        <v-textarea
+          v-model="postItem.message"
+          rows="1"
+          auto-grow
+          flat
+          style="white-space: pre"
+          readonly
+          solo
+          dense
+        />
       </div>
       <div class="pb-3">
         <v-btn
@@ -46,41 +108,55 @@
           @click.once="fetchComments"
         >
           <v-icon left>
-            mdi-comment-outline
+            {{ postItem.numberOfComments > 0 ? 'mdi-comment' : 'mdi-comment-outline' }}
           </v-icon>
-          Comment
+          {{ commentBtnText }}
         </v-btn>
       </div>
-      <div v-if="commentToggle">
-        <div>
-          <v-divider />
-          <v-list
-            three-line
-            class="ma-0 pa-0"
-          >
-            <template v-for="comment in comments">
-              <comment-item
-                :key="comment.id"
-                :comment="comment"
-              />
-            </template>
-            <v-btn
-              small
-              text
-              class="text-none"
-              color="primary"
-              @click="viewMoreComments"
-            >
-              View more comments.
-            </v-btn>
-          </v-list>
-        </div>
-        <v-expand-transition>
+      <v-expand-transition>
+        <div
+          v-if="commentToggle"
+        >
           <div>
+            <v-divider />
+
+            <div>
+              <v-btn
+                small
+                text
+                class="text-none mb-2"
+                color="primary"
+                @click="viewMoreComments"
+              >
+                View more comments
+              </v-btn>
+              <div class="mt-6">
+                <transition-group
+                  name="list"
+                  tag="p"
+                >
+                  <template v-for="comment in comments">
+                    <comment-item
+                      :key="comment.id"
+                      :comment="comment"
+                      class="mt-n3"
+                      :teacher-access="teacherAccess"
+                      @edit-comment="editComment"
+                      @remove-comment="deleteComment"
+                    />
+                  </template>
+                </transition-group>
+              </div>
+            </div>
+          </div>
+          <div class="mt-n6">
             <v-divider />
             <v-row>
               <v-col cols="2">
-                <v-avatar class="ml-n3 ml-sm-3">
+                <v-avatar
+                  class="ml-n3 ml-sm-3"
+                  style="border: 1px solid lightgray"
+                >
                   <img
                     :src="currentUser.profile"
                   >
@@ -97,6 +173,7 @@
                     label="Write a comment"
                     append-icon="mdi-send"
                     color="primary"
+                    style="white-space: pre"
                     @click:append="postComment(postItem.id)"
                   />
                   <v-btn
@@ -107,9 +184,15 @@
               </v-col>
             </v-row>
           </div>
-        </v-expand-transition>
-      </div>
+        </div>
+      </v-expand-transition>
     </v-card-text>
+    <confirm-dialog
+      :model="dialogConfirmDeleteComment"
+      title="Delete comment?"
+      text="Are you sure you want to delete this comment?"
+      @goto-response="confirmDeleteComment"
+    />
   </v-card>
 </template>
 
@@ -133,6 +216,11 @@
         type: Object as PropType<Post>,
         required: true,
       },
+      teacherAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
@@ -143,6 +231,11 @@
 
         comments: [] as Comment[],
         commentLimit: 2,
+
+        dialogConfirmDeleteComment: false,
+        commentIdToBeDeleted: '',
+
+        numberOfComments: 0,
       }
     },
     computed: {
@@ -161,6 +254,25 @@
         const path = this.$route.path.split('/')
         return path[path.length - 1]
       },
+      commentBtnText (): string {
+        if (this.postItem.numberOfComments > 0) {
+          if (this.postItem.numberOfComments === 1) {
+            return `${this.postItem.numberOfComments} Comment`
+          }
+          return `${this.postItem.numberOfComments} Comments`
+        }
+
+        return 'Comment'
+      },
+      deleteAccess (): boolean {
+        if (this.teacherAccess) {
+          return true
+        }
+        return this.currentUser.id === this.postItem.userId
+      },
+      editAccess (): boolean {
+        return this.currentUser.id === this.postItem.userId
+      },
     },
     mounted () {
       usersCollection.doc(this.postItem.userId).get().then(doc => {
@@ -175,7 +287,7 @@
         let fetchComm: Comment[] = []
         classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
           .collection('comments')
-          .orderBy('time', 'desc')
+          .orderBy('time', 'asc')
           .onSnapshot(querySnapshot => {
             fetchComm = []
             querySnapshot.forEach(commentItem => {
@@ -202,14 +314,17 @@
           message: this.comment_message,
         }
 
-        classesCollection.doc(this.classId).collection('discussions')
-          .doc(postId).collection('comments').add(newComment)
-          .catch(error => {
-            console.log(error.message)
-          }).finally(() => {
-            this.comment_message = ''
-            this.commentToggle = false
-          })
+        const postRef = classesCollection.doc(this.classId).collection('discussions')
+          .doc(postId)
+        postRef.collection('comments').add(newComment).then(() => {
+          postRef.set({
+            numberOfComments: firebase.firestore.FieldValue.increment(1),
+          }, { merge: true })
+        }).catch(error => {
+          console.log(error.message)
+        }).finally(() => {
+          this.comment_message = ''
+        })
       },
       getFullName (firstName: string, middleName: string, lastName: string): string {
         return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
@@ -229,19 +344,53 @@
         return theDate.toLocaleDateString('en-US', options)
       },
       viewMoreComments (): void {
-        classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
-          .collection('comments').get()
-          .then(querySnapshot => {
-            if (this.commentLimit < querySnapshot.size) {
-              console.log('extend limit!')
-              this.commentLimit += 5
-            }
-          })
+        // classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+        //   .collection('comments').get()
+        //   .then(querySnapshot => {
+        //     if (this.commentLimit < querySnapshot.size) {
+        //       console.log('extend limit!')
+        //       this.commentLimit += 5
+        //     }
+        //   })
+      },
+      editComment (commentId: string): void {
+        console.log(commentId)
+      },
+      deleteComment (commentId: string): void {
+        this.commentIdToBeDeleted = commentId
+        this.dialogConfirmDeleteComment = true
+      },
+      editPost () {
+        this.$emit('edit-post', this.postItem)
+      },
+      deletePost () {
+        this.$emit('delete-post', this.postItem.id)
+      },
+      confirmDeleteComment (response: boolean): void {
+        if (response) {
+          classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+            .collection('comments').doc(this.commentIdToBeDeleted)
+            .delete()
+            .catch((deleteError) => {
+              console.log(deleteError)
+            })
+        }
+        this.dialogConfirmDeleteComment = false
       },
     },
   })
 </script>
 
 <style lang="scss" scoped>
-
+  .list-item {
+    display: inline-block;
+    margin-right: 5px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 0.5s;
+  }
+  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(5px);
+  }
 </style>

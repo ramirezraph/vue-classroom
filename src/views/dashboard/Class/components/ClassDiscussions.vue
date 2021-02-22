@@ -20,7 +20,9 @@
               v-model="post_message"
               label="Type your message here"
               outlined
-              color="blue"
+              auto-grow
+              color="info"
+              style="white-space: pre"
             />
           </v-row>
           <v-row class="px-3">
@@ -117,12 +119,17 @@
               v-for="post in posts"
               :key="post.id"
               class="ml-n6"
-              color="green"
+              color="info"
               icon="mdi-forum"
               fill-dot
               medium
             >
-              <post-item :post="post" />
+              <post-item
+                :post="post"
+                :teacher-access="teacherEditAccess"
+                @edit-post="editPost"
+                @delete-post="deletePost"
+              />
             </v-timeline-item>
           </transition-group>
         </v-timeline>
@@ -140,6 +147,20 @@
         </div>
       </v-card-text>
     </v-card>
+    <confirm-dialog
+      :model="dialogConfirmDeletePost"
+      title="Delete post?"
+      text="Are you sure you want to delete this post?"
+      @goto-response="confirmDeletePost"
+    />
+    <edit-post-dialog
+      v-if="dialogEditPost"
+      :key="postToEdit.id"
+      :v-model="dialogEditPost"
+      :post="postToEdit"
+      @close="dialogEditPost = false"
+      @save-changes="saveEditPost"
+    />
   </div>
 </template>
 
@@ -150,23 +171,36 @@
   import { User } from '@/model/User'
   import firebase from 'firebase'
   import { classesCollection } from '@/fb'
+  import EditPostDialog from './EditPostDialog.vue'
   // eslint-disable-next-line no-undef
   import Timestamp = firebase.firestore.Timestamp;
 
   export default Vue.extend({
     components: {
       PostItem,
+      EditPostDialog,
     },
     props: {
       discussions: {
         type: Array as PropType<Post[]>,
         required: true,
       },
+      teacherEditAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
         post_message: '',
         postLoading: false,
+
+        dialogEditPost: false,
+        postToEdit: {} as Post,
+
+        dialogConfirmDeletePost: false,
+        postIdToBeDeleted: '',
       }
     },
     computed: {
@@ -175,6 +209,10 @@
       },
       user (): User {
         return this.$store.getters['user/getCurrentUser']
+      },
+      classId (): string {
+        const path = this.$route.path.split('/')
+        return path[path.length - 1]
       },
     },
     methods: {
@@ -198,6 +236,50 @@
       },
       showMorePosts (): void {
         this.$emit('show-more-post')
+      },
+      editPost (post: Post): void {
+        console.log(post)
+        this.postToEdit = post
+        this.dialogEditPost = true
+      },
+      saveEditPost (newMessage: string): void {
+        classesCollection.doc(this.classId).collection('discussions')
+          .doc(this.postToEdit.id).set({
+            message: newMessage,
+            edited: Timestamp.now(),
+          }, { merge: true })
+          .then(() => {
+            console.log('edit success')
+          }).catch(error => {
+            console.log(error)
+          })
+        this.dialogEditPost = false
+      },
+      deletePost (postId: string): void {
+        this.postIdToBeDeleted = postId
+        this.dialogConfirmDeletePost = true
+      },
+      confirmDeletePost (response: boolean) {
+        if (response) {
+          const postRef = classesCollection.doc(this.classId).collection('discussions').doc(this.postIdToBeDeleted)
+          postRef.delete()
+            .then(() => {
+              postRef.collection('comments').get()
+                .then(comments => {
+                  comments.forEach(comment => {
+                    postRef.collection('comments').doc(comment.id)
+                      .delete()
+                      .then(() => {
+                        console.log('success')
+                      })
+                  })
+                })
+            })
+            .catch((deleteError) => {
+              console.log(deleteError)
+            })
+        }
+        this.dialogConfirmDeletePost = false
       },
     },
   })

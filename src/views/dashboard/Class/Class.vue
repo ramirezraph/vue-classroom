@@ -1,5 +1,6 @@
 <template>
   <v-container
+    v-if="currentUser"
     fluid
     class="px-6 px-md-8"
   >
@@ -264,6 +265,7 @@
             >
               <class-discussions
                 :discussions="discussions"
+                :teacher-edit-access="hasEditAccess"
                 @show-more-post="showMorePosts"
               />
             </v-tab-item>
