@@ -119,7 +119,7 @@
               v-for="post in posts"
               :key="post.id"
               class="ml-n6"
-              color="green"
+              color="info"
               icon="mdi-forum"
               fill-dot
               medium
