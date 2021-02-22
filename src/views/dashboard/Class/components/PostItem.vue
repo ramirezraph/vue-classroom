@@ -124,7 +124,7 @@
               <v-btn
                 small
                 text
-                class="text-none mb-2"
+                class="text-none mb-3 mt-1"
                 color="primary"
                 @click="viewMoreComments"
               >
@@ -368,11 +368,21 @@
       },
       confirmDeleteComment (response: boolean): void {
         if (response) {
-          classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
-            .collection('comments').doc(this.commentIdToBeDeleted)
+          const postRef = classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
+          postRef.collection('comments').doc(this.commentIdToBeDeleted)
             .delete()
-            .catch((deleteError) => {
-              console.log(deleteError)
+            .then(() => {
+              postRef.set({
+                numberOfComments: firebase.firestore.FieldValue.increment(-1),
+              }, { merge: true })
+            })
+            .catch((error) => {
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Failed',
+                text: error.message,
+                type: 'error',
+              })
             })
         }
         this.dialogConfirmDeleteComment = false
