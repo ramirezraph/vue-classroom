@@ -17,6 +17,7 @@ import firebase from 'firebase'
 import { User, UserType } from '@/model/User'
 import ViewContent from './components/ViewContent.vue'
 import { ClassFile } from '@/model/Lesson'
+import CreateClassDialog from '@/views/dashboard/Classes/components/CreateClassDialog.vue'
 import DocumentReference = firebase.firestore.DocumentReference;
 
 extend('required', {
@@ -48,6 +49,7 @@ export default Vue.extend({
     ValidationProvider,
     ValidationObserver,
     ViewContent,
+    CreateClassDialog,
   },
   props: {
     id: { // from router params
@@ -88,11 +90,14 @@ export default Vue.extend({
       activeUnit: {} as Unit,
 
       numberOfPostLimit: 3,
+
+      dialogEditClass: false,
+      destroyClassDialog: false,
     }
   },
   computed: {
     selectedClass (): Class {
-      return this.$store.getters['classes/classes'].find((c: Class) => c.id === this.id)
+      return this.getSelectedClass(this.id)
     },
     unitNumberAlreadyExistsRule (): string {
       let unitNumbers = ''
@@ -142,6 +147,9 @@ export default Vue.extend({
     this.fetchPeople()
   },
   methods: {
+    getSelectedClass (id: string): Class {
+      return this.$store.getters['classes/classes'].find((c: Class) => c.id === id)
+    },
     fetchUnits (): void {
       this.unitDataLoading = true
       try {
@@ -294,6 +302,18 @@ export default Vue.extend({
     showMorePosts (): void {
       this.numberOfPostLimit += 3
       this.fetchDiscussions()
+    },
+    editClass (): void {
+      this.dialogEditClass = true
+      this.destroyClassDialog = false
+      console.log('hello edit')
+    },
+    closeEditClass (): void {
+      this.dialogEditClass = false
+
+      setTimeout(() => {
+        this.destroyClassDialog = true
+      }, 1000)
     },
   },
 })

@@ -30,8 +30,28 @@
             outlined
             class="pb-6"
           >
-            <v-card-title>
-              <span>Class Material/s</span>
+            <v-card-title class="d-flex">
+              <div>
+                <span>Class Material/s</span>
+              </div>
+              <div class="ml-auto">
+                <v-tooltip
+                  color="info"
+                  bottom
+                >
+                  <template #activator="{attrs, on}">
+                    <v-btn
+                      icon
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="editClass"
+                    >
+                      <v-icon>mdi-cog</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Class Settings</span>
+                </v-tooltip>
+              </div>
             </v-card-title>
             <v-skeleton-loader
               :loading="unitDataLoading"
@@ -322,6 +342,13 @@
       :active-unit="activeUnit"
       :has-edit-access="hasEditAccess"
       @close="dialogViewContent = false"
+    />
+    <create-class-dialog
+      v-if="!destroyClassDialog"
+      :v-model="dialogEditClass"
+      dialog-title="Class Settings"
+      :class-edit="selectedClass"
+      @cancel="closeEditClass"
     />
   </v-container>
 </template>

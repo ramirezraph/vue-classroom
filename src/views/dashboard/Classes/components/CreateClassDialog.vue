@@ -17,7 +17,7 @@
         >
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Create Class</v-toolbar-title>
+        <v-toolbar-title>{{ dialogTitle }}</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-row>
@@ -172,13 +172,14 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import Vue, { PropType } from 'vue'
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { max, required } from 'vee-validate/dist/rules'
   import { classesCollection, storageRef } from '@/fb'
   import { User } from '@/model/User'
   import firebase from 'firebase'
+  import { Class } from '@/model/Class'
 
   export enum ClassColor {
     Red = 'red',
@@ -215,6 +216,21 @@
       vModel: {
         type: Boolean,
         required: true,
+      },
+      dialogTitle: {
+        type: String,
+        required: false,
+        default: 'Create Class',
+      },
+      classEdit: {
+        type: Object as PropType<Class>,
+        required: false,
+        default: function () {
+          return new Class(
+            '', '', '',
+            '', '', '',
+            '', '')
+        },
       },
     },
     data () {
@@ -260,6 +276,15 @@
         }
         return colors
       },
+    },
+    mounted () {
+      if (this.classEdit.id.length > 0) {
+        this.title = this.classEdit.title
+        this.description = this.classEdit.description
+        // this.teacherName = this.classEdit.teacherName
+        this.code = this.classEdit.code
+        this.imageSource = this.classEdit.imageSource
+      }
     },
     methods: {
       onImageSelect () {
