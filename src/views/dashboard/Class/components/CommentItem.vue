@@ -58,18 +58,27 @@
               <v-list-item
                 link
               >
+                <v-icon left>
+                  mdi-pin-outline
+                </v-icon>
                 <span>Pin to top</span>
               </v-list-item>
               <v-list-item
                 link
                 @click="editComment"
               >
+                <v-icon left>
+                  mdi-pencil-outline
+                </v-icon>
                 <span>Edit</span>
               </v-list-item>
               <v-list-item
                 link
                 @click="removeComment"
               >
+                <v-icon left>
+                  mdi-delete-outline
+                </v-icon>
                 <span>Remove</span>
               </v-list-item>
             </v-list>

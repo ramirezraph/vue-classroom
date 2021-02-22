@@ -20,7 +20,9 @@
               v-model="post_message"
               label="Type your message here"
               outlined
-              color="blue"
+              auto-grow
+              color="info"
+              style="white-space: pre"
             />
           </v-row>
           <v-row class="px-3">
@@ -150,6 +152,14 @@
       text="Are you sure you want to delete this post?"
       @goto-response="confirmDeletePost"
     />
+    <edit-post-dialog
+      v-if="dialogEditPost"
+      :key="postToEdit.id"
+      :v-model="dialogEditPost"
+      :post="postToEdit"
+      @close="dialogEditPost = false"
+      @save-changes="saveEditPost"
+    />
   </div>
 </template>
 
@@ -160,12 +170,14 @@
   import { User } from '@/model/User'
   import firebase from 'firebase'
   import { classesCollection } from '@/fb'
+  import EditPostDialog from './EditPostDialog.vue'
   // eslint-disable-next-line no-undef
   import Timestamp = firebase.firestore.Timestamp;
 
   export default Vue.extend({
     components: {
       PostItem,
+      EditPostDialog,
     },
     props: {
       discussions: {
@@ -177,6 +189,9 @@
       return {
         post_message: '',
         postLoading: false,
+
+        dialogEditPost: false,
+        postToEdit: null,
 
         dialogConfirmDeletePost: false,
         postIdToBeDeleted: '',
@@ -216,8 +231,23 @@
       showMorePosts (): void {
         this.$emit('show-more-post')
       },
-      editPost (postId: string): void {
-        console.log(postId)
+      editPost (post: Post): void {
+        console.log(post)
+        this.postToEdit = post
+        this.dialogEditPost = true
+      },
+      saveEditPost (newMessage: string): void {
+        classesCollection.doc(this.classId).collection('discussions')
+          .doc(this.postToEdit.id).set({
+            message: newMessage,
+            edited: Timestamp.now(),
+          }, { merge: true })
+          .then(() => {
+            console.log('edit success')
+          }).catch(error => {
+            console.log(error)
+          })
+        this.dialogEditPost = false
       },
       deletePost (postId: string): void {
         this.postIdToBeDeleted = postId

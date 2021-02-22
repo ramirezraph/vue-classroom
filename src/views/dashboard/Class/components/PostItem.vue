@@ -51,18 +51,27 @@
             <v-list-item
               link
             >
+              <v-icon left>
+                mdi-pin-outline
+              </v-icon>
               <span>Pin to top</span>
             </v-list-item>
             <v-list-item
               link
               @click="editPost"
             >
+              <v-icon left>
+                mdi-pencil-outline
+              </v-icon>
               <span>Edit</span>
             </v-list-item>
             <v-list-item
               link
               @click="deletePost"
             >
+              <v-icon left>
+                mdi-delete-outline
+              </v-icon>
               <span>Remove</span>
             </v-list-item>
           </v-list>
@@ -70,8 +79,17 @@
       </div>
     </v-card-title>
     <v-card-text class="pt-3 body-1">
-      <div class="pb-6">
-        {{ postItem.message }}
+      <div>
+        <v-textarea
+          v-model="postItem.message"
+          rows="1"
+          auto-grow
+          flat
+          style="white-space: pre"
+          readonly
+          solo
+          dense
+        />
       </div>
       <div class="pb-3">
         <v-btn
@@ -84,9 +102,9 @@
           @click.once="fetchComments"
         >
           <v-icon left>
-            mdi-comment-outline
+            {{ comments.length > 0 ? 'mdi-comment' : 'mdi-comment-outline' }}
           </v-icon>
-          Comment
+          {{ commentBtnText }}
         </v-btn>
       </div>
       <v-expand-transition>
@@ -107,7 +125,7 @@
                 color="primary"
                 @click="viewMoreComments"
               >
-                View more comments.
+                View more comments
               </v-btn>
               <transition-group
                 name="list"
@@ -218,6 +236,16 @@
         const path = this.$route.path.split('/')
         return path[path.length - 1]
       },
+      commentBtnText (): string {
+        if (this.comments.length > 0) {
+          if (this.comments.length === 1) {
+            return `${this.comments.length} Comment`
+          }
+          return `${this.comments.length} Comments`
+        }
+
+        return 'Comment'
+      },
     },
     mounted () {
       usersCollection.doc(this.postItem.userId).get().then(doc => {
@@ -302,7 +330,7 @@
         this.dialogConfirmDeleteComment = true
       },
       editPost () {
-        this.$emit('edit-post', this.postItem.id)
+        this.$emit('edit-post', this.postItem)
       },
       deletePost () {
         this.$emit('delete-post', this.postItem.id)
