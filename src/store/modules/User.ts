@@ -40,6 +40,7 @@ export default {
              user.course = doc.data()?.course
              user.section = doc.data()?.section
              context.commit('SET_CURRENT_USER', user)
+             context.dispatch('classes/fetchClasses', user, { root: true })
            }
      })
      },
