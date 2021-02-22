@@ -33,10 +33,21 @@
         class="mt-3"
       >
         <div
+          v-if="lessonItem.shortDescription"
           id="description"
           class="body-1"
         >
-          <p>{{ lessonItem.shortDescription }}</p>
+          <v-textarea
+            v-model="lessonItem.shortDescription"
+            rows="1"
+            auto-grow
+            flat
+            style="white-space: pre"
+            readonly
+            solo
+            dense
+            class="ma-0 mb-n12"
+          />
         </div>
         <div class="mt-6">
           <transition-group
@@ -168,6 +179,23 @@
               <template #activator="{ on, attrs }">
                 <v-btn
                   icon
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="toggleEditLesson"
+                >
+                  <v-icon size="25">
+                    mdi-pencil
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>
+                Edit Lesson
+              </span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  icon
                   color="error"
                   v-bind="attrs"
                   v-on="on"
@@ -267,6 +295,97 @@
             </v-card-text>
           </v-card>
         </v-expand-transition>
+        <v-expand-transition>
+          <v-card
+            v-if="showHideEditLesson"
+            elevation="6"
+            class="pa-2"
+            outlined
+          >
+            <v-card-title class="text-h4">
+              Edit Lesson
+            </v-card-title>
+            <v-card-text>
+              <validation-observer
+                ref="observer"
+                v-slot="{ invalid }"
+              >
+                <v-form
+                  class="mt-4"
+                  @submit.prevent="submitEditLesson"
+                >
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Lesson Number"
+                    :rules="`required|min_value:0|${lessonNumberAlreadyExistsRuleEdit}`"
+                  >
+                    <v-text-field
+                      v-model="edit_lessonNumber"
+                      label="Lesson Number"
+                      color="info"
+                      outlined
+                      rounded
+                      type="number"
+                      :error-messages="errors"
+                      dense
+                      prepend-inner-icon="mdi-pencil-outline"
+                    />
+                  </validation-provider>
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Unit Title"
+                    rules="required"
+                  >
+                    <v-text-field
+                      v-model="edit_lessonTitle"
+                      label="Unit Title"
+                      color="info"
+                      outlined
+                      rounded
+                      :error-messages="errors"
+                      dense
+                      prepend-inner-icon="mdi-pencil-outline"
+                    />
+                  </validation-provider>
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Short Description"
+                  >
+                    <v-textarea
+                      v-model="edit_lessonDescription"
+                      label="Short Description"
+                      color="info"
+                      outlined
+                      rounded
+                      auto-grow
+                      optional
+                      style="white-space: pre"
+                      :error-messages="errors"
+                      hint="Optional"
+                      rows="3"
+                      prepend-inner-icon="mdi-card-text-outline"
+                    />
+                  </validation-provider>
+                  <v-btn
+                    type="submit"
+                    :disabled="invalid"
+                    class="info mr-2"
+                    :loading="editLessonLoading"
+                  >
+                    Save Changes
+                  </v-btn>
+                  <v-btn
+                    text
+                    outlined
+                    @click="toggleEditLesson"
+                  >
+                    Cancel
+                  </v-btn>
+                </v-form>
+              </validation-observer>
+            </v-card-text>
+          </v-card>
+        </v-expand-transition>
       </v-card>
     </v-expansion-panel-content>
 
@@ -306,6 +425,10 @@
         type: Object as PropType<Lesson>,
         required: true,
       },
+      lessons: {
+        type: Array as PropType<Lesson[]>,
+        required: true,
+      },
       unitDbRef: {
         type: Object as PropType<DocumentReference>,
         required: true,
@@ -329,6 +452,14 @@
         remove_fileId: '',
         remove_fileName: '',
         dialogConfirmDeleteFile: false,
+
+        showHideEditLesson: false,
+        edit_lessonNumber: -1,
+        edit_lessonTitle: '',
+        edit_lessonDescription: '',
+        edit_lessonNumberTemp: -1,
+        editLessonLoading: false,
+
       }
     },
     computed: {
@@ -343,6 +474,16 @@
       },
       lessonDbRef (): DocumentReference {
         return this.unitDbRef.collection('lessons').doc(this.lesson.id)
+      },
+      lessonNumberAlreadyExistsRuleEdit (): string {
+        let lessonNumbers = ''
+        this.lessons.forEach(lesson => {
+          if (this.edit_lessonNumberTemp !== lesson.lessonNumber) {
+            lessonNumbers += lesson.lessonNumber + ','
+          }
+        })
+        lessonNumbers = lessonNumbers.substring(0, lessonNumbers.length - 1)
+        return `excluded:${lessonNumbers}`
       },
     },
     watch: {
@@ -526,6 +667,40 @@
       },
       fileClicked (file: ClassFile): void {
         this.$emit('file-clicked', file)
+      },
+      toggleEditLesson (): void {
+        this.edit_lessonNumber = this.lessonItem.lessonNumber
+        this.edit_lessonTitle = this.lessonItem.title
+        this.edit_lessonDescription = this.lessonItem.shortDescription
+
+        this.edit_lessonNumberTemp = this.lessonItem.lessonNumber
+
+        this.showHideEditLesson = !this.showHideEditLesson
+      },
+      async submitEditLesson () {
+        this.editLessonLoading = true
+        await this.lessonDbRef.update({
+          lessonNumber: this.edit_lessonNumber,
+          title: this.edit_lessonTitle,
+          shortDescription: this.edit_lessonDescription,
+        }).then(() => {
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Success',
+            text: 'Lesson has been updated successfully.',
+            type: 'success',
+          })
+          this.toggleEditLesson()
+        }).catch(error => {
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Failed',
+            text: error.message,
+            type: 'error',
+          })
+        }).finally(() => {
+          this.editLessonLoading = false
+        })
       },
     },
   })

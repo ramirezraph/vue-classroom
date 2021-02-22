@@ -39,6 +39,7 @@
             :key="lesson.id"
             :has-edit-access="hasEditAccess"
             :lesson="lesson"
+            :lessons="lessons"
             :unit-db-ref="unitDbRef"
             @file-clicked="fileClicked"
           />
