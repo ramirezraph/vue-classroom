@@ -236,7 +236,7 @@
                     color="error"
                     class="text-none"
                   >
-                    Delete Class
+                    Archive
                   </v-btn>
                   <v-btn
                     min-width="200px"
