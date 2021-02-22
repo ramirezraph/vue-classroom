@@ -102,7 +102,7 @@
           @click.once="fetchComments"
         >
           <v-icon left>
-            {{ comments.length > 0 ? 'mdi-comment' : 'mdi-comment-outline' }}
+            {{ postItem.numberOfComments > 0 ? 'mdi-comment' : 'mdi-comment-outline' }}
           </v-icon>
           {{ commentBtnText }}
         </v-btn>
@@ -218,6 +218,8 @@
 
         dialogConfirmDeleteComment: false,
         commentIdToBeDeleted: '',
+
+        numberOfComments: 0,
       }
     },
     computed: {
@@ -237,11 +239,11 @@
         return path[path.length - 1]
       },
       commentBtnText (): string {
-        if (this.comments.length > 0) {
-          if (this.comments.length === 1) {
-            return `${this.comments.length} Comment`
+        if (this.postItem.numberOfComments > 0) {
+          if (this.postItem.numberOfComments === 1) {
+            return `${this.postItem.numberOfComments} Comment`
           }
-          return `${this.comments.length} Comments`
+          return `${this.postItem.numberOfComments} Comments`
         }
 
         return 'Comment'
@@ -287,13 +289,17 @@
           message: this.comment_message,
         }
 
-        classesCollection.doc(this.classId).collection('discussions')
-          .doc(postId).collection('comments').add(newComment)
-          .catch(error => {
-            console.log(error.message)
-          }).finally(() => {
-            this.comment_message = ''
-          })
+        const postRef = classesCollection.doc(this.classId).collection('discussions')
+          .doc(postId)
+        postRef.collection('comments').add(newComment).then(() => {
+          postRef.set({
+            numberOfComments: firebase.firestore.FieldValue.increment(1),
+          }, { merge: true })
+        }).catch(error => {
+          console.log(error.message)
+        }).finally(() => {
+          this.comment_message = ''
+        })
       },
       getFullName (firstName: string, middleName: string, lastName: string): string {
         return `${firstName} ${this.middleInitial(middleName)} ${lastName}`

@@ -183,6 +183,7 @@ export default Vue.extend({
                   doc.data().time,
                   doc.data().message,
                 )
+                post.numberOfComments = doc.data().numberOfComments
 
                 fetchDiscussions.push(post)
               }

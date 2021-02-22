@@ -16,6 +16,7 @@ export class Comment {
 
 export class Post {
   comments?: Comment[] = []
+  numberOfComments = 0
   userName = ''
   userProfile = ''
   // eslint-disable-next-line no-useless-constructor
