@@ -105,19 +105,19 @@ export default Vue.extend({
     computed_dbRef (): DocumentReference {
       return this.dbRef
     },
-    isClassOwner (): boolean {
-      const currentUser: User = this.$store.getters['user/getCurrentUser']
-      return currentUser.id === this.selectedClass.ownerId
+    currentUser (): User {
+      return this.$store.getters['user/getCurrentUser']
     },
-
+    isClassOwner (): boolean {
+      return this.currentUser.id === this.selectedClass.ownerId
+    },
     hasEditAccess (): boolean {
       let hasAccess = false
 
       if (this.isClassOwner) {
         hasAccess = true
       } else {
-        const currentUser: User = this.$store.getters['user/getCurrentUser']
-        const foundUser = this.people.find(p => p.id === currentUser.id)
+        const foundUser = this.people.find(p => p.id === this.currentUser.id)
         if (foundUser) {
           if (foundUser.userType === UserType.Teacher) {
             hasAccess = true

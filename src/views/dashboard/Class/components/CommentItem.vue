@@ -42,7 +42,9 @@
           </div>
         </div>
       </div>
-      <div class="ml-auto">
+      <div
+        class="ml-auto"
+      >
         <v-menu
           v-if="editAccess || deleteAccess"
           rounded
@@ -88,7 +90,6 @@
     <v-card-text class="ma-0 pa-0 pl-12 mt-n4">
       <v-textarea
         v-model="commentItem.message"
-        class="transparent"
         rows="1"
         auto-grow
         flat

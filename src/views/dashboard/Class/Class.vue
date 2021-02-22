@@ -1,5 +1,6 @@
 <template>
   <v-container
+    v-if="currentUser"
     fluid
     class="px-6 px-md-8"
   >
