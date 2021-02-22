@@ -126,6 +126,7 @@
             >
               <post-item
                 :post="post"
+                :teacher-access="teacherEditAccess"
                 @edit-post="editPost"
                 @delete-post="deletePost"
               />
@@ -183,6 +184,11 @@
       discussions: {
         type: Array as PropType<Post[]>,
         required: true,
+      },
+      teacherEditAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
     data () {

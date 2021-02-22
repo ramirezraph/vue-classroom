@@ -264,6 +264,7 @@
             >
               <class-discussions
                 :discussions="discussions"
+                :teacher-edit-access="hasEditAccess"
                 @show-more-post="showMorePosts"
               />
             </v-tab-item>

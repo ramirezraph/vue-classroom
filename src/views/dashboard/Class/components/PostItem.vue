@@ -6,7 +6,9 @@
     <v-card-title>
       <div class="d-flex">
         <div>
-          <v-avatar>
+          <v-avatar
+            style="border: 1px solid lightgray"
+          >
             <img
               :src="userProfile"
               alt="John"
@@ -32,6 +34,7 @@
       </div>
       <div class="ml-auto">
         <v-menu
+          v-if="deleteAccess || editAccess || teacherAccess"
           rounded
           offset-y
         >
@@ -49,6 +52,7 @@
 
           <v-list>
             <v-list-item
+              v-if="teacherAccess"
               link
             >
               <v-icon left>
@@ -57,6 +61,7 @@
               <span>Pin to top</span>
             </v-list-item>
             <v-list-item
+              v-if="editAccess"
               link
               @click="editPost"
             >
@@ -66,6 +71,7 @@
               <span>Edit</span>
             </v-list-item>
             <v-list-item
+              v-if="deleteAccess"
               link
               @click="deletePost"
             >
@@ -118,7 +124,7 @@
               <v-btn
                 small
                 text
-                class="text-none"
+                class="text-none mb-2"
                 color="primary"
                 @click="viewMoreComments"
               >
@@ -133,6 +139,8 @@
                     <comment-item
                       :key="comment.id"
                       :comment="comment"
+                      class="mt-n3"
+                      :teacher-access="teacherAccess"
                       @edit-comment="editComment"
                       @remove-comment="deleteComment"
                     />
@@ -145,7 +153,10 @@
             <v-divider />
             <v-row>
               <v-col cols="2">
-                <v-avatar class="ml-n3 ml-sm-3">
+                <v-avatar
+                  class="ml-n3 ml-sm-3"
+                  style="border: 1px solid lightgray"
+                >
                   <img
                     :src="currentUser.profile"
                   >
@@ -205,6 +216,11 @@
         type: Object as PropType<Post>,
         required: true,
       },
+      teacherAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
@@ -247,6 +263,15 @@
         }
 
         return 'Comment'
+      },
+      deleteAccess (): boolean {
+        if (this.teacherAccess) {
+          return true
+        }
+        return this.currentUser.id === this.postItem.userId
+      },
+      editAccess (): boolean {
+        return this.currentUser.id === this.postItem.userId
       },
     },
     mounted () {

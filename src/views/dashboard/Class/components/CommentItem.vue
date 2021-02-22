@@ -6,7 +6,9 @@
     <v-card-title class="ma-0 pa-0">
       <div class="d-flex">
         <div>
-          <v-avatar>
+          <v-avatar
+            style="border: 1px solid lightgray"
+          >
             <img
               :src="userProfile"
               alt="John"
@@ -42,6 +44,7 @@
       </div>
       <div class="ml-auto">
         <v-menu
+          v-if="editAccess || deleteAccess"
           rounded
           offset-y
         >
@@ -59,6 +62,7 @@
 
           <v-list>
             <v-list-item
+              v-if="editAccess"
               link
               @click="editComment"
             >
@@ -68,6 +72,7 @@
               <span>Edit</span>
             </v-list-item>
             <v-list-item
+              v-if="deleteAccess"
               link
               @click="removeComment"
             >
@@ -99,6 +104,7 @@
   import Vue, { PropType } from 'vue'
   import { Comment } from '@/model/Post'
   import { usersCollection } from '@/fb'
+  import { User } from '@/model/User'
 
   export default Vue.extend({
     name: 'CommentItem',
@@ -106,6 +112,11 @@
       comment: {
         type: Object as PropType<Comment>,
         required: true,
+      },
+      teacherAccess: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
     data () {
@@ -122,6 +133,18 @@
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = this.comment.time.toDate()
         return theDate.toLocaleDateString('en-US', options)
+      },
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
+      deleteAccess (): boolean {
+        if (this.teacherAccess) {
+          return true
+        }
+        return this.currentUser.id === this.commentItem.userId
+      },
+      editAccess (): boolean {
+        return this.currentUser.id === this.commentItem.userId
       },
     },
     mounted () {
