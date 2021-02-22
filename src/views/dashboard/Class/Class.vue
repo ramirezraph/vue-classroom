@@ -32,9 +32,12 @@
           >
             <v-card-title class="d-flex">
               <div>
-                <span>Class Material/s</span>
+                <span class="subtitle-2">Class Material/s</span>
               </div>
-              <div class="ml-auto">
+              <div
+                v-if="isClassOwner"
+                class="ml-auto"
+              >
                 <v-tooltip
                   color="info"
                   bottom
@@ -312,17 +315,7 @@
       </v-col>
     </v-row>
 
-    <!--  Dialogs & Notifications -->
-    <base-material-snackbar
-      v-model="unitNotification"
-      :type="unitNotificationType"
-      v-bind="{
-        'top': true,
-        'center': true
-      }"
-    >
-      {{ unitNotificationMessage }}
-    </base-material-snackbar>
+    <!--  Dialogs -->
 
     <confirm-dialog
       :model="dialogConfirmAddUnit"

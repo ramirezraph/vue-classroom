@@ -452,7 +452,12 @@
                 })
             })
             .catch(error => {
-              console.log('adding class failed', error)
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Add Class Failed',
+                text: error.message,
+                type: 'error',
+              })
             })
         }
         this.dialogConfirmAddClass = false
@@ -504,9 +509,19 @@
                 }
               })
           }
-          console.log('class update success')
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Success',
+            text: 'Class information has been updated successfully.',
+            type: 'success',
+          })
         }).catch(error => {
-          console.log(error)
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Failed',
+            text: error.message,
+            type: 'error',
+          })
         }).finally(() => {
           this.submitChangesLoading = false
         })

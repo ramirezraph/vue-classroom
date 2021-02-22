@@ -29,10 +29,6 @@ export default Vue.extend({
       dialogCreateClass: false,
       dialogClassNotFound: false,
       join_classCode: '',
-
-      notification: false,
-      notificationType: 'success',
-      notificationMessage: '',
     }
   },
   computed: {
@@ -47,9 +43,12 @@ export default Vue.extend({
       if (foundClass) {
         this.join_classCode = ''
         this.joinClassCardVisible = false
-        this.notificationType = 'success'
-        this.notificationMessage = 'You are already enrolled in this class.'
-        this.notification = true
+        this.$notify({
+          group: 'appWideNotification',
+          title: 'Enrolled Failed',
+          text: 'You are already enrolled in this class.',
+          type: 'warn',
+        })
         return
       }
       const data = classesCollection.doc(this.join_classCode).get()
@@ -66,16 +65,22 @@ export default Vue.extend({
                 }).then(() => {
                   this.join_classCode = ''
                   this.joinClassCardVisible = false
-                  this.notificationType = 'success'
-                  this.notificationMessage = 'You have enrolled successfully.'
-                  this.notification = true
+                  this.$notify({
+                    group: 'appWideNotification',
+                    title: 'Enrolled Success',
+                    text: 'You have enrolled successfully.',
+                    type: 'success',
+                  })
                 })
               }).catch(error => {
               this.join_classCode = ''
               this.joinClassCardVisible = false
-              this.notificationType = 'error'
-              this.notificationMessage = error.message
-              this.notification = true
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Join Class Failed.',
+                text: error.message,
+                type: 'error',
+              })
               })
           } else {
             this.dialogClassNotFound = true

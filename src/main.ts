@@ -26,6 +26,8 @@ import ConfirmDialog from '@/views/dashboard/components/dialogs/ConfirmDialog.vu
 import DeleteConfirmDialog from '@/views/dashboard/components/dialogs/DeleteConfirmDialog.vue'
 import axios from 'axios'
 import { firebaseAuth } from '@/fb'
+import Notifications from 'vue-notification'
+import velocity from 'velocity-animate'
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
@@ -33,6 +35,7 @@ Vue.config.productionTip = false
 Vue.component('ClassicDialog', ClassicDialog)
 Vue.component('ConfirmDialog', ConfirmDialog)
 Vue.component('DeleteConfirmDialog', DeleteConfirmDialog)
+Vue.use(Notifications, { velocity })
 
 let app
 

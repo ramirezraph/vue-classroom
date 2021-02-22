@@ -314,16 +314,20 @@
 
           this.unitDbRef.collection('lessons').add(newLesson)
             .then(() => {
-              // this.unitNotificationType = 'success'
-              // this.unitNotificationMessage = 'Lesson added successfully.'
-              // this.unitNotification = true
-              console.log('adding lesson succeed')
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Success',
+                text: 'Added lesson successfully.',
+                type: 'success',
+              })
             })
             .catch(error => {
-              // this.unitNotificationType = 'error'
-              // this.unitNotificationMessage = 'Adding Lesson failed: ' + error
-              // this.unitNotification = true
-              console.log('adding lesson failed', error)
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Adding Lesson Failed',
+                text: error.message,
+                type: 'error',
+              })
             })
           this.toggleAddNewLesson()
         }

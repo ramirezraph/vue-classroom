@@ -132,18 +132,7 @@
       />
     </v-card>
 
-    <!--  Dialogs & Notifications -->
-    <base-material-snackbar
-      v-model="notification"
-      :type="notificationType"
-      v-bind="{
-        'top': true,
-        'center': true
-      }"
-    >
-      {{ notificationMessage }}
-    </base-material-snackbar>
-
+    <!--  Dialogs -->
     <classic-dialog
       :v-model="dialogClassNotFound"
       title="Class not found"

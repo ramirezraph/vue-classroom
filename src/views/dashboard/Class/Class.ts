@@ -62,9 +62,6 @@ export default Vue.extend({
       tabs: null,
       showHideAddUnit: false,
       unitDataLoading: false,
-      unitNotification: false,
-      unitNotificationType: 'success',
-      unitNotificationMessage: '',
 
       units: [] as Unit[],
       discussions: [] as Post[],
@@ -258,14 +255,20 @@ export default Vue.extend({
 
         classesCollection.doc(this.id).collection('units').add(newUnit)
           .then(() => {
-            this.unitNotificationType = 'success'
-            this.unitNotificationMessage = 'Unit added successfully.'
-            this.unitNotification = true
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Success',
+              text: 'Unit added successfully.',
+              type: 'success',
+            })
           })
           .catch(error => {
-            this.unitNotificationType = 'error'
-            this.unitNotificationMessage = 'Adding Unit failed: ' + error
-            this.unitNotification = true
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Failed',
+              text: error.message,
+              type: 'error',
+            })
           })
         this.toggleAddNewUnit()
       }
@@ -281,14 +284,20 @@ export default Vue.extend({
       if (response) {
         classesCollection.doc(this.id).collection('units').doc(this.delete_unitId).delete()
           .then(() => {
-            this.unitNotificationType = 'success'
-            this.unitNotificationMessage = 'Unit deleted successfully.'
-            this.unitNotification = true
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Success',
+              text: 'Unit deleted successfully.',
+              type: 'success',
+            })
           })
           .catch(error => {
-            this.unitNotificationType = 'error'
-            this.unitNotificationMessage = 'Deleting Unit failed: ' + error
-            this.unitNotification = true
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Failed',
+              text: error.message,
+              type: 'error',
+            })
           })
 
         // reset
@@ -310,7 +319,6 @@ export default Vue.extend({
     editClass (): void {
       this.dialogEditClass = true
       this.destroyClassDialog = false
-      console.log('hello edit')
     },
     closeEditClass (): void {
       this.dialogEditClass = false

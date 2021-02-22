@@ -281,12 +281,6 @@
       text="Are you sure you want to remove this file?"
       @goto-response="confirmRemoveFile"
     />
-    <classic-dialog
-      :v-model="dialogError"
-      :title="error_dialogTitle"
-      :text="error_dialogMessage"
-      @close="dialogError = false"
-    />
   </v-expansion-panel>
 </template>
 
@@ -335,10 +329,6 @@
         remove_fileId: '',
         remove_fileName: '',
         dialogConfirmDeleteFile: false,
-
-        dialogError: false,
-        error_dialogTitle: '',
-        error_dialogMessage: '',
       }
     },
     computed: {
@@ -372,7 +362,12 @@
             console.log('toggle success')
           })
           .catch(error => {
-            console.log('toggle failed', error)
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Toggle Failed',
+              text: error.message,
+              type: 'error',
+            })
           })
         this.lessonOpened()
       },
@@ -383,10 +378,20 @@
         if (response) {
           this.lessonDbRef.delete()
             .then(() => {
-              console.log('Lesson deleted successfully.')
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Success',
+                text: 'Lesson deleted successfully.',
+                type: 'success',
+              })
             })
             .catch(error => {
-              console.log('Lesson delete failed.', error)
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Lesson delete failed',
+                text: error.message,
+                type: 'error',
+              })
             })
         }
         this.dialogConfirmDeleteLesson = false
@@ -500,15 +505,21 @@
                 .then(() => {
                   // delete complete
                   console.log('File deleted completely.')
-                }).catch(() => {
-                  this.error_dialogTitle = 'File delete failed.'
-                  this.error_dialogMessage = 'Something went wrong. Please try again.'
-                  this.dialogError = true
+                }).catch((error) => {
+                  this.$notify({
+                    group: 'appWideNotification',
+                    title: 'File Delete Failed',
+                    text: error.message,
+                    type: 'error',
+                  })
                 })
-            }).catch(() => {
-              this.error_dialogTitle = 'File delete failed.'
-              this.error_dialogMessage = 'Something went wrong. Please try again.'
-              this.dialogError = true
+            }).catch((error) => {
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'File Delete Failed',
+                text: error.message,
+                type: 'error',
+              })
             })
         }
         this.dialogConfirmDeleteFile = false
