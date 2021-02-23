@@ -151,11 +151,11 @@ export default Vue.extend({
     getSelectedClass (id: string): Class {
       return this.$store.getters['classes/classes'].find((c: Class) => c.id === id)
     },
-    fetchUnits (): void {
+    async fetchUnits () {
       this.unitDataLoading = true
       try {
         let fetchUnit: Unit[] = []
-        classesCollection.doc(this.id).collection('units').orderBy('number')
+        await classesCollection.doc(this.id).collection('units').orderBy('number')
           .onSnapshot(snapshot => {
             fetchUnit = []
             snapshot.forEach(doc => {
@@ -169,18 +169,18 @@ export default Vue.extend({
               fetchUnit.push(unit)
             })
             this.units = fetchUnit
-            this.$store.dispatch('classes/fetchUnits', { class: this.selectedClass, units: this.units })
-           })
+            this.$store.dispatch('classes/fetchUnits', { class: this.selectedClass, units: fetchUnit })
+          })
       } finally {
         this.unitDataLoading = false
       }
     },
-    fetchDiscussions (): void {
+    async fetchDiscussions () {
       try {
         let fetchDiscussions: Post[] = []
 
         // paginate
-        classesCollection.doc(this.id).collection('discussions')
+        await classesCollection.doc(this.id).collection('discussions')
           .orderBy('time', 'desc')
           .limit(this.numberOfPostLimit).onSnapshot(snapshot => {
             fetchDiscussions = []
@@ -203,10 +203,10 @@ export default Vue.extend({
         this.unitDataLoading = false
       }
     },
-    fetchPeople (): void {
+    async fetchPeople () {
       try {
         let fetchPeople: User[] = []
-        classesCollection.doc(this.id).collection('people')
+        await classesCollection.doc(this.id).collection('people')
           .onSnapshot(snapshot => {
             fetchPeople = []
             snapshot.forEach(doc => {

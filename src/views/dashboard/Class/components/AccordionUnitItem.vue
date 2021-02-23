@@ -436,9 +436,9 @@
         // confirm
         this.$emit('remove-unit', this.unit)
       },
-      fetchLessons () {
+      async fetchLessons () {
         let fetchLessons: Lesson[] = []
-        this.unitDbRef.collection('lessons').orderBy('lessonNumber')
+        await this.unitDbRef.collection('lessons').orderBy('lessonNumber')
           .onSnapshot(snapshot => {
             fetchLessons = []
             snapshot.forEach(doc => {

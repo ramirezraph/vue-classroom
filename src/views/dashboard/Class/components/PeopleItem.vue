@@ -52,7 +52,7 @@
       </template>
       <span>View Info</span>
     </v-tooltip><v-tooltip
-      v-if="hasEditAccess"
+      v-if="showHideRemoveBtn"
       bottom
     >
       <template #activator="{ on, attrs }">
@@ -62,6 +62,7 @@
           v-bind="attrs"
           class="mr-2"
           v-on="on"
+          @click="removePerson"
         >
           <v-icon>
             mdi-account-remove-outline
@@ -88,6 +89,11 @@
         required: false,
         default: false,
       },
+      isClassOwner: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
@@ -106,6 +112,21 @@
         }
 
         return middleInitial
+      },
+      showHideRemoveBtn (): boolean {
+        if (this.user.userType === 'Teacher') {
+          return this.isClassOwner
+        } else {
+          if (this.user.userType === 'Student') {
+            return this.hasEditAccess
+          }
+        }
+        return true
+      },
+    },
+    methods: {
+      removePerson (): void {
+        this.$emit('remove-person', this.user.id, this.user.fullName)
       },
     },
   })

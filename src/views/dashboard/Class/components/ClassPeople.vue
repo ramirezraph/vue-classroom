@@ -28,6 +28,8 @@
             :user="item"
             :has-edit-access="hasEditAccess"
             class="my-0 mr-1 pa-0"
+            :is-class-owner="isClassOwner"
+            @remove-person="removePerson"
           />
         </v-list>
       </div>
@@ -91,6 +93,7 @@
               :user="item"
               :has-edit-access="hasEditAccess"
               class="my-0 mr-1 pa-0"
+              @remove-person="removePerson"
             />
           </v-list>
           <v-list v-else>
@@ -103,6 +106,13 @@
         </div>
       </div>
     </v-card-text>
+    <confirm-dialog
+      v-if="dialogConfirmRemovePerson"
+      :model="dialogConfirmRemovePerson"
+      :title="`Confirm: ${remove_userName}`"
+      text="Are you sure you want to remove this person?"
+      @goto-response="confirmRemovePerson"
+    />
   </v-card>
 </template>
 
@@ -110,6 +120,8 @@
   import { User, UserType } from '@/model/User'
   import Vue, { PropType } from 'vue'
   import PeopleItem from './PeopleItem.vue'
+  import { classesCollection } from '@/fb'
+  import firebase from 'firebase/app'
   export default Vue.extend({
     name: 'ClassPeople',
     components: {
@@ -124,10 +136,17 @@
         type: Boolean,
         required: true,
       },
+      isClassOwner: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
     data () {
       return {
-
+        dialogConfirmRemovePerson: false,
+        remove_userId: '',
+        remove_userName: '',
       }
     },
     computed: {
@@ -136,6 +155,53 @@
       },
       students (): User[] {
         return this.people.filter(p => p.userType === UserType.Student)
+      },
+      classId (): string {
+        const path = this.$route.path.split('/')
+        return path[path.length - 1]
+      },
+    },
+    methods: {
+      removePerson (userId: string, userName: string): void {
+        this.remove_userId = userId
+        this.remove_userName = userName
+        this.dialogConfirmRemovePerson = true
+      },
+      confirmRemovePerson (response: boolean): void {
+        if (response) {
+          classesCollection.doc(this.classId).collection('people')
+            .doc(this.remove_userId)
+            .delete()
+            .then(() => {
+              classesCollection.doc(this.classId).update({
+                userList: firebase.firestore.FieldValue.arrayRemove(this.remove_userId),
+              }).then(() => {
+                this.$notify({
+                  group: 'appWideNotification',
+                  title: 'Remove Success',
+                  text: 'User removed successfully.',
+                  type: 'success',
+                })
+                // this.$emit('user-removed')
+              }).catch(errorOnArray => {
+                this.$notify({
+                  group: 'appWideNotification',
+                  title: 'Remove Failed',
+                  text: errorOnArray.message,
+                  type: 'error',
+                })
+              })
+            }).catch(error => {
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Remove Failed',
+                text: error.message,
+                type: 'error',
+              })
+            })
+        }
+
+        this.dialogConfirmRemovePerson = false
       },
     },
   })
