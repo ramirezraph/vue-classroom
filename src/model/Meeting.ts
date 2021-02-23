@@ -8,13 +8,15 @@ export class Meeting {
 
   // eslint-disable-next-line no-useless-constructor
   constructor (
+    public id: string,
     public teacherId: string,
     public classId: string,
     public title: string,
     public description: string,
     public date: Timestamp,
-    public timeEnd: Timestamp,
-    public timeStart: Timestamp,
+    public timeEnd: string,
+    public timeStart: string,
     public link: string,
+    public dateCreated: Timestamp,
   ) { }
 }

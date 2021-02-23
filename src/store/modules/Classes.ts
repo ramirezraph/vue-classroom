@@ -1,8 +1,9 @@
 import { Class } from '@/model/Class'
-import { classesCollection } from '@/fb'
+import {classesCollection, lecturesCollection} from '@/fb'
 import { User } from '@/model/User';
 import { Unit } from '@/model/Unit';
 import { ClassFile, Lesson } from '@/model/Lesson';
+import {Meeting} from "@/model/Meeting";
 
 export default {
   namespaced: true,
@@ -55,6 +56,7 @@ export default {
                    doc.data().color,
                    doc.data().ownerId,
                  )
+
                  classes.push(generatedClass)
                }
              })

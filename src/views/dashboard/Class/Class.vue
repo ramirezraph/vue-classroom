@@ -311,7 +311,10 @@
             <v-tab-item
               value="livelecture"
             >
-              <class-live-lecture />
+              <class-live-lecture
+                :meetings="meetings"
+                :has-edit-access="hasEditAccess"
+              />
             </v-tab-item>
           </v-tabs-items>
         </v-card>

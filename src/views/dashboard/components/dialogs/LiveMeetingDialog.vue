@@ -37,7 +37,7 @@
               >
                 <v-text-field
                   v-model="link"
-                  label="Meeting Link"
+                  label="Link"
                   color="info"
                   :error-messages="errors"
                   dense
@@ -47,7 +47,7 @@
               </validation-provider>
               <validation-provider
                 v-slot="{ errors }"
-                name="Title"
+                name="Meeting Title"
                 rules="meeting_required"
               >
                 <v-text-field
@@ -78,7 +78,8 @@
               </validation-provider>
               <validation-provider
                 v-slot="{ errors }"
-                name="Title"
+                name="Meeting Date"
+                rules="meeting_required"
               >
                 <v-menu
                   v-model="menuDate"
@@ -106,23 +107,23 @@
                   />
                 </v-menu>
               </validation-provider>
-              <validation-provider
-                v-slot="{ errors }"
-                name="Time Start"
-                rules="meeting_required"
+              <v-menu
+                ref="menuTimeStart"
+                v-model="menuTimeStart"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                :return-value.sync="timeStart"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
               >
-                <v-menu
-                  ref="menuTimeStart"
-                  v-model="menuTimeStart"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeStart"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template #activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Meeting Time Start"
+                    rules="meeting_required"
+                  >
                     <v-text-field
                       v-model="formattedTimeStart"
                       label="Time Start"
@@ -133,34 +134,34 @@
                       persistent-hint
                       v-on="on"
                     />
-                  </template>
-                  <v-time-picker
-                    v-if="menuTimeStart"
-                    v-model="timeStart"
-                    full-width
-                    ampm-in-title
-                    format="24hr"
-                    @click:minute="$refs.menuTimeStart.save(timeStart)"
-                  />
-                </v-menu>
-              </validation-provider>
-              <validation-provider
-                v-slot="{ errors }"
-                name="Time End"
-                rules="meeting_required"
+                  </validation-provider>
+                </template>
+                <v-time-picker
+                  v-if="menuTimeStart"
+                  v-model="timeStart"
+                  full-width
+                  ampm-in-title
+                  format="24hr"
+                  @click:minute="$refs.menuTimeStart.save(timeStart)"
+                />
+              </v-menu>
+              <v-menu
+                ref="menuTimeEnd"
+                v-model="menuTimeEnd"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                :return-value.sync="timeEnd"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="290px"
               >
-                <v-menu
-                  ref="menuTimeEnd"
-                  v-model="menuTimeEnd"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  :return-value.sync="timeEnd"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template #activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Meeting Time End"
+                    rules="meeting_required"
+                  >
                     <v-text-field
                       v-model="formattedTimeEnd"
                       label="Time End"
@@ -171,17 +172,17 @@
                       :error-messages="errors"
                       v-on="on"
                     />
-                  </template>
-                  <v-time-picker
-                    v-if="menuTimeEnd"
-                    v-model="timeEnd"
-                    full-width
-                    ampm-in-title
-                    format="24hr"
-                    @click:minute="$refs.menuTimeEnd.save(timeEnd)"
-                  />
-                </v-menu>
-              </validation-provider>
+                  </validation-provider>
+                </template>
+                <v-time-picker
+                  v-if="menuTimeEnd"
+                  v-model="timeEnd"
+                  full-width
+                  ampm-in-title
+                  format="24hr"
+                  @click:minute="$refs.menuTimeEnd.save(timeEnd)"
+                />
+              </v-menu>
             </v-form>
           </v-card-text>
           <v-card-actions class="ma-0 pa-3 mt-n6 px-6">
@@ -204,7 +205,7 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { Meeting } from '@/model/Meeting'
-  import { extend } from 'vee-validate'
+  import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import { required } from 'vee-validate/dist/rules'
   import { lecturesCollection } from '@/fb'
   import firebase from 'firebase/app'
@@ -216,6 +217,10 @@
 
   export default Vue.extend({
     name: 'LiveMeetingDialog',
+    components: {
+      ValidationProvider,
+      ValidationObserver,
+    },
     props: {
       vModel: {
         type: Boolean,
@@ -282,6 +287,7 @@
           timeStart: this.formattedTimeStart,
           timeEnd: this.formattedTimeEnd,
           link: this.link,
+          dateCreated: firebase.firestore.Timestamp.now(),
         }
 
         lecturesCollection.add(newMeeting)
