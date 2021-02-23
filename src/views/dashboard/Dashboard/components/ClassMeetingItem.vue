@@ -112,7 +112,7 @@
 
         return middleInitial
       },
-      getNameOfClass (): string {
+      getNameOfClass (): void {
         classesCollection.doc(this.meeting.classId).get()
           .then(doc => {
             if (doc.exists) {
