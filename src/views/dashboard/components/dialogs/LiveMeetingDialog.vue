@@ -76,34 +76,34 @@
                   class="mb-6"
                 />
               </validation-provider>
-              <validation-provider
-                v-slot="{ errors }"
-                name="Description"
-                rules="meeting_required"
+              <v-menu
+                v-model="menuDate"
+                :close-on-content-click="false"
+                max-width="290"
               >
-                <v-menu
-                  v-model="menuDate"
-                  :close-on-content-click="false"
-                  max-width="290"
-                >
-                  <template #activator="{ on, attrs }">
+                <template #activator="{ on, attrs }">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Description"
+                    rules="meeting_required"
+                  >
                     <v-text-field
                       :value="computedDateFormattedMomentJs"
-                      clearable
                       label="Date"
                       readonly
                       v-bind="attrs"
                       :error-messages="errors"
+                      prepend-icon="mdi-calendar"
                       v-on="on"
                       @click:clear="date = null"
                     />
-                  </template>
-                  <v-date-picker
-                    v-model="date"
-                    @change="menuDate = false"
-                  />
-                </v-menu>
-              </validation-provider>
+                  </validation-provider>
+                </template>
+                <v-date-picker
+                  v-model="date"
+                  @change="menuDate = false"
+                />
+              </v-menu>
               <v-menu
                 ref="menuTimeStart"
                 v-model="menuTimeStart"
