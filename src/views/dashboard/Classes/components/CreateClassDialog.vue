@@ -490,6 +490,7 @@
           color: this.color,
           description: this.description,
           title: this.title,
+          teacherName: this.teacherName,
         }).then(() => {
           if (this.imageSource && this.imageSource !== this.classEdit.imageSource) {
             storageRef.child('classes').child(this.classEdit.id)

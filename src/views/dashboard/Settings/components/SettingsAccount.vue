@@ -752,9 +752,19 @@
         }
 
         await usersCollection.doc(this.user.id).set(updatedUserInfo, { merge: true }).then(() => {
-          console.log('updated successfully')
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Success',
+            text: 'Account has been updated successfully.',
+            type: 'success',
+          })
         }).catch(error => {
-          console.log(error)
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Update Failed',
+            text: error.message,
+            type: 'error',
+          })
         }).finally(() => {
           this.hasChangesNow = false
           this.loading = false

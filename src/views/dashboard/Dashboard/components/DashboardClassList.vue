@@ -17,7 +17,7 @@
     <v-data-table
       hide-default-footer
       :headers="headers"
-      :items="classes"
+      :items="displayClasses"
       :search.sync="search"
       :sort-by="['name']"
       multi-sort
@@ -50,8 +50,9 @@
   </base-material-card>
 </template>
 
-<script>
+<script lang="ts">
   import Vue from 'vue'
+  import { Class } from '@/model/Class'
   export default Vue.extend({
     name: 'ClassList',
     data () {
@@ -63,45 +64,44 @@
           { text: 'Class Code', value: 'code' },
           { text: 'Teacher', value: 'teacher' },
         ],
-        classes: [
-          {
-            actions: '',
-            counter: '1',
-            name: 'Software Design',
-            code: 'CPE301',
-            teacher: 'John L. Doe',
-          },
-          {
-            actions: '',
-            counter: '1',
-            name: 'Data Structure and Algorithms',
-            code: 'CPE302',
-            teacher: 'John Titor',
-          },
-          {
-            actions: '',
-            counter: '1',
-            name: 'Differential Calculus',
-            code: 'CPE304',
-            teacher: 'Lee Harvey Oswald',
-          },
-          {
-            actions: '',
-            counter: '1',
-            name: 'Operating System',
-            code: 'CPE305',
-            teacher: 'Michael Macintosh',
-          },
-          {
-            actions: '',
-            counter: '1',
-            name: 'Engineering Economy',
-            code: 'CPE306',
-            teacher: 'Rudolph Fentz',
-          },
-        ],
         search: undefined,
       }
+    },
+    computed: {
+      classList (): Class[] {
+        return this.$store.getters['classes/classes']
+      },
+      displayClasses () {
+        let counter = 0
+        const classes: {counter: number, name: string, code: string, teacher: string}[] = []
+        this.classList.forEach(c => {
+          counter += 1
+          classes.push(
+            {
+              counter: counter,
+              name: c.title,
+              code: c.code,
+              teacher: c.teacherName,
+            },
+          )
+        })
+
+        return classes
+      },
+    },
+    methods: {
+      getFullName (firstName: string, middleName: string, lastName: string): string {
+        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
+      },
+      middleInitial (middleName: string): string {
+        const midName: string[] = middleName.split(' ')
+        let middleInitial = ''
+        for (let i = 0; i < midName.length; i++) {
+          middleInitial += midName[i].substring(0, 1) + '.'
+        }
+
+        return middleInitial
+      },
     },
   })
  </script>
