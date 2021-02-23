@@ -398,7 +398,6 @@
   import { min, required } from 'vee-validate/dist/rules'
   import ClassicDialog from '@/views/dashboard/components/dialogs/ClassicDialog.vue'
   import firebase from 'firebase/app'
-  import Login from '@/views/pages/Login.vue'
 
   extend('changePassword_required', {
     ...required,

@@ -78,32 +78,29 @@
               </validation-provider>
               <validation-provider
                 v-slot="{ errors }"
-                name="Meeting Date"
+                name="Description"
                 rules="meeting_required"
               >
                 <v-menu
                   v-model="menuDate"
                   :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
+                  max-width="290"
                 >
                   <template #activator="{ on, attrs }">
                     <v-text-field
-                      v-model="computedDateFormatted"
+                      :value="computedDateFormattedMomentJs"
+                      clearable
                       label="Date"
-                      prepend-icon="mdi-calendar"
                       readonly
-                      :error-messages="errors"
                       v-bind="attrs"
+                      :error-messages="errors"
                       v-on="on"
+                      @click:clear="date = null"
                     />
                   </template>
                   <v-date-picker
                     v-model="date"
-                    no-title
-                    @input="menuDate = false"
+                    @change="menuDate = false"
                   />
                 </v-menu>
               </validation-provider>
@@ -203,12 +200,13 @@
 </template>
 
 <script lang="ts">
-  import Vue, { PropType } from 'vue'
-  import { Meeting } from '@/model/Meeting'
+  import Vue from 'vue'
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import { required } from 'vee-validate/dist/rules'
   import { lecturesCollection } from '@/fb'
   import firebase from 'firebase/app'
+  import moment from 'moment'
+  import { format, parseISO } from 'date-fns'
 
   extend('meeting_required', {
     ...required,
@@ -226,25 +224,17 @@
         type: Boolean,
         required: true,
       },
-      meeting: {
-        type: Object as PropType<Meeting>,
-        required: false,
-        default: () => {
-          return new Meeting()
-        },
-      },
     },
     data () {
       return {
         title: '',
         description: '',
-        timeEnd: null,
-        timeStart: null,
+        timeEnd: '',
+        timeStart: '',
         link: '',
 
-        date: new Date().toISOString().substr(0, 10),
-        dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
         menuDate: false,
+        date: format(parseISO(new Date().toISOString()), 'yyyy-MM-dd'),
 
         menuTimeStart: false,
         menuTimeEnd: false,
@@ -253,9 +243,6 @@
     computed: {
       modelValue () {
         return this.vModel || false
-      },
-      computedDateFormatted () {
-        return this.formatDate(this.date)
       },
       currentUser () {
         return this.$store.getters['user/getCurrentUser']
@@ -270,10 +257,8 @@
       formattedTimeEnd (): string {
         return this.convertTime(this.timeEnd)
       },
-    },
-    watch: {
-      date (val) {
-        this.dateFormatted = this.formatDate(this.date)
+      computedDateFormattedMomentJs (): string {
+        return this.date ? moment(this.date).format('dddd, MMMM Do YYYY') : ''
       },
     },
     methods: {
@@ -313,30 +298,11 @@
       close (): void {
         this.$emit('close')
       },
-      formatDate (date) {
-        if (!date) return null
-
-        const [year, month, day] = date.split('-')
-        return `${month}/${day}/${year}`
-      },
-      parseDate (date) {
-        if (!date) return null
-
-        const [month, day, year] = date.split('/')
-        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-      },
-      convertTime (time: string): string {
-        if (time) {
-          // Check correct time format and split into components
-          time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time]
-
-          if (time.length > 1) { // If time format correct
-            time = time.slice(1) // Remove full string match value
-            time[5] = +time[0] < 12 ? ' AM' : ' PM' // Set AM/PM
-            time[0] = +time[0] % 12 || 12 // Adjust hours
-          }
-          return time.join('') // return adjusted time or original string        }
-        }
+      convertTime (timeString: string) {
+        const H = +timeString.substr(0, 2)
+        const h = (H % 12) || 12
+        const ampm = H < 12 ? ' AM' : ' PM'
+        return h + timeString.substr(2, 3) + ampm
       },
     },
   })

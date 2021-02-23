@@ -177,14 +177,13 @@
   import Vue, { PropType } from 'vue'
   import { lecturesCollection, usersCollection } from '@/fb'
   import { Meeting } from '@/model/Meeting'
-  // eslint-disable-next-line no-undef
+
   export default Vue.extend({
     name: 'LiveLectureItem',
     props: {
       meeting: {
         type: Object as PropType<Meeting>,
         required: true,
-        default: '',
       },
       hasEditAccess: {
         type: Boolean,
