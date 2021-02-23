@@ -19,7 +19,7 @@
       :headers="headers"
       :items="displayClasses"
       :search.sync="search"
-      :sort-by="['name']"
+      :sort-by="['counter']"
       multi-sort
     >
       <template #[`item.teacher`]="{ item }">

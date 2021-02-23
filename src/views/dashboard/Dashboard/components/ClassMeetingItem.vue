@@ -5,15 +5,18 @@
     max-width="600"
   >
     <div>
-      <small>{{ teacherName }}</small>
+      <small class="grey--text">{{ convertedDate }}</small>
     </div>
-    <div class="display-1 primary--text">
-      {{ className }}
+    <div class="display-2 info--text">
+      {{ meeting.title }}
     </div>
+    <span class="caption grey--text">
+      {{ gcName }}
+    </span>
     <div class="d-flex mt-3 pb-6">
       <div>
         <v-chip
-          color="green lighten-2"
+          color="primary"
           class="time-chips white--text px-6 mr-2"
         >
           <v-icon
@@ -22,10 +25,10 @@
           >
             mdi-clock-start
           </v-icon>
-          {{ timeStart }}
+          {{ meeting.timeStart }}
         </v-chip>
         <v-chip
-          color="red"
+          color="error"
           class="time-chips white--text px-6 mr-2"
         >
           <v-icon
@@ -34,22 +37,23 @@
           >
             mdi-clock-end
           </v-icon>
-          {{ timeEnd }}
+          {{ meeting.timeEnd }}
         </v-chip>
       </div>
       <div class="ml-auto">
         <v-btn
-          color="blue"
+          color="info"
           small
           class="text-none mr-2"
           width="110"
           depressed
           tile
+          @click="joinMeeting"
         >
           Join Meeting
         </v-btn>
         <v-btn
-          color="red"
+          color="error"
           small
           class="text-none mr-2"
           depressed
@@ -66,36 +70,68 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue'
+  import Vue, { PropType } from 'vue'
+  import { Meeting } from '@/model/Meeting'
+  import { classesCollection } from '@/fb'
   export default Vue.extend({
     name: 'ClassMeetingItem',
     props: {
-      classId: {
-        type: String,
-        required: true,
-        default: '',
-      },
-      teacherName: {
-        type: String,
-        required: true,
-      },
-      className: {
-        type: String,
-        required: true,
-      },
-      timeStart: {
-        type: String,
-        required: true,
-      },
-      timeEnd: {
-        type: String,
+      meeting: {
+        type: Object as PropType<Meeting>,
         required: true,
       },
     },
     data () {
       return {
-
+        className: '',
       }
+    },
+    computed: {
+      convertedDate (): string {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+        const theDate = this.meeting.date.toDate()
+        return theDate.toLocaleDateString(undefined, options)
+      },
+      gcName (): string {
+        return this.className
+      },
+    },
+    mounted () {
+      this.getNameOfClass()
+    },
+    methods: {
+      getFullName (firstName: string, middleName: string, lastName: string): string {
+        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
+      },
+      middleInitial (middleName: string): string {
+        const midName: string[] = middleName.split(' ')
+        let middleInitial = ''
+        for (let i = 0; i < midName.length; i++) {
+          middleInitial += midName[i].substring(0, 1) + '.'
+        }
+
+        return middleInitial
+      },
+      getNameOfClass (): string {
+        classesCollection.doc(this.meeting.classId).get()
+          .then(doc => {
+            if (doc.exists) {
+              this.className = doc.data()?.title
+            }
+          })
+      },
+      joinMeeting (): void {
+        try {
+          window.open(this.meeting.link, '_blank')
+        } catch (error) {
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Failed',
+            text: error.message,
+            type: 'error',
+          })
+        }
+      },
     },
   })
 </script>
