@@ -1,13 +1,15 @@
 import { Class } from '@/model/Class'
-import { classesCollection } from '@/fb'
+import {classesCollection, lecturesCollection} from '@/fb'
 import { User } from '@/model/User';
 import { Unit } from '@/model/Unit';
 import { ClassFile, Lesson } from '@/model/Lesson';
+import {Meeting} from "@/model/Meeting";
 
 export default {
   namespaced: true,
   state: {
     classes: [] as Class[],
+    meetings: [] as Meeting[],
   },
   getters: {
     classes (state): Class[] {
@@ -15,6 +17,9 @@ export default {
     },
     getClass: (state) => (id) => {
       return state.classes.find(c => c.id === id)
+    },
+    meetings (state): Meeting[] {
+      return state.meetings
     },
   },
   mutations: {
@@ -36,6 +41,9 @@ export default {
       const lessonIndex = state.classes[classIndex].units[unitIndex].lessons.findIndex((l: Lesson) => l.id === payload.lessonId)
       state.classes[classIndex].units[unitIndex].lessons[lessonIndex].files = payload.files
     },
+    FETCH_MEETINGS (state, payload: { meetings: Meeting[] }) {
+      state.meetings = payload.meetings
+    }
   },
   actions: {
      fetchClasses (context, payload: User): void {
@@ -55,6 +63,7 @@ export default {
                    doc.data().color,
                    doc.data().ownerId,
                  )
+
                  classes.push(generatedClass)
                }
              })
@@ -78,5 +87,33 @@ export default {
         context.commit('FETCH_FILES', payload)
       }
     },
+    fetchMeetings ({ commit, state }, payload: { currentUser: User }) {
+       if (payload) {
+         lecturesCollection.orderBy('date').onSnapshot(snapshot => {
+           const meetings: Meeting[] = []
+           snapshot.forEach(meet => {
+             state.classes.forEach(c => {
+               if (meet.data().classId === c.id) {
+                 const generatedMeeting = new Meeting(
+                   meet.id,
+                   meet.data()?.teacherId,
+                   meet.data()?.classId,
+                   meet.data()?.title,
+                   meet.data()?.description,
+                   meet.data()?.date,
+                   meet.data()?.timeEnd,
+                   meet.data()?.timeStart,
+                   meet.data()?.link,
+                   meet.data()?.dateCreated,
+                 )
+                 meetings.push(generatedMeeting)
+               }
+             })
+           })
+
+           commit('FETCH_MEETINGS', { meetings: meetings })
+         })
+       }
+    }
   },
 }

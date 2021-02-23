@@ -32,13 +32,9 @@
       <v-tabs-items v-model="activeTab">
         <v-tab-item>
           <class-meeting-item
-            v-for="meeting in meetings"
-            :key="meeting.classId"
-            :class-id="meeting.classId"
-            :teacher-name="meeting.teacherName"
-            :class-name="meeting.className"
-            :time-start="meeting.timeStart"
-            :time-end="meeting.timeEnd"
+            v-for="meeting in classMeetings"
+            :key="meeting.id"
+            :meeting="meeting"
           />
         </v-tab-item>
       </v-tabs-items>
@@ -49,6 +45,7 @@
  <script lang="ts">
   import Vue from 'vue'
   import ClassMeetingItem from './ClassMeetingItem.vue'
+  import { Meeting } from '@/model/Meeting'
 
   export default Vue.extend({
     name: 'ClassMeetings',
@@ -57,16 +54,18 @@
     },
     data () {
       return {
-        activeTab: 'Today',
+        activeTab: 'All Meetings',
         tabs: [
+          'All Meetings',
           'Today',
           'This Week',
         ],
-        meetings: [
-          { teacherName: 'John L. Doe', className: 'Logic Gates and Design', timeStart: '11:00AM', timeEnd: '12:30PM' },
-          { teacherName: 'John L. Doe', className: 'Differential Calculus', timeStart: '11:00AM', timeEnd: '12:30PM' },
-        ],
       }
+    },
+    computed: {
+      classMeetings (): Meeting[] {
+        return this.$store.getters['classes/meetings']
+      },
     },
   })
  </script>

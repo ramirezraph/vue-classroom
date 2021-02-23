@@ -2,6 +2,7 @@ import { User } from "@/model/User";
 import {firebaseAuth, usersCollection} from "@/fb";
 import firebase from "firebase";
 import UserCredential = firebase.auth.UserCredential;
+import {Class} from "@/model/Class";
 
 export default {
   namespaced: true,
@@ -19,7 +20,7 @@ export default {
     }
   },
   actions: {
-     setCurrentUser (context, payload: { uid: string }) {
+    setCurrentUser (context, payload: { uid: string }) {
        // set current user
        usersCollection.doc(payload.uid).onSnapshot(doc => {
            if (doc.exists) {
@@ -41,6 +42,9 @@ export default {
              user.section = doc.data()?.section
              context.commit('SET_CURRENT_USER', user)
              context.dispatch('classes/fetchClasses', user, { root: true })
+             setTimeout(() => {
+               context.dispatch('classes/fetchMeetings', { currentUser: user }, { root: true })
+             }, 1000)
            }
      })
      },

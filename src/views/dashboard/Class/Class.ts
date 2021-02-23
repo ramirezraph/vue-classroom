@@ -9,7 +9,7 @@ import ClassLiveLecture from './components/ClassLiveLecture.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
-import { classesCollection, usersCollection } from '@/fb'
+import { classesCollection, lecturesCollection, usersCollection } from '@/fb'
 import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
 // eslint-disable-next-line camelcase
 import { excluded, min_value, required } from 'vee-validate/dist/rules'
@@ -18,6 +18,7 @@ import { User, UserType } from '@/model/User'
 import ViewContent from './components/ViewContent.vue'
 import { ClassFile } from '@/model/Lesson'
 import CreateClassDialog from '@/views/dashboard/Classes/components/CreateClassDialog.vue'
+import { Meeting } from '@/model/Meeting'
 import DocumentReference = firebase.firestore.DocumentReference;
 
 extend('required', {
@@ -66,6 +67,7 @@ export default Vue.extend({
       units: [] as Unit[],
       discussions: [] as Post[],
       people: [] as User[],
+      meetings: [] as Meeting[],
 
       // Add Unit
       dialogConfirmAddUnit: false,
@@ -140,12 +142,14 @@ export default Vue.extend({
       this.fetchUnits()
       this.fetchDiscussions()
       this.fetchPeople()
+      this.fetchLectures()
     },
   },
   created () {
     this.fetchUnits()
     this.fetchDiscussions()
     this.fetchPeople()
+    this.fetchLectures()
   },
   methods: {
     getSelectedClass (id: string): Class {
@@ -235,6 +239,32 @@ export default Vue.extend({
       } finally {
         this.unitDataLoading = false
       }
+    },
+    async fetchLectures () {
+      await lecturesCollection.where('classId', '==', this.selectedClass.id)
+        .onSnapshot(snapshot => {
+          const lectures: Meeting[] = []
+          snapshot.forEach(meet => {
+            if (meet.exists) {
+              const generatedMeeting = new Meeting(
+                meet.id,
+                meet.data()?.teacherId,
+                meet.data()?.classId,
+                meet.data()?.title,
+                meet.data()?.description,
+                meet.data()?.date,
+                meet.data()?.timeEnd,
+                meet.data()?.timeStart,
+                meet.data()?.link,
+                meet.data()?.dateCreated,
+              )
+              generatedMeeting.isClosed = meet.data()?.isClosed
+
+              lectures.push(generatedMeeting)
+            }
+          })
+          this.meetings = lectures
+        })
     },
     toggleAddNewUnit (): void {
       // NOTE: confirm first
