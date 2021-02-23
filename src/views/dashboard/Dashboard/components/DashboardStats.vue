@@ -8,8 +8,8 @@
       <base-material-stats-card
         color="blue lighten-1"
         icon="mdi-notebook"
-        title="Subject"
-        :value="numberOfSubjects"
+        title="Class"
+        :value="numberOfClass"
       />
     </v-col>
     <v-col
@@ -31,9 +31,13 @@
   export default Vue.extend({
     data () {
       return {
-        numberOfSubjects: 12,
         numberOfAssignment: 4,
       }
+    },
+    computed: {
+      numberOfClass (): number {
+        return this.$store.getters['classes/classes'].length
+      },
     },
   })
 </script>
