@@ -53,14 +53,15 @@
           Join Meeting
         </v-btn>
         <v-btn
-          color="error"
+          color="grey darken-3"
           small
           class="text-none mr-2"
           depressed
           tile
           width="110"
+          @click="goToClass"
         >
-          I'll be absent
+          Go to Class
         </v-btn>
       </div>
     </div>
@@ -131,6 +132,9 @@
             type: 'error',
           })
         }
+      },
+      goToClass (): void {
+        this.$router.push(`classes/${this.meeting.classId}`)
       },
     },
   })
