@@ -335,6 +335,7 @@
       @goto-response="confirmRemoveUnit"
     />
     <view-content
+      v-if="dialogViewContent"
       :v-model="dialogViewContent"
       :class-data="selectedClass"
       :active-file="activeFile"

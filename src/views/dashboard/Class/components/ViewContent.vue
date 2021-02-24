@@ -213,8 +213,33 @@
           cols="3"
           class="pa-3"
         >
-          <div class="px-6 pt-3 pb-2">
-            <span class="subtitle-1 info--text">Comments</span>
+          <div>
+            <v-toolbar
+              dense
+              class="ma-0 pa-0"
+              flat
+            >
+              <v-toolbar-title>
+                <span class="subtitle-1 info--text">Comments</span>
+              </v-toolbar-title>
+              <v-spacer />
+              <v-tooltip bottom>
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    icon
+                    color="info"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="fetchComments(computedFileActive)"
+                  >
+                    <v-icon>
+                      mdi-refresh
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Refresh</span>
+              </v-tooltip>
+            </v-toolbar>
           </div>
           <v-divider />
           <div>
