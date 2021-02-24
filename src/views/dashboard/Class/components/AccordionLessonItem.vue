@@ -333,12 +333,12 @@
                   </validation-provider>
                   <validation-provider
                     v-slot="{ errors }"
-                    name="Unit Title"
+                    name="Lesson Title"
                     rules="required"
                   >
                     <v-text-field
                       v-model="edit_lessonTitle"
-                      label="Unit Title"
+                      label="Lesson Title"
                       color="info"
                       outlined
                       rounded
