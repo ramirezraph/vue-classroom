@@ -188,6 +188,48 @@
                   <v-col
                     cols="6"
                   >
+                    <v-subheader v-text="'Class Invite Code'" />
+                  </v-col>
+                  <v-col
+                    cols="6"
+                  >
+                    <v-text-field
+                      v-model="classInviteCode"
+                      class="text-none"
+                      append-outer-icon="mdi-content-copy"
+                      readonly
+                      @click:append-outer="copyInviteCode"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row
+                  no-gutters
+                  class="mt-n3"
+                >
+                  <v-col
+                    cols="6"
+                  >
+                    <v-subheader v-text="''" />
+                  </v-col>
+                  <v-col
+                    cols="6"
+                  >
+                    <v-btn
+                      color="info"
+                      small
+                      class="text-none"
+                    >
+                      Generate New Code
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-row
+                  no-gutters
+                  align="center"
+                >
+                  <v-col
+                    cols="6"
+                  >
                     <v-subheader v-text="'Set who can post and comment'" />
                   </v-col>
                   <v-col
@@ -386,6 +428,9 @@
         }
         return colors
       },
+      classInviteCode (): string {
+        return this.classEdit.id
+      },
     },
     mounted () {
       if (this.classEdit.id.length > 0) {
@@ -526,6 +571,9 @@
         }).finally(() => {
           this.submitChangesLoading = false
         })
+      },
+      copyInviteCode (): void {
+        console.log('copying')
       },
     },
   })
