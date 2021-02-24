@@ -13,7 +13,7 @@
     >
       <v-toolbar
         dark
-        color="blue"
+        color="primary"
       >
         <v-btn
           text
@@ -96,7 +96,7 @@
           <div id="content-header">
             <div id="content-unit-info">
               <h1
-                class="display-3 blue--text mt-3"
+                class="display-3 info--text mt-3"
               >
                 Unit: {{ computedUnitActive.title }}
               </h1>
@@ -122,7 +122,7 @@
                 <v-spacer />
                 <v-col>
                   <v-btn
-                    color="blue"
+                    color="info"
                     class="white--text"
                     height="30"
                     :loading="downloadBtnLoading"
@@ -214,17 +214,18 @@
           class="pa-3"
         >
           <div class="px-6 pt-3 pb-2">
-            <span class="subtitle-1 blue--text">Comments</span>
+            <span class="subtitle-1 info--text">Comments</span>
           </div>
           <v-divider />
           <div>
             <v-list
+              :key="computedFileActive.id"
               three-line
             >
-              <template v-for="(item, index) in items">
+              <template v-for="(item, index) in fileComments">
                 <v-subheader
                   v-if="item.header"
-                  :key="item.header"
+                  :key="index"
                   v-text="item.header"
                 />
 
@@ -236,27 +237,43 @@
 
                 <v-list-item
                   v-else
-                  :key="item.title"
+                  :key="index"
                 >
                   <v-list-item-avatar>
                     <v-img :src="item.avatar" />
                   </v-list-item-avatar>
 
-                  <v-list-item-content>
-                    <v-list-item-title v-html="item.title" />
-                    <v-list-item-subtitle v-html="item.subtitle" />
+                  <v-list-item-content class="mb-n8">
+                    <v-list-item-title
+                      class="info--text font-weight-medium"
+                      v-html="item.title"
+                    />
+                    <v-textarea
+                      class="text-h5 mt-n3"
+                      flat
+                      :value="item.subtitle"
+                      auto-grow
+                      readonly
+                      style="white-space: pre"
+                      rows="1"
+                    />
                   </v-list-item-content>
                 </v-list-item>
               </template>
             </v-list>
             <div class="mt-3 pa-3">
-              <v-text-field
+              <v-textarea
+                v-model="comment_message"
                 full-width
                 color="blue"
                 outlined
+                rows="1"
                 append-icon="mdi-send"
+                auto-grow
                 dense
+                label="Comment"
                 placeholder="Write a comment here"
+                @click:append="postComment(computedFileActive)"
               >
                 <template #prepend>
                   <v-avatar
@@ -265,12 +282,11 @@
                     class="mt-n2"
                   >
                     <img
-                      src="https://cdn.vuetifyjs.com/images/john.jpg"
-                      alt="John"
+                      :src="currentUser.profile"
                     >
                   </v-avatar>
                 </template>
-              </v-text-field>
+              </v-textarea>
             </div>
           </div>
         </v-col>
@@ -282,8 +298,15 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import File from '@/views/dashboard/components/component/File.vue'
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   import { videoPlayer } from 'vue-video-player'
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   import VueDocPreview from 'vue-doc-preview'
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   import CoolLightBox from 'vue-cool-lightbox'
   import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 
@@ -291,9 +314,11 @@
   import 'video.js/dist/video-js.css'
   import { Class } from '@/model/Class'
   import { Unit } from '@/model/Unit'
-  import { classesCollection, resourcesCollection } from '@/fb'
+  import { classesCollection, fileCommentsCollection, resourcesCollection, usersCollection } from '@/fb'
   import { ClassFile, Lesson } from '@/model/Lesson'
   import axios from 'axios'
+  import firebase from 'firebase/app'
+  import { User } from '@/model/User'
 
   export default Vue.extend({
     components: {
@@ -343,37 +368,9 @@
         showPdfPreview: false,
         pdfValue: '',
 
-        items: [
-          {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-            title: 'Brunch this weekend?',
-            subtitle: 'I\'ll be in your neighborhood doing errands this weekend. Do you want to hang out?',
-          },
-          { divider: true, inset: true },
-          {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-            title: 'Summer BBQ',
-            subtitle: 'Wish I could come, but I\'m out of town this weekend.',
-          },
-          { divider: true, inset: true },
-          {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-            title: 'Oui oui',
-            subtitle: 'Do you have Paris recommendations? Have you ever been?',
-          },
-          { divider: true, inset: true },
-          {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-            title: 'Birthday gift',
-            subtitle: 'Have any ideas about what we should get Heidi for her birthday?',
-          },
-          { divider: true, inset: true },
-          {
-            avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-            title: 'Recipe to try',
-            subtitle: 'We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
-          },
-        ],
+        comment_message: '',
+        fileComments: [] as { avatar: string, title: string, subtitle: string }[],
+
         playerOptions: {},
       }
     },
@@ -415,6 +412,9 @@
         set (newValue: Unit):void {
           this.activeUnitData = newValue
         },
+      },
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
       },
     },
     watch: {
@@ -506,35 +506,77 @@
               })
               this.$store.dispatch('classes/fetchLessons', { classId: this.classItem.id, unitId: unitId, lessons: fetchLessons })
             })
-          console.log('read lessons')
         }
       },
       lessonOpened (unitId: string, lessonId: string): void {
         const foundUnit = this.units.find(u => u.id === unitId)
         const foundLesson = foundUnit?.lessons?.find(l => l.id === lessonId)
         if ((foundLesson?.files?.length || 0) <= 0) { // read only if empty
-          resourcesCollection.doc(lessonId).collection('files')
-            .onSnapshot(snapshot => {
-              const fetchFiles: ClassFile[] = []
-              snapshot.forEach(doc => {
-                const newFile = new ClassFile(
-                  doc.id,
-                  doc.data().type,
-                  doc.data().name,
-                  doc.data().link,
-                )
-                fetchFiles.push(newFile)
-              })
-              // this.files = fetchFiles
-              const classId = this.classItem.id
-              this.$store.dispatch('classes/fetchFiles', { classId: classId, unitId: unitId, lessonId: lessonId, files: fetchFiles })
+          const fileRef = resourcesCollection.doc(lessonId).collection('files')
+          fileRef.onSnapshot(snapshot => {
+            const fetchFiles: ClassFile[] = []
+            snapshot.forEach(doc => {
+              const newFile = new ClassFile(
+                doc.id,
+                doc.data().type,
+                doc.data().name,
+                doc.data().link,
+              )
+
+              fetchFiles.push(newFile)
             })
-          console.log('read files')
+            // this.files = fetchFiles
+            this.$store.dispatch('classes/fetchFiles', { classId: this.classItem.id, unitId: unitId, lessonId: lessonId, files: fetchFiles })
+          })
         }
       },
-      fileClicked (file: ClassFile, unit: Unit): void {
+      fileClicked (file: ClassFile, unit: Unit) {
+        if (file.id === this.computedFileActive.id) {
+          console.log('true')
+          return
+        }
         this.computedUnitActive = unit
         this.computedFileActive = file
+        this.fetchComments(this.computedFileActive)
+      },
+      postComment (activeFile: ClassFile) {
+        const newComment = {
+          userId: this.currentUser.id,
+          time: firebase.firestore.Timestamp.now(),
+          message: this.comment_message,
+        }
+        fileCommentsCollection.doc(activeFile.id).collection('comments')
+          .add(newComment).then(() => {
+            this.comment_message = ''
+          }).catch(error => {
+            console.log(error)
+          })
+      },
+      async fetchComments (activeFile: ClassFile) {
+        if (!activeFile) {
+          return
+        }
+
+        // fetch comments
+        let comments: { avatar: string, title: string, subtitle: string }[] = []
+        const ref = fileCommentsCollection.doc(activeFile.id).collection('comments')
+          .orderBy('time')
+          .onSnapshot(commentSnapshot => {
+            console.log('snapshot')
+            comments = []
+            commentSnapshot.forEach(comment => {
+              usersCollection.doc(comment.data()?.userId).get().then(user => {
+                comments.push({
+                  avatar: user.data()?.imgProfile,
+                  title: this.getFullName(user.data()?.firstName, user.data()?.middleName, user.data()?.lastName),
+                  subtitle: comment.data()?.message,
+                })
+              })
+            })
+            this.fileComments = comments
+          })
+        this.fileComments = comments
+        return ref
       },
       forceFileDownload (response) {
         const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -558,6 +600,18 @@
           .finally(() => {
             this.downloadBtnLoading = false
           })
+      },
+      getFullName (firstName: string, middleName: string, lastName: string): string {
+        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
+      },
+      middleInitial (middleName: string): string {
+        const midName: string[] = middleName.split(' ')
+        let middleInitial = ''
+        for (let i = 0; i < midName.length; i++) {
+          middleInitial += midName[i].substring(0, 1) + '.'
+        }
+
+        return middleInitial
       },
     },
   })

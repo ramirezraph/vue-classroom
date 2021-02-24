@@ -32,6 +32,8 @@ const usersCollection = db.collection('users')
 // firestore class collection reference
 const lecturesCollection = db.collection('lectures')
 
+const fileCommentsCollection = db.collection('file-comments')
+
 // Get a reference to the storage service, which is used to create references in your storage bucket
 const storage = firebase.storage()
 
@@ -49,4 +51,5 @@ export {
   resourcesCollection,
   usersCollection,
   lecturesCollection,
+  fileCommentsCollection,
 }

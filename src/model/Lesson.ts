@@ -1,5 +1,8 @@
+import { Comment } from '@/model/Post'
 
 export class ClassFile {
+  public comments: Comment[] = []
+
   // eslint-disable-next-line no-useless-constructor
   constructor (
     public id: string,
