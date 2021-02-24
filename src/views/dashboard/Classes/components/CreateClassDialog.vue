@@ -573,7 +573,13 @@
         })
       },
       copyInviteCode (): void {
-        console.log('copying')
+        navigator.clipboard.writeText(this.classEdit.id)
+        this.$notify({
+          group: 'appWideNotification',
+          title: 'Class Invite Code',
+          text: 'Copied to clipboard',
+          type: 'success',
+        })
       },
     },
   })
