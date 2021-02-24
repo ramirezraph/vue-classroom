@@ -358,6 +358,7 @@
 
   .tab-items {
     overflow-y: auto;
+    overflow-x: hidden;
     max-height: 950px;
     background-color: #eeeeee;
   }

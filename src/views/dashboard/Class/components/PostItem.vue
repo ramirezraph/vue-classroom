@@ -166,6 +166,7 @@
                 <v-form @submit.prevent="postComment(postItem.id)">
                   <v-textarea
                     v-model="comment_message"
+                    class="ml-xl-n16"
                     outlined
                     clearable
                     rows="1"
