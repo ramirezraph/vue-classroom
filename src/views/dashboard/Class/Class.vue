@@ -305,6 +305,7 @@
                 :people="people"
                 :has-edit-access="hasEditAccess"
                 :is-class-owner="isClassOwner"
+                :owner-id="selectedClass.ownerId"
                 @user-removed="fetchPeople"
               />
             </v-tab-item>

@@ -29,6 +29,7 @@
             :has-edit-access="hasEditAccess"
             class="my-0 mr-1 pa-0"
             :is-class-owner="isClassOwner"
+            :owner-id="ownerId"
             @remove-person="removePerson"
           />
         </v-list>
@@ -93,6 +94,7 @@
               :user="item"
               :has-edit-access="hasEditAccess"
               class="my-0 mr-1 pa-0"
+              owner-id="ownerId"
               @remove-person="removePerson"
             />
           </v-list>
@@ -140,6 +142,10 @@
         type: Boolean,
         required: false,
         default: false,
+      },
+      ownerId: {
+        type: String,
+        required: true,
       },
     },
     data () {

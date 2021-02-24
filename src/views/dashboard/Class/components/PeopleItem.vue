@@ -94,6 +94,10 @@
         required: false,
         default: false,
       },
+      ownerId: {
+        type: String,
+        required: true,
+      },
     },
     data () {
       return {
@@ -114,6 +118,10 @@
         return middleInitial
       },
       showHideRemoveBtn (): boolean {
+        if (this.user.id === this.ownerId) {
+          return false
+        }
+
         if (this.user.userType === 'Teacher') {
           return this.isClassOwner
         } else {
