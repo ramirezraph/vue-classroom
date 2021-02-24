@@ -124,6 +124,7 @@
   import PeopleItem from './PeopleItem.vue'
   import { classesCollection } from '@/fb'
   import firebase from 'firebase/app'
+
   export default Vue.extend({
     name: 'ClassPeople',
     components: {
@@ -157,10 +158,12 @@
     },
     computed: {
       teachers (): User[] {
-        return this.people.filter(p => p.userType === UserType.Teacher)
+        const list = this.people.filter(p => p.userType === UserType.Teacher)
+        return list.sort((a, b) => (a.lastName > b.lastName) ? 1 : -1)
       },
       students (): User[] {
-        return this.people.filter(p => p.userType === UserType.Student)
+        const list = this.people.filter(p => p.userType === UserType.Student)
+        return list.sort((a, b) => (a.lastName > b.lastName) ? 1 : -1)
       },
       classId (): string {
         const path = this.$route.path.split('/')
