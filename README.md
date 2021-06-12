@@ -5,7 +5,7 @@ The Klasse Online Classroom is a web-based learning management system intended t
 Developed using HTML, CSS, JavaScript, Vue.js, Vuetify, TypeScript, and Firebase Firestore as the database.
 
 **Developed by:**<br />
-&nbsp;&nbsp;Raphael Isiah L. Ramirez <br />
-&nbsp;&nbsp;Hanz Josemer L. Cruz <br />
-&nbsp;&nbsp;Hirold B. Bartolay <br />
-&nbsp;&nbsp;Jeff Andrei M. Lacerna <br />
+Raphael Isiah L. Ramirez <br />
+Hanz Josemer L. Cruz <br />
+Hirold B. Bartolay <br />
+Jeff Andrei M. Lacerna <br />
