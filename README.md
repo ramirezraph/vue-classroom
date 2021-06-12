@@ -16,6 +16,8 @@ Hanz Josemer L. Cruz <br />
 Hirold B. Bartolay <br />
 Jeff Andrei M. Lacerna <br />
 
+## Project Status
+The project is still being developed.
 
 ## Setup
 To run this project, install it locally using npm:
