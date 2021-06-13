@@ -34,3 +34,8 @@ npm install
 ```
 npm run serve
 ```
+## Project Screenshots
+
+<img src="demo/classes.png">
+<img src="demo/classview.png">
+<img src="demo/classfilespost.png">
