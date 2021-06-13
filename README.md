@@ -19,9 +19,11 @@ Jeff Andrei M. Lacerna <br />
 ## Project Status
 The project is still being developed.
 
-## Project URL
+## URL
 This project utilizes Azure CI/CD pipeline.
 https://happy-bay-0a4841e00.azurestaticapps.net
+
+Note: The project is being developed in a desktop-first approach. Using mobile device to view this project is not recommended.
 
 ## Setup
 To run this project, install it locally using npm:
