@@ -10,7 +10,7 @@ Project is created with:
 * TypeScript
 * Google Firestore
 
-## Developed by
+## Developers
 Raphael Isiah L. Ramirez <br />
 Hanz Josemer L. Cruz <br />
 Hirold B. Bartolay <br />
