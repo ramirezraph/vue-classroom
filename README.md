@@ -23,7 +23,7 @@ The project is still being developed.
 This project utilizes Azure CI/CD pipeline.
 https://happy-bay-0a4841e00.azurestaticapps.net
 
-Note: The project is being developed in a desktop-first approach. Using mobile device to view this project is not recommended.
+_Note: The project is being developed in a desktop-first approach. Using a mobile device to view this project is not recommended yet._
 
 ## Setup
 To run this project, install it locally using npm:
