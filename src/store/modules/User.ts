@@ -49,7 +49,7 @@ export default {
      })
      },
      userSignIn(context, payload: { email: string, password: string }) {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
           .then(() => {
             resolve()
@@ -70,7 +70,7 @@ export default {
         email: string,
         birthdate: string
       }, password: string }) {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         firebaseAuth.createUserWithEmailAndPassword(payload.user.email, payload.password)
           .then((userCredential: UserCredential) => {
             usersCollection.doc(userCredential.user?.uid)

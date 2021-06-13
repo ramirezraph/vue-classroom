@@ -52,17 +52,26 @@ const routes = [
           {
             name: 'General Settings',
             path: 'general',
-            component: () => import('@/views/dashboard/Settings/components/SettingsGeneral.vue'),
+            component: () =>
+              import(
+                '@/views/dashboard/Settings/components/SettingsGeneral.vue'
+              ),
           },
           {
             name: 'Account Settings',
             path: 'account',
-            component: () => import('@/views/dashboard/Settings/components/SettingsAccount.vue'),
+            component: () =>
+              import(
+                '@/views/dashboard/Settings/components/SettingsAccount.vue'
+              ),
           },
           {
             name: 'Appearance Settings',
             path: 'appearance',
-            component: () => import('@/views/dashboard/Settings/components/SettingsAppearance.vue'),
+            component: () =>
+              import(
+                '@/views/dashboard/Settings/components/SettingsAppearance.vue'
+              ),
           },
         ],
       },
