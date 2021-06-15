@@ -30,6 +30,9 @@
 </script>
 
 <style lang="scss">
+
+@import './src/sass/variables';
+
 .notification-style {
 // Style of the notification itself
   padding: 5%;
