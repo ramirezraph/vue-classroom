@@ -36,12 +36,13 @@
   </v-card>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'PagesPlanCard',
 
     components: {
-      PagesBtn: () => import('./Btn'),
+      PagesBtn: () => import('./Btn.vue'),
     },
 
     props: {
@@ -56,7 +57,7 @@
         }),
       },
     },
-  }
+  })
 </script>
 
 <style lang="sass">
