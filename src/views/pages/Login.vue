@@ -13,7 +13,7 @@
           width="400"
           class="px-5 py-3"
         >
-          <template v-slot:heading>
+          <template #heading>
             <div class="text-center">
               <h1 class="display-2 font-weight-bold mb-2">
                 Login
@@ -75,8 +75,9 @@
   </v-container>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue'
+  export default Vue.extend({
     name: 'PagesLogin',
 
     components: {
@@ -84,6 +85,12 @@
     },
 
     data: () => ({
+      email: '',
+      password: '',
+      rememberMe: false,
+      errorMessage: '',
+      loading: false,
+
       socials: [
         {
           href: '#',
@@ -99,5 +106,30 @@
         },
       ],
     }),
-  }
+    methods: {
+      async onLogin () {
+        try {
+          this.loading = true
+          this.errorMessage = ''
+
+          if (!(this.email.length > 0 && this.password.length > 0)) {
+            this.errorMessage = 'Please complete the form to login.'
+            return
+          }
+
+          await this.$store.dispatch('user/userSignIn', { email: this.email, password: this.password })
+            .then(() => {
+              this.$router.push('/')
+            }).catch(() => {
+              this.errorMessage = 'Invalid user credentials.'
+              this.password = ''
+            })
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loading = false
+        }
+      },
+    },
+  })
 </script>
