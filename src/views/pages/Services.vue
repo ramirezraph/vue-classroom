@@ -52,8 +52,8 @@
     name: 'PagesPricing',
 
     components: {
-      PagesHeading: () => import('./components/Heading'),
-      PagesPlanCard: () => import('./components/PlanCard'),
+      PagesHeading: () => import('./components/Heading.vue'),
+      PagesPlanCard: () => import('./components/PlanCard.vue'),
     },
 
     data: () => ({
