@@ -18,13 +18,13 @@
         class="d-flex align-center text-center"
       >
         <div v-if="this.$router.currentRoute.fullPath === '/pages'">
-          <p class="text-h2">
+          <p class="text-h3 text-md-h2">
             Welcome to
           </p>
-          <h1 class="page-title mt-n10">
+          <h1 class="page-title mt-n6 mt-md-n12">
             Klasse
           </h1>
-          <p class="text-h3 page-subtitle mx-auto mt-n3 font-weight-light">
+          <p class="text-subtitle-1 text-md-h3 page-subtitle mx-auto mt-n3 mt-md-n6 font-weight-light">
             A modern learning management system that
             makes e-learning awesome
           </p>
@@ -80,12 +80,24 @@ p, h1 {
 }
 
 .page-title {
-  font-size: 11rem;
+  font-size: 6rem;
 }
 
 .page-subtitle {
   line-height: 1.75;
-  width: 40ch;
-  letter-spacing: 2px;
+  width: 30ch;
+  letter-spacing: 1.2px !important;
+}
+
+@media (min-width: 1280px) {
+  .page-title {
+    font-size: 13rem;
+  }
+
+  .page-subtitle {
+    line-height: 1.75;
+    width: 40ch;
+    letter-spacing: 2px !important;
+  }
 }
 </style>

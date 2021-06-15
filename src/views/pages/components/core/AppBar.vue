@@ -6,7 +6,22 @@
     height="85"
     class="mt-6"
   >
-    <v-container class="px-0 text-right d-flex align-center">
+    <v-container class="px-0 d-flex">
+      <v-toolbar-title class="hidden-md-and-up">
+        <v-btn
+          to="/pages"
+          text
+          plain
+          exact
+          min-height="48"
+          min-width="40"
+        >
+          <v-icon>
+            mdi-home
+          </v-icon>
+        </v-btn>
+      </v-toolbar-title>
+
       <v-toolbar-title
         class="font-weight-light hidden-sm-and-down"
       >
