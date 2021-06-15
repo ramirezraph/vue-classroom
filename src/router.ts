@@ -10,19 +10,19 @@ const routes = [
     component: () => import('@/views/pages/Index.vue'),
     children: [
       {
-        name: 'Lock',
-        path: 'lock',
-        component: () => import('@/views/pages/Lock.vue'),
+        name: 'Services',
+        path: 'services',
+        component: () => import('@/views/pages/Services.vue'),
+      },
+      {
+        name: 'Support',
+        path: 'support',
+        component: () => import('@/views/pages/Support.vue'),
       },
       {
         name: 'Login',
         path: 'login',
         component: () => import('@/views/pages/Login.vue'),
-      },
-      {
-        name: 'Pricing',
-        path: 'pricing',
-        component: () => import('@/views/pages/Pricing.vue'),
       },
       {
         name: 'Register',

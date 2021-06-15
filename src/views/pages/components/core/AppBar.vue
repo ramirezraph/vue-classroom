@@ -4,6 +4,7 @@
     color="transparent"
     flat
     height="85"
+    class="mt-6"
   >
     <v-container class="px-0 text-right d-flex align-center">
       <v-toolbar-title
@@ -11,8 +12,9 @@
       >
         <v-btn
           text
-          class="text-none text-h3 transparent"
-          href="/pages"
+          class="text-none text-h3"
+          to="/pages"
+          exact
           min-height="48"
           min-width="40"
         >
@@ -62,7 +64,7 @@
         </span>
       </v-btn>
       <v-btn
-        to=""
+        to="/pages/login"
         class="primary white--text hidden-sm-and-down"
         width="150"
       >
@@ -93,7 +95,7 @@
         {
           icon: 'mdi-tools',
           text: 'Services',
-          to: '/pages/pricing',
+          to: '/pages/services',
         },
         {
           icon: 'mdi-help-circle',
@@ -107,11 +109,15 @@
         },
       ],
       titles: {
-        '/pages/lock': 'Lock Page',
-        '/pages/login': 'Login Page',
-        '/pages/pricing': 'Pricing Page',
+        '/pages/services': 'Services Page',
+        '/pages/support': 'Support Page',
         '/pages/register': 'Register Page',
+        '/pages/login': 'Login Page',
       },
     }),
   })
 </script>
+
+<style lang="scss" scoped>
+
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <v-content
+  <v-main
     id="pages"
     :class="$vuetify.theme.dark ? undefined : 'grey lighten-3'"
   >
@@ -8,7 +8,7 @@
         'v-image--sm': this.$vuetify.breakpoint.smAndDown,
         'v-image--md': this.$vuetify.breakpoint.mdAndDown
       }"
-      :src="require(`@/assets/${src || 'bg.jpg'}`)"
+      :src="require(`@/assets/${src || 'bg-school.jpg'}`)"
       gradient="to top, rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)"
       min-height="100%"
     >
@@ -19,7 +19,7 @@
       >
         <div v-if="this.$router.currentRoute.fullPath === '/pages'">
           <p class="text-h2">
-            Welcome To
+            Welcome to
           </p>
           <h1 class="page-title mt-n10">
             Klasse
@@ -41,7 +41,7 @@
         <router-view />
       </v-responsive>
     </v-img>
-  </v-content>
+  </v-main>
 </template>
 
 <script lang="ts">
@@ -51,10 +51,10 @@
 
     data: () => ({
       srcs: {
-        '/pages/lock': 'lock.jpg',
-        '/pages/login': 'login.jpg',
-        '/pages/pricing': 'pricing.jpg',
+        '/pages/services': 'lock.jpg',
+        '/pages/support': 'pricing.jpg',
         '/pages/register': 'register.jpg',
+        '/pages/login': 'login.jpg',
       },
     }),
 
