@@ -10,6 +10,16 @@ const routes = [
     component: () => import('@/views/pages/Index.vue'),
     children: [
       {
+        name: 'Services',
+        path: 'services',
+        component: () => import('@/views/pages/Services.vue'),
+      },
+      {
+        name: 'Support',
+        path: 'support',
+        component: () => import('@/views/pages/Support.vue'),
+      },
+      {
         name: 'Login',
         path: 'login',
         component: () => import('@/views/pages/Login.vue'),
@@ -102,7 +112,7 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const isAuth = firebaseAuth.currentUser
   if (requiresAuth && !isAuth) {
-    next('/pages/login')
+    next('/pages')
   } else {
     next()
   }
