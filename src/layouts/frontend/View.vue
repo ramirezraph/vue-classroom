@@ -39,6 +39,7 @@
 </script>
 
 <style lang="sass">
+
   // #pages
   //   > .v-content__wrap > .v-image
   //     padding-top: 64px
