@@ -67,6 +67,9 @@
         to="/pages/login"
         class="primary white--text hidden-sm-and-down"
         width="150"
+        min-height="48"
+        min-width="40"
+        depressed
       >
         <v-icon
           :left="$vuetify.breakpoint.mdAndUp"
