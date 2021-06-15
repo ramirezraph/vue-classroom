@@ -54,7 +54,7 @@
         '/pages/services': 'lock.jpg',
         '/pages/support': 'pricing.jpg',
         '/pages/register': 'register.jpg',
-        '/pages/login': 'login.jpg',
+        '/pages/login': 'bg-classroom.jpg',
       },
     }),
 
