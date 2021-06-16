@@ -4,132 +4,85 @@
     class="fill-height justify-center"
     tag="section"
   >
-    <v-row justify="center">
-      <v-slide-y-transition appear>
-        <v-card
-          class="mt-6 mt-md-0"
-          light
-          max-width="100%"
-          width="100%"
-        >
-          <v-card-text class="text-center">
-            <div class="display-2 font-weight-light mb-3 text--darken-2 grey--text">
-              Register an Account
-            </div>
-            <div>
-              <v-stepper v-model="e1">
-                <v-stepper-header>
+    <v-card
+      light
+      flat
+      width="100%"
+    >
+      <v-row justify="center">
+        <v-slide-y-transition appear>
+          <v-card
+            class="pa-10"
+            light
+            flat
+            width="45%"
+          >
+            <v-stepper
+              v-model="e1"
+            >
+              <v-stepper-header>
+                <template v-for="n in steps">
                   <v-stepper-step
-                    :complete="e1 > 1"
-                    step="1"
-                  >
-                    Register
-                  </v-stepper-step>
-
-                  <v-divider />
-
-                  <v-stepper-step
-                    :complete="e1 > 2"
-                    step="2"
-                  >
-                    Confirmation
-                  </v-stepper-step>
-
-                  <v-divider />
-
-                  <v-stepper-step step="3">
-                    Information
-                  </v-stepper-step>
-
-                  <v-divider />
-
-                  <v-stepper-step step="4">
-                    Avatar
-                  </v-stepper-step>
-                </v-stepper-header>
+                    :key="`${n}-step`"
+                    :complete="e1 > n"
+                    :step="n"
+                    linear
+                  />
+                  <v-divider
+                    v-if="n !== steps"
+                    :key="n"
+                  />
+                </template>
+              </v-stepper-header>
+              <v-card
+                class="pa-6 mb-6 align end"
+                color="grey lighten-1"
+                height="400px"
+                flat
+              >
                 <v-stepper-items>
-                  <v-stepper-content step="1">
-                    <v-card
-                      class="mb-12"
-                      color="grey lighten-1"
-                      height="200px"
+                  <v-stepper-content
+                    v-for="n in steps"
+                    :key="`${n}-content`"
+                    :step="n"
+                  >
+                    <v-text-field
+                      color="secondary"
+                      label="Email"
+                      prepend-icon="mdi-email"
                     />
-
-                    <v-btn
-                      color="primary"
-                      @click="e1 = 2"
-                    >
-                      Continue
-                    </v-btn>
-
-                    <v-btn text>
-                      Cancel
-                    </v-btn>
-                  </v-stepper-content>
-
-                  <v-stepper-content step="2">
-                    <v-card
-                      class="mb-12"
-                      color="grey lighten-1"
-                      height="200px"
+                    <v-text-field
+                      color="secondary"
+                      label="Password"
+                      prepend-icon="mdi-lock-outline"
                     />
-
-                    <v-btn
-                      color="primary"
-                      @click="e1 = 3"
-                    >
-                      Continue
-                    </v-btn>
-
-                    <v-btn text>
-                      Cancel
-                    </v-btn>
-                  </v-stepper-content>
-
-                  <v-stepper-content step="3">
-                    <v-card
-                      class="mb-12"
-                      color="grey lighten-1"
-                      height="200px"
+                    <v-text-field
+                      color="secondary"
+                      label="Confirm Password"
+                      prepend-icon="mdi-lock-outline"
                     />
-
-                    <v-btn
-                      color="primary"
-                      @click="e1 = 1"
+                    <v-checkbox
+                      :input-value="true"
+                      color="white"
                     >
-                      Continue
-                    </v-btn>
-
-                    <v-btn text>
-                      Cancel
-                    </v-btn>
-
-                    <v-stepper-content step="4">
-                      <v-card
-                        class="mb-12"
-                        color="grey lighten-1"
-                        height="200px"
-                      />
-
-                      <v-btn
-                        color="primary"
-                        @click="e1 = 1"
-                      >
-                        Continue
-                      </v-btn>
-
-                      <v-btn text>
-                        Cancel
-                      </v-btn>
-                    </v-stepper-content>
+                      <template #label>
+                        <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
+                        <a
+                          class="white--text ml-4 ml-sm-1"
+                          href="#"
+                        >
+                          Terms and Conditions
+                        </a>.
+                      </template>
+                    </v-checkbox>
                   </v-stepper-content>
                 </v-stepper-items>
-              </v-stepper>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-slide-y-transition>
-    </v-row>
+              </v-card>
+            </v-stepper>
+          </v-card>
+        </v-slide-y-transition>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
 
@@ -139,8 +92,32 @@
     name: 'PagesRegister',
     components: {},
     data: () => ({
-
+      steps: 4,
+      e1: 1,
     }),
+    watch: {
+      steps (val) {
+        if (this.e1 > val) {
+          this.e1 = val
+        }
+      },
+    },
+    methods: {
+      nextStep (n) {
+        if (n === this.steps) {
+          this.e1 = 1
+        } else {
+          this.e1 = n + 1
+        }
+      },
+      previousStep (n) {
+        if (n === this.steps) {
+          this.e1 = 1
+        } else {
+          this.e1 = n - 1
+        }
+      },
+    },
   })
 </script>
 
