@@ -82,7 +82,7 @@ export default Vue.extend({
       delete_unitNumber: -1,
       delete_unitTitle: '',
 
-      dbRef: classesCollection.doc(this.id),
+      dbRef: {} as DocumentReference,
 
       dialogViewContent: false,
       activeFile: {} as ClassFile,
@@ -137,19 +137,53 @@ export default Vue.extend({
     },
   },
   watch: {
-    '$route' () {
+    '$route.params.id' () {
       this.dbRef = classesCollection.doc(this.id)
-      this.fetchUnits()
-      this.fetchDiscussions()
-      this.fetchPeople()
-      this.fetchLectures()
+      this.fetchUnits().then(() => {
+        console.log('fetch unit success on watch')
+      }).catch(error => {
+        console.log('Fetch Unit Failed on Watch: ' + error)
+      })
+      this.fetchDiscussions().then(() => {
+        console.log('fetch Discussion success on watch')
+      }).catch(error => {
+        console.log('Fetch Discussion Failed on Watch: ' + error)
+      })
+      this.fetchPeople().then(() => {
+        console.log('fetch People success on watch')
+      }).catch(error => {
+        console.log('Fetch People Failed on Watch: ' + error)
+      })
+      this.fetchLectures().then(() => {
+        console.log('fetch Lecture success on watch')
+      }).catch(error => {
+        console.log('Fetch Lecture Failed on Watch: ' + error)
+      })
     },
   },
-  created () {
-    this.fetchUnits()
-    this.fetchDiscussions()
-    this.fetchPeople()
-    this.fetchLectures()
+  mounted () {
+    this.dbRef = classesCollection.doc(this.id)
+
+    this.fetchUnits().then(() => {
+      console.log('fetch Unit success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Unit Failed on Mounted: ' + error)
+    })
+    this.fetchDiscussions().then(() => {
+      console.log('fetch Discussion success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Discussion Failed on Mounted: ' + error)
+    })
+    this.fetchPeople().then(() => {
+      console.log('fetch People success on Mounted')
+    }).catch(error => {
+      console.log('Fetch People Failed on Mounted: ' + error)
+    })
+    this.fetchLectures().then(() => {
+      console.log('fetch Lecture success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Lecture Failed on Mounted: ' + error)
+    })
   },
   methods: {
     getSelectedClass (id: string): Class {

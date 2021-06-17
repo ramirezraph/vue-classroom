@@ -69,6 +69,7 @@
                   class="mt-2"
                 >
                   <v-expansion-panels
+                    :key="$route.fullPath"
                     accordion
                     popout
                     focusable
@@ -76,7 +77,7 @@
                   >
                     <accordion-unit-item
                       v-for="unitItem in units"
-                      :key="unitItem.add_unitNumber"
+                      :key="unitItem.id"
                       :has-edit-access="hasEditAccess"
                       :class-db-ref="computed_dbRef"
                       :unit="unitItem"
@@ -337,10 +338,6 @@
     />
     <view-content
       :v-model="dialogViewContent"
-      :class-data="selectedClass"
-      :active-file="activeFile"
-      :active-unit="activeUnit"
-      :has-edit-access="hasEditAccess"
       @close="dialogViewContent = false"
     />
     <create-class-dialog
