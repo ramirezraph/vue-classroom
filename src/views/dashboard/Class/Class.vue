@@ -338,6 +338,9 @@
     />
     <view-content
       :v-model="dialogViewContent"
+      :class-db-ref="computed_dbRef"
+      :class-id="selectedClass.id"
+      :has-edit-access="hasEditAccess"
       @close="dialogViewContent = false"
     />
     <create-class-dialog
