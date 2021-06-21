@@ -18,9 +18,10 @@
           <v-card
             class="vcard2"
             width="670px"
+            flat
           >
-            <div class="justify-start">
-              <h1>
+            <div class="text-start pl-15">
+              <h1 class="font-weight-light">
                 Register an Account
               </h1>
             </div>
@@ -54,24 +55,28 @@
                     width="550px"
                   >
                     <v-text-field
-                      color="secondary"
+                      color="white"
                       label="Email"
                       prepend-icon="mdi-email"
+                      dark
                     />
                     <v-text-field
                       class="mt-0"
-                      color="secondary"
+                      color="white"
                       label="Password"
                       prepend-icon="mdi-lock-outline"
+                      dark
                     />
                     <v-text-field
                       class="mt-0"
-                      color="secondary"
+                      color="white"
                       label="Confirm Password"
                       prepend-icon="mdi-lock-outline"
+                      dark
                     />
                     <v-checkbox
-                      class="mt-0 ml-10"
+                      class="mt-0 pl-10"
+                      dark
                     >
                       <template #label>
                         <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
@@ -226,4 +231,5 @@
     box-shadow: none !important;
     height: 72px;
 }
+
 </style>
