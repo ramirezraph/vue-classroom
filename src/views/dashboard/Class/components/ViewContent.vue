@@ -93,9 +93,44 @@
             <v-card
               min-width="100%"
               color="white"
-              class="pb-6 pa-3"
+              class="pb-6 pa-6"
+              min-height="600"
             >
-              <h1>File Preview</h1>
+              <div class="d-flex text-left pa-0 ma-0 align-center">
+                <h3>Introduction to Software Design.pdf</h3>
+                <v-spacer />
+                <v-btn
+                  color="primary"
+                  min-width="175"
+                >
+                  <v-icon left>
+                    mdi-download
+                  </v-icon>
+
+                  <span>
+                    Download
+                  </span>
+                </v-btn>
+              </div>
+              <v-card
+                flat
+                class="full-width mt-3"
+                max-width="100%"
+              >
+                test
+              </v-card>
+            </v-card>
+            <v-card
+              flat
+              class="pa-0 mt-6"
+            >
+              <v-icon
+                color="grey"
+                left
+              >
+                mdi-clock-time-four-outline
+              </v-icon>
+              <span class="grey--text">Recent Discussions</span>
             </v-card>
           </v-col>
         </v-row>
