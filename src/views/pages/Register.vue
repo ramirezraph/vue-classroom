@@ -57,7 +57,7 @@
                     <v-text-field
                       color="white"
                       label="Email"
-                      prepend-icon="mdi-email"
+                      prepend-icon="mdi-email-outline"
                       dark
                     />
                     <v-text-field
@@ -75,6 +75,7 @@
                       dark
                     />
                     <v-checkbox
+                      color="white"
                       class="mt-0 pl-10"
                       dark
                     >
@@ -117,45 +118,62 @@
 
                 <v-stepper-content step="2">
                   <v-card
-                    class="mb-12"
-                    color="grey lighten-1"
-                    height="200px"
+                    class="mb-6 mt-0 ml-10"
+                    color="grey"
+                    height="250px"
+                    width="550px"
                   >
+                    <div class="text-start pa-6 ml-4">
+                      <h1 class="white--text display-2 small">
+                        Verify your email to continue signing up
+                      </h1>
+                    </div>
+                    <div class="text-start caption mx-11">
+                      <p class="white--text">
+                        Hello, World!
+                      </p>
+                      <span class="white--text small">
+                        To verify that you are the owner
+                        <span class="white--text small font-weight-bold">sample@gmail.com,</span>
+                        please check your email and enter the verification code that we just sent.&nbsp;
+                      </span>
+                      <a
+                        href="#"
+                        class="blue--text text--lighten-3 text-decoration-none"
+                      >Resend verification code</a>
+                    </div>
                     <v-text-field
-                      color="secondary"
-                      label="Confirm Password"
-                      prepend-icon="mdi-lock-outline"
+                      color="white"
+                      label="Enter the code here"
+                      prepend-icon="mdi-email-outline"
+                      dark
                     />
                   </v-card>
-                  <v-btn
-                    color="primary"
-                    @click="e1 = 3"
-                  >
-                    Continue
-                  </v-btn>
+                  <v-row>
+                    <v-col
+                      class="pr-15"
+                      cols="12"
+                      md="9"
+                    >
+                      <v-btn
+                        color="primary"
+                        width="150px"
+                        height="35px"
+                        @click="e1 = 3"
+                      >
+                        Save and Continue
+                      </v-btn>
 
-                  <v-btn text>
-                    Cancel
-                  </v-btn>
-                </v-stepper-content>
-
-                <v-stepper-content step="3">
-                  <v-card
-                    class="mb-12"
-                    color="grey lighten-1"
-                    height="200px"
-                  />
-
-                  <v-btn
-                    color="primary"
-                    @click="e1 = 1"
-                  >
-                    Continue
-                  </v-btn>
-
-                  <v-btn text>
-                    Cancel
-                  </v-btn>
+                      <v-btn
+                        text
+                        width="150px"
+                        height="35px"
+                        @click="e1 = 1"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-col>
+                  </v-row>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
