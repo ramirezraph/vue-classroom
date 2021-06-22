@@ -1,6 +1,6 @@
 [
   {
-    "origin": ["http://localhost:8080/", "https://happy-bay-0a4841e00.azurestaticapps.net/"],
+    "origin": ["http://localhost:8080/", "http://localhost:8081/", "https://happy-bay-0a4841e00.azurestaticapps.net/"],
     "method": ["GET"],
     "maxAgeSeconds": 3600
   }
