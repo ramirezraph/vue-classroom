@@ -121,9 +121,11 @@
                 max-width="100%"
               >
                 <v-img
-                  src="../../../../../src/assets/lock.jpg"
-                  contain
+                  v-if="activeFile.file.type === 'Image'"
+                  cover
+                  :src="activeFile.file.link"
                   min-width="100%"
+                  scrollable
                   position="center center"
                   placeholder="Class File Image Preview"
                 />
