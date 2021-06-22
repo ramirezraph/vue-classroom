@@ -97,7 +97,9 @@
               min-height="600"
             >
               <div class="d-flex text-left pa-0 ma-0 align-center">
-                <h3>Introduction to Software Design.pdf</h3>
+                <h3>
+                  {{ activeFile.file.name }}
+                </h3>
                 <v-spacer />
                 <v-btn
                   color="primary"
@@ -201,9 +203,6 @@
 
         units: [] as Unit[],
 
-        activeUnit: {} as Unit,
-        activeFile: {} as ClassFile,
-
         dbRef: {} as DocumentReference,
       }
     },
@@ -216,6 +215,9 @@
       },
       computed_dbRef (): DocumentReference {
         return this.dbRef
+      },
+      activeFile (): { lessonId: string, file: ClassFile } {
+        return this.$store.getters['class/getActiveFile']
       },
     },
     watch: {
@@ -243,12 +245,11 @@
       close (): void {
         this.$emit('close')
       },
-      fileClicked (file: ClassFile, unit: Unit): void {
-        this.activeUnit = unit
-        this.activeFile = file
+      fileClicked ({ file, lessonId }): void {
+        this.$store.dispatch('class/setActiveFile', { lessonId: lessonId, file: file })
 
-        console.log('active unit: ', this.activeUnit)
-        console.log('active file: ', this.activeFile)
+        console.log('active file: ', file)
+        console.log('active lessonId: ', lessonId)
       },
       async fetchUnits () {
         this.unitDataLoading = true

@@ -515,8 +515,8 @@
         }
         // this.dialogConfirmAddUnit = false
       },
-      fileClicked (file: ClassFile): void {
-        this.$emit('file-clicked', file, this.unitItem)
+      fileClicked ({ file, lessonId }): void {
+        this.$emit('file-clicked', { file: file, lessonId: lessonId })
       },
     },
   })

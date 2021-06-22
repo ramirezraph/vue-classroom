@@ -687,7 +687,7 @@
         this.dialogConfirmDeleteFile = false
       },
       fileClicked (file: ClassFile): void {
-        this.$emit('file-clicked', file)
+        this.$emit('file-clicked', { file: file, lessonId: this.lessonItem.id })
       },
       toggleEditLesson (): void {
         this.edit_lessonNumber = this.lessonItem.lessonNumber

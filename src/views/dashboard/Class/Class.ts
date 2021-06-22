@@ -85,8 +85,6 @@ export default Vue.extend({
       dbRef: {} as DocumentReference,
 
       dialogViewContent: false,
-      activeFile: {} as ClassFile,
-      activeUnit: {} as Unit,
 
       numberOfPostLimit: 3,
 
@@ -371,16 +369,19 @@ export default Vue.extend({
       }
       this.dialogConfirmDeleteUnit = false
     },
-    fileClicked (file: ClassFile, unit: Unit): void {
-      this.activeUnit = unit
-      this.activeFile = file
+    fileClicked ({ file, lessonId }): void {
+      console.log('selected file lesson id', lessonId)
+      console.log('selected file', file)
+
+      this.$store.dispatch('class/setActiveFile', { lessonId: lessonId, file: file })
+
       this.dialogViewContent = true
     },
     showMorePosts (): void {
       this.numberOfPostLimit += 3
       this.fetchDiscussions()
     },
-    editClass (): void {
+  editClass (): void {
       this.dialogEditClass = true
       this.destroyClassDialog = false
     },
