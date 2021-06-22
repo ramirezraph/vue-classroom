@@ -105,6 +105,8 @@
                   color="primary"
                   min-width="175"
                   class="ma-0"
+                  :loading="downloadBtnLoading"
+                  @click="download()"
                 >
                   <v-icon left>
                     mdi-download
@@ -173,6 +175,7 @@
   import AccordionUnitItem from './AccordionUnitItem.vue'
   import { ClassFile } from '@/model/Lesson'
   import { classesCollection } from '@/fb'
+  import axios from 'axios'
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference;
 
@@ -202,6 +205,7 @@
     data () {
       return {
         unitDataLoading: false,
+        downloadBtnLoading: false,
 
         units: [] as Unit[],
 
@@ -275,6 +279,29 @@
         } finally {
           this.unitDataLoading = false
         }
+      },
+      forceFileDownload (response) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', this.activeFile.file.name) // or any other extension
+        document.body.appendChild(link)
+        link.click()
+      },
+      download (): void {
+        this.downloadBtnLoading = true
+        axios({
+          method: 'get',
+          url: this.activeFile.file.link,
+          responseType: 'arraybuffer',
+        })
+          .then(response => {
+            this.forceFileDownload(response)
+          })
+          .catch(() => console.log('error occured'))
+          .finally(() => {
+            this.downloadBtnLoading = false
+          })
       },
     },
   })
