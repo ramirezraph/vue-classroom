@@ -2,14 +2,17 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Classes from '@/store/modules/Classes'
 import User from "@/store/modules/User";
+import Class from '@/store/modules/Class';
+
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
     classes: Classes,
-    user: User
+    user: User,
+    class: Class,
   },
   state: {
     // barColor: 'rgba(47, 47, 43, .8), rgba(0, 0, 0, .8)',
@@ -38,3 +41,5 @@ export default new Vuex.Store({
   },
   actions: {},
 })
+
+export default store

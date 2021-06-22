@@ -97,7 +97,7 @@ export default Vue.extend({
   },
   computed: {
     selectedClass (): Class {
-      return this.getSelectedClass(this.id)
+      return this.$store.getters['class/getActiveClass']
     },
     selectedClassOwner (): User {
       return this.getSelectedClassOwner(this.selectedClass.ownerId)
@@ -137,7 +137,10 @@ export default Vue.extend({
     },
   },
   watch: {
-    '$route.params.id' () {
+    '$route' (to) {
+      // updates active class
+      this.$store.dispatch('class/setActiveClass', { classId: to.params.id })
+
       this.dbRef = classesCollection.doc(this.id)
       this.fetchUnits().then(() => {
         console.log('fetch unit success on watch')
@@ -186,9 +189,6 @@ export default Vue.extend({
     })
   },
   methods: {
-    getSelectedClass (id: string): Class {
-      return this.$store.getters['classes/classes'].find((c: Class) => c.id === id)
-    },
     async fetchUnits () {
       this.unitDataLoading = true
       try {

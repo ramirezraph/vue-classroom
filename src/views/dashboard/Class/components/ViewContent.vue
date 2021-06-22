@@ -102,6 +102,7 @@
                 <v-btn
                   color="primary"
                   min-width="175"
+                  class="ma-0"
                 >
                   <v-icon left>
                     mdi-download
@@ -117,7 +118,13 @@
                 class="full-width mt-3"
                 max-width="100%"
               >
-                test
+                <v-img
+                  src="../../../../../src/assets/lock.jpg"
+                  contain
+                  min-width="100%"
+                  position="center center"
+                  placeholder="Class File Image Preview"
+                />
               </v-card>
             </v-card>
             <v-card
