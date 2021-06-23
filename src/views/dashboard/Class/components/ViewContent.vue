@@ -135,6 +135,7 @@
                 />
 
                 <cool-light-box
+                  v-if="activeFile.file.type === 'Image'"
                   :items="[activeFile.file.link]"
                   :index="imgIndex"
                   @close="imgIndex = null"
@@ -147,6 +148,16 @@
                   :options="playerOptions"
                   :playsinline="true"
                 />
+
+                <object
+                  v-if="activeFile.file.type === 'Other' && getFileType(activeFile.file) === 'pdf'"
+                  :data="activeFile.file.link"
+                  type="application/pdf"
+                  width="100%"
+                  height="700"
+                >
+                  <iframe :src="`https://docs.google.com/viewer?url=${activeFile.file.link}&embedded=true`" />
+                </object>
               </v-card>
             </v-card>
             <v-card
@@ -174,10 +185,6 @@
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  import VueDocPreview from 'vue-doc-preview'
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   import CoolLightBox from 'vue-cool-lightbox'
   import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 
@@ -193,13 +200,13 @@
   import { ClassFile } from '@/model/Lesson'
   import { classesCollection } from '@/fb'
   import axios from 'axios'
+
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference;
 
   export default Vue.extend({
     components: {
       File,
-      VueDocPreview,
       CoolLightBox,
       AccordionUnitItem,
       videoPlayer,
@@ -345,6 +352,9 @@
           .finally(() => {
             this.downloadBtnLoading = false
           })
+      },
+      getFileType (file: ClassFile): string {
+        return file.name.split('.').reverse()[0]
       },
     },
   })
