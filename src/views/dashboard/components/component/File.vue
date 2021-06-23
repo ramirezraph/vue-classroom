@@ -1,17 +1,26 @@
 <template>
   <div class="d-flex d-block">
-    <span
-      class="blue--text body-1"
-      style="cursor: pointer;"
-    >
-      <v-icon
-        left
-        color="blue"
-      >
-        {{ fileIcon }}
-      </v-icon>
-      <slot name="title">{{ name }}</slot>
-    </span>
+    <v-tooltip top>
+      <template #activator="{ on, attrs }">
+        <span
+          class="blue--text body-1"
+          style="cursor: pointer;"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon
+            left
+            color="blue"
+          >
+            {{ fileIcon }}
+          </v-icon>
+          <slot name="title">{{ name }}</slot>
+        </span>
+      </template>
+      <span>
+        Click to view
+      </span>
+    </v-tooltip>
     <v-spacer />
     <v-tooltip top>
       <template #activator="{ on, attrs }">

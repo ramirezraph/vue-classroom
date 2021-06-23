@@ -94,7 +94,6 @@
               min-width="100%"
               color="white"
               class="pb-6 pa-6"
-              min-height="600"
             >
               <div class="d-flex text-left pa-0 ma-0 align-center">
                 <h3>
@@ -142,7 +141,7 @@
                 />
 
                 <video-player
-                  v-if="activeFile.file.type === 'Video'"
+                  v-else-if="activeFile.file.type === 'Video'"
                   ref="videoPlayer"
                   class="video-player-box vjs-big-play-centered full-width"
                   :options="playerOptions"
@@ -150,7 +149,7 @@
                 />
 
                 <object
-                  v-if="activeFile.file.type === 'Other' && getFileType(activeFile.file) === 'pdf'"
+                  v-else-if="activeFile.file.type === 'Other' && getFileType(activeFile.file) === 'pdf'"
                   :data="activeFile.file.link"
                   type="application/pdf"
                   width="100%"
@@ -158,6 +157,16 @@
                 >
                   <iframe :src="`https://docs.google.com/viewer?url=${activeFile.file.link}&embedded=true`" />
                 </object>
+
+                <v-card
+                  v-else
+                  flat
+                  class="ma-0 pa-0"
+                >
+                  <span class="caption grey--text">
+                    Viewing of this file is not supported yet.
+                  </span>
+                </v-card>
               </v-card>
             </v-card>
             <v-card
