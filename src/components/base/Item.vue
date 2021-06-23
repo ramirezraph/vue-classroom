@@ -30,10 +30,11 @@
   </v-list-item>
 </template>
 
-<script>
+<script lang="ts">
   import Themeable from 'vuetify/lib/mixins/themeable'
+  import Vue from 'vue'
 
-  export default {
+  export default Vue.extend({
     name: 'Item',
 
     mixins: [Themeable],
@@ -41,7 +42,6 @@
     props: {
       item: {
         type: Object,
-        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         default: () => ({
           href: undefined,
           icon: undefined,
@@ -58,7 +58,6 @@
     },
 
     computed: {
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       computedText () {
         if (!this.item || !this.item.title) return ''
 
@@ -70,12 +69,13 @@
 
         return text
       },
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       href () {
         return this.item.href || (!this.item.to ? '#' : undefined)
       },
 
       onClick () {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return this.item.onClick || this.defaultClick
       },
     },
@@ -84,5 +84,5 @@
         // empty
       },
     },
-  }
+  })
 </script>

@@ -124,12 +124,28 @@
               >
                 <v-img
                   v-if="activeFile.file.type === 'Image'"
-                  cover
                   :src="activeFile.file.link"
+                  contain
+                  position="top"
                   min-width="100%"
-                  scrollable
-                  position="center center"
                   placeholder="Class File Image Preview"
+                  max-height="72vh"
+                  class="scroll"
+                  @click="imgIndex = 0"
+                />
+
+                <cool-light-box
+                  :items="[activeFile.file.link]"
+                  :index="imgIndex"
+                  @close="imgIndex = null"
+                />
+
+                <video-player
+                  v-if="activeFile.file.type === 'Video'"
+                  ref="videoPlayer"
+                  class="video-player-box vjs-big-play-centered full-width"
+                  :options="playerOptions"
+                  :playsinline="true"
                 />
               </v-card>
             </v-card>
@@ -155,9 +171,7 @@
 <script lang="ts">
   import Vue from 'vue'
   import File from '@/views/dashboard/components/component/File.vue'
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  import { videoPlayer } from 'vue-video-player'
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   import VueDocPreview from 'vue-doc-preview'
@@ -167,8 +181,11 @@
   import CoolLightBox from 'vue-cool-lightbox'
   import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 
-  // require styles
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  import { videoPlayer } from 'vue-video-player'
   import 'video.js/dist/video-js.css'
+
   import { Unit } from '@/model/Unit'
 
   import firebase from 'firebase'
@@ -182,10 +199,10 @@
   export default Vue.extend({
     components: {
       File,
-      videoPlayer,
       VueDocPreview,
       CoolLightBox,
       AccordionUnitItem,
+      videoPlayer,
     },
     props: {
       vModel: {
@@ -210,6 +227,11 @@
         units: [] as Unit[],
 
         dbRef: {} as DocumentReference,
+
+        playerOptions: {},
+
+        // for light box
+        imgIndex: null,
       }
     },
     computed: {
@@ -223,7 +245,14 @@
         return this.dbRef
       },
       activeFile (): { lessonId: string, file: ClassFile } {
-        return this.$store.getters['class/getActiveFile']
+        const file = this.$store.getters['class/getActiveFile']
+
+        return file
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      player (): any {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (this.$refs.videoPlayer as any).player
       },
     },
     watch: {
@@ -236,6 +265,20 @@
         }).catch(error => {
           console.log('Fetch Unit Failed on ViewContent Mounted: ' + error)
         })
+      },
+      'activeFile' () {
+        if (this.activeFile.file.type === 'Video') {
+          // videojs options
+          this.playerOptions = {
+            language: 'en',
+            playbackRates: [0.7, 1.0, 1.5, 2.0],
+            fluid: true,
+            sources: [{
+              type: 'video/mp4',
+              src: this.activeFile.file.link,
+            }],
+          }
+        }
       },
     },
     mounted () {
@@ -308,5 +351,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+  .scroll {
+    overflow-y: scroll;
+  }
 </style>

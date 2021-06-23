@@ -293,7 +293,7 @@
 </template>
 
 <script lang="ts">
-  import { ClassFile, Lesson } from '@/model/Lesson'
+  import { Lesson } from '@/model/Lesson'
   import { Unit } from '@/model/Unit'
   import Vue, { PropType } from 'vue'
   import AccordionLessonItem from './AccordionLessonItem.vue'
