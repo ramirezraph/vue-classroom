@@ -82,11 +82,9 @@ export default Vue.extend({
       delete_unitNumber: -1,
       delete_unitTitle: '',
 
-      dbRef: classesCollection.doc(this.id),
+      dbRef: {} as DocumentReference,
 
       dialogViewContent: false,
-      activeFile: {} as ClassFile,
-      activeUnit: {} as Unit,
 
       numberOfPostLimit: 3,
 
@@ -97,7 +95,7 @@ export default Vue.extend({
   },
   computed: {
     selectedClass (): Class {
-      return this.getSelectedClass(this.id)
+      return this.$store.getters['class/getActiveClass']
     },
     selectedClassOwner (): User {
       return this.getSelectedClassOwner(this.selectedClass.ownerId)
@@ -137,24 +135,58 @@ export default Vue.extend({
     },
   },
   watch: {
-    '$route' () {
+    '$route' (to) {
+      // updates active class
+      this.$store.dispatch('class/setActiveClass', { classId: to.params.id })
+
       this.dbRef = classesCollection.doc(this.id)
-      this.fetchUnits()
-      this.fetchDiscussions()
-      this.fetchPeople()
-      this.fetchLectures()
+      this.fetchUnits().then(() => {
+        console.log('fetch unit success on watch')
+      }).catch(error => {
+        console.log('Fetch Unit Failed on Watch: ' + error)
+      })
+      this.fetchDiscussions().then(() => {
+        console.log('fetch Discussion success on watch')
+      }).catch(error => {
+        console.log('Fetch Discussion Failed on Watch: ' + error)
+      })
+      this.fetchPeople().then(() => {
+        console.log('fetch People success on watch')
+      }).catch(error => {
+        console.log('Fetch People Failed on Watch: ' + error)
+      })
+      this.fetchLectures().then(() => {
+        console.log('fetch Lecture success on watch')
+      }).catch(error => {
+        console.log('Fetch Lecture Failed on Watch: ' + error)
+      })
     },
   },
-  created () {
-    this.fetchUnits()
-    this.fetchDiscussions()
-    this.fetchPeople()
-    this.fetchLectures()
+  mounted () {
+    this.dbRef = classesCollection.doc(this.id)
+
+    this.fetchUnits().then(() => {
+      console.log('fetch Unit success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Unit Failed on Mounted: ' + error)
+    })
+    this.fetchDiscussions().then(() => {
+      console.log('fetch Discussion success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Discussion Failed on Mounted: ' + error)
+    })
+    this.fetchPeople().then(() => {
+      console.log('fetch People success on Mounted')
+    }).catch(error => {
+      console.log('Fetch People Failed on Mounted: ' + error)
+    })
+    this.fetchLectures().then(() => {
+      console.log('fetch Lecture success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Lecture Failed on Mounted: ' + error)
+    })
   },
   methods: {
-    getSelectedClass (id: string): Class {
-      return this.$store.getters['classes/classes'].find((c: Class) => c.id === id)
-    },
     async fetchUnits () {
       this.unitDataLoading = true
       try {
@@ -337,16 +369,19 @@ export default Vue.extend({
       }
       this.dialogConfirmDeleteUnit = false
     },
-    fileClicked (file: ClassFile, unit: Unit): void {
-      this.activeUnit = unit
-      this.activeFile = file
+    fileClicked ({ file, lessonId }): void {
+      console.log('selected file lesson id', lessonId)
+      console.log('selected file', file)
+
+      this.$store.dispatch('class/setActiveFile', { lessonId: lessonId, file: file })
+
       this.dialogViewContent = true
     },
     showMorePosts (): void {
       this.numberOfPostLimit += 3
       this.fetchDiscussions()
     },
-    editClass (): void {
+  editClass (): void {
       this.dialogEditClass = true
       this.destroyClassDialog = false
     },

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { firebaseAuth } from '@/fb'
+import store from '@/store/index'
 
 Vue.use(Router)
 
@@ -52,6 +53,14 @@ const routes = [
         path: 'classes/:id',
         component: () => import('@/views/dashboard/Class/Class.vue'),
         props: true,
+        beforeEnter: (to, from, next) => {
+          store.dispatch('class/setActiveClass', { classId: to.params.id })
+          if (store.getters['class/getActiveClass']) {
+            next()
+          } else {
+            next('/classes')
+          }
+        },
       },
       {
         name: 'Settings',

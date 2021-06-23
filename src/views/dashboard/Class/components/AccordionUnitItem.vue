@@ -25,6 +25,7 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <v-card
+        v-if="lessons.length > 0"
         elevation="3"
         class="mt-n2"
       >
@@ -46,8 +47,18 @@
         </v-expansion-panels>
       </v-card>
       <v-card
-        v-if="hasEditAccess"
+        v-else
         flat
+        class="mt-6"
+      >
+        <p class="caption grey--text">
+          No lesson found.
+        </p>
+      </v-card>
+      <v-card
+        v-if="hasEditAccess && !readOnly"
+        flat
+        class="mt-6"
       >
         <v-row
           no-gutters
@@ -282,7 +293,7 @@
 </template>
 
 <script lang="ts">
-  import { ClassFile, Lesson } from '@/model/Lesson'
+  import { Lesson } from '@/model/Lesson'
   import { Unit } from '@/model/Unit'
   import Vue, { PropType } from 'vue'
   import AccordionLessonItem from './AccordionLessonItem.vue'
@@ -329,6 +340,11 @@
       classDbRef: {
         type: Object as PropType<DocumentReference>,
         required: true,
+      },
+      readOnly: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
     data () {
@@ -437,6 +453,7 @@
         this.$emit('remove-unit', this.unit)
       },
       async fetchLessons () {
+        console.log('initate fetch lesson')
         let fetchLessons: Lesson[] = []
         await this.unitDbRef.collection('lessons').orderBy('lessonNumber')
           .onSnapshot(snapshot => {
@@ -449,6 +466,7 @@
                 doc.data().shortDescription,
                 doc.data().isLive,
               )
+
               if (this.hasEditAccess) {
                 fetchLessons.push(lesson)
               } else {
@@ -459,6 +477,8 @@
             })
             const classId = this.unitDbRef.path.split('/')[1]
             this.lessons = fetchLessons
+            console.log('fetch lesson:', this.lessons)
+
             this.$store.dispatch('classes/fetchLessons', { classId: classId, unitId: this.unitItem.id, lessons: this.lessons })
           })
       },
@@ -495,8 +515,8 @@
         }
         // this.dialogConfirmAddUnit = false
       },
-      fileClicked (file: ClassFile): void {
-        this.$emit('file-clicked', file, this.unitItem)
+      fileClicked ({ file, lessonId }): void {
+        this.$emit('file-clicked', { file: file, lessonId: lessonId })
       },
     },
   })

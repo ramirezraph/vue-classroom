@@ -33,47 +33,57 @@
         class="mt-3"
       >
         <div
-          v-if="lessonItem.shortDescription"
-          id="description"
-          class="body-1"
+          v-if="hasContent"
+          class="lesson-content"
         >
-          <v-textarea
-            v-model="lessonItem.shortDescription"
-            rows="1"
-            auto-grow
-            flat
-            style="white-space: pre"
-            readonly
-            solo
-            dense
-            class="ma-0 mb-n6"
-          />
-        </div>
-        <div class="mt-6">
-          <transition-group
-            name="list"
-            tag="p"
+          <div
+            v-if="lessonItem.shortDescription"
+            id="description"
+            class="body-1"
           >
-            <file
-              v-for="file in files"
-              :key="file.id"
-              :has-edit-access="hasEditAccess"
-              :file-id="file.id"
-              :name="file.name"
-              :type="file.type"
-              :link="file.link"
-              class="mt-2 px-2"
-              @on-remove="onRemoveFile"
+            <v-textarea
+              v-model="lessonItem.shortDescription"
+              rows="1"
+              auto-grow
+              flat
+              style="white-space: pre"
+              readonly
+              solo
+              dense
+              class="ma-0 mb-n6"
+            />
+          </div>
+          <div class="mt-6">
+            <transition-group
+              name="list"
+              tag="p"
             >
-              <template
-                #title
+              <file
+                v-for="file in files"
+                :key="file.id"
+                :has-edit-access="hasEditAccess"
+                :file-id="file.id"
+                :name="file.name"
+                :type="file.type"
+                :link="file.link"
+                class="mt-2 px-2"
+                @on-remove="onRemoveFile"
               >
-                <span @click="fileClicked(file)">
-                  {{ file.name }}
-                </span>
-              </template>
-            </file>
-          </transition-group>
+                <template
+                  #title
+                >
+                  <span @click="fileClicked(file)">
+                    {{ file.name }}
+                  </span>
+                </template>
+              </file>
+            </transition-group>
+          </div>
+        </div>
+        <div v-else>
+          <p class="caption grey--text mt-6">
+            No content.
+          </p>
         </div>
         <v-row
           v-if="hasEditAccess"
@@ -299,7 +309,7 @@
           <v-card
             v-if="showHideEditLesson"
             elevation="6"
-            class="pa-2"
+            class="pa-2 mt-6"
             outlined
           >
             <v-card-title class="text-h4">
@@ -485,6 +495,17 @@
         lessonNumbers = lessonNumbers.substring(0, lessonNumbers.length - 1)
         return `excluded:${lessonNumbers}`
       },
+      hasContent (): boolean {
+        if (this.lessonItem.shortDescription) {
+          return true
+        }
+
+        if (this.files.length > 0) {
+          return true
+        }
+
+        return false
+      },
     },
     watch: {
       '$route' () {
@@ -666,7 +687,7 @@
         this.dialogConfirmDeleteFile = false
       },
       fileClicked (file: ClassFile): void {
-        this.$emit('file-clicked', file)
+        this.$emit('file-clicked', { file: file, lessonId: this.lessonItem.id })
       },
       toggleEditLesson (): void {
         this.edit_lessonNumber = this.lessonItem.lessonNumber
