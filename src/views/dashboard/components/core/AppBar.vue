@@ -82,8 +82,11 @@
             color="red"
             overlap
             bordered
+            :value="unreadNotifications > 0"
           >
-            <template #badge>
+            <template
+              #badge
+            >
               <span>{{ unreadNotifications }}</span>
             </template>
 
