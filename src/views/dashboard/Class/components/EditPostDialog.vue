@@ -81,6 +81,9 @@
   import { User } from '@/model/User'
   import { Post } from '@/model/Post'
   import { usersCollection } from '@/fb'
+
+  import getFullName from '@/plugins/fullname'
+
   export default Vue.extend({
     name: 'DialogEditPost',
     props: {
@@ -110,6 +113,8 @@
       convertedDate (): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = this.postItem.time.toDate()
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return theDate.toLocaleDateString('en-US', options)
       },
       currentUser (): User {
@@ -124,23 +129,14 @@
       this.message = this.postItem.message
       usersCollection.doc(this.postItem.userId).get().then(doc => {
         if (doc.exists) {
-          this.userName = this.getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+          this.userName = getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
           this.userProfile = doc.data()?.imgProfile
         }
       })
     },
     methods: {
-      getFullName (firstName: string, middleName: string, lastName: string): string {
-        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
-      },
-      middleInitial (middleName: string): string {
-        const midName: string[] = middleName.split(' ')
-        let middleInitial = ''
-        for (let i = 0; i < midName.length; i++) {
-          middleInitial += midName[i].substring(0, 1) + '.'
-        }
-
-        return middleInitial
+      whatisthis (whatisthis: string) {
+        console.log(`${whatisthis} do not remove this method, it holds the universe together.`)
       },
       saveChanges (): void {
         this.$emit('save-changes', this.message)
@@ -151,7 +147,3 @@
     },
   })
 </script>
-
-<style scoped>
-
-</style>

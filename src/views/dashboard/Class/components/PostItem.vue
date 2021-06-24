@@ -342,6 +342,8 @@
       convertDate (time: Timestamp): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = time.toDate()
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return theDate.toLocaleDateString('en-US', options)
       },
       viewMoreComments (): void {
