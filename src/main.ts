@@ -42,7 +42,6 @@ let app
 firebaseAuth.onAuthStateChanged(user => {
   if (user) {
     store.dispatch('user/setCurrentUser', { uid: user?.uid })
-    store.dispatch('user/fetchNotifications')
   }
   if (!app) {
     app = new Vue({

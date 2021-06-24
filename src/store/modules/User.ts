@@ -9,6 +9,7 @@ export default {
   state: {
     currentUser: null,
     notifications: null,
+    notificationsSnapshotUnsubscribe: null
   },
   getters: {
     getCurrentUser (state): User {
@@ -16,6 +17,9 @@ export default {
     },
     getNotifications (state): Array<UserNotification> {
       return state.notifications
+    },
+    getNotificationsSnapshotUnsubscribe(state) {
+      return state.notificationsSnapshotUnsubscribe
     }
   },
   mutations: {
@@ -24,6 +28,9 @@ export default {
     },
     SET_NOTIFICATIONS (state, payload: Array<UserNotification>) {
       state.notifications = payload
+    },
+    SET_NOTIFICATIONS_SNAPSHOT (state, payload) {
+      state.notificationsSnapshotUnsubscribe = payload
     }
   },
   actions: {
@@ -52,6 +59,8 @@ export default {
              setTimeout(() => {
                dispatch('classes/fetchMeetings', { currentUser: user }, { root: true })
              }, 1000)
+             dispatch('clearNotification')
+             dispatch('fetchNotifications')
            }
      })
      },
@@ -98,13 +107,21 @@ export default {
     },
     fetchNotifications ({ commit, getters }) {
 
+      let unsubscribe
+
       let notifications: Array<UserNotification> = []
 
       const currentUser = getters['getCurrentUser']
-      console.log(currentUser.id);
 
       if (currentUser) {
-        notificationsCollection.doc(currentUser.id)
+
+        const snapshot = getters['getNotificationsSnapshotUnsubscribe']
+
+        if (snapshot) {
+          snapshot() // detach a listener
+        }
+
+        unsubscribe = notificationsCollection.doc(currentUser.id)
         .collection('items')
         .orderBy('date')
         .onSnapshot(notifSnapshot => {
@@ -163,9 +180,14 @@ export default {
                 return
             }
           })
+
+          commit('SET_NOTIFICATIONS_SNAPSHOT', unsubscribe)
           commit('SET_NOTIFICATIONS', notifications)
         })
       }
-    }
+    },
+    clearNotification ({ commit }) {
+      commit('SET_NOTIFICATIONS', [])
+    },
   },
 }
