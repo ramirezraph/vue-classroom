@@ -115,7 +115,6 @@ export default {
                 notifications.push(new ClassInviteNotification(
                   n.id,
                   n.data()?.userId,
-                  n.data()?.userName,
                   n.data()?.type,
                   n.data()?.date,
                   n.data()?.read,
@@ -128,7 +127,6 @@ export default {
                 notifications.push(new ClassInviteResultNotification(
                   n.id,
                   n.data()?.userId,
-                  n.data()?.userName,
                   n.data()?.type,
                   n.data()?.date,
                   n.data()?.read,
@@ -141,7 +139,6 @@ export default {
                 notifications.push(new AssignmentNotification(
                   n.id,
                   n.data()?.userId,
-                  n.data()?.userName,
                   n.data()?.type,
                   n.data()?.date,
                   n.data()?.read,
@@ -155,7 +152,6 @@ export default {
                 notifications.push(new RegularNotification(
                   n.id,
                   n.data()?.userId,
-                  n.data()?.userName,
                   n.data()?.type,
                   n.data()?.date,
                   n.data()?.read,

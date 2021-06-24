@@ -8,13 +8,15 @@
         <v-avatar size="48">
           <img
             alt="user"
-            src="https://cdn.pixabay.com/photo/2020/06/24/19/12/cabbage-5337431_1280.jpg"
+            width="100%"
+            :src="imgProfileLink"
+            class="profile"
           >
         </v-avatar>
       </div>
       <div>
         <v-card-title class="text-h4 pt-4 d-flex">
-          <span>{{ notification.userName }}</span>
+          <span>{{ fullName }}</span>
         </v-card-title>
         <v-card-text class="subtitle-1">
           <div v-if="type === 'Regular'">
@@ -59,6 +61,9 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { UserNotification, NotificationType } from '@/model/UserNotification'
+  import { usersCollection } from '@/fb'
+  import getFullName from '@/plugins/fullname'
+
   export default Vue.extend({
     props: {
       notification: {
@@ -67,16 +72,31 @@
       },
     },
     data () {
-      return {}
+      return {
+        imgProfileLink: null,
+        fullName: '',
+      }
     },
     computed: {
       type (): NotificationType {
         return this.notification.type
       },
     },
+    mounted () {
+      usersCollection.doc(this.notification.userId).get().then(
+        doc => {
+          if (doc.exists) {
+            this.imgProfileLink = doc.data()?.imgProfile
+            this.fullName = getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+          }
+        },
+      )
+    },
   })
 </script>
 
 <style lang="scss" scoped>
-
+  .profile {
+    object-fit: cover;
+  }
 </style>

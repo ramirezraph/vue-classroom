@@ -13,7 +13,6 @@ export class UserNotification {
   constructor (
     public id: string,
     public userId: string,
-    public userName: string,
     public type: NotificationType,
     public date: Timestamp,
     public read: boolean,
@@ -24,13 +23,12 @@ export class RegularNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
-    public userName: string,
     public type: NotificationType,
     public date: Timestamp,
     public read: boolean,
     public content: string,
   ) {
-    super(id, userId, userName, type, date, read)
+    super(id, userId, type, date, read)
   }
 }
 
@@ -38,7 +36,6 @@ export class AssignmentNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
-    public userName: string,
     public type: NotificationType,
     public date: Timestamp,
     public read: boolean,
@@ -47,7 +44,7 @@ export class AssignmentNotification extends UserNotification {
     public classCode: string,
     public due: Timestamp,
   ) {
-    super(id, userId, userName, type, date, read)
+    super(id, userId, type, date, read)
   }
 }
 
@@ -55,7 +52,6 @@ export class ClassInviteNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
-    public userName: string,
     public type: NotificationType,
     public date: Timestamp,
     public read: boolean,
@@ -63,7 +59,7 @@ export class ClassInviteNotification extends UserNotification {
     public classTitle: string,
     public classCode: string,
   ) {
-    super(id, userId, userName, type, date, read)
+    super(id, userId, type, date, read)
   }
 }
 
@@ -71,7 +67,6 @@ export class ClassInviteResultNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
-    public userName: string,
     public type: NotificationType,
     public date: Timestamp,
     public read: boolean,
@@ -79,6 +74,6 @@ export class ClassInviteResultNotification extends UserNotification {
     public classTitle: string,
     public classCode: string,
   ) {
-    super(id, userId, userName, type, date, read)
+    super(id, userId, type, date, read)
   }
 }
