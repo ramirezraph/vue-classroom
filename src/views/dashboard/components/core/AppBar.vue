@@ -119,11 +119,21 @@
           </v-card-title>
           <v-divider />
           <v-card-text class="ma-0 pa-0">
-            <notification
-              v-for="(notif, index) in notifications"
-              :key="index"
-              :notification="notif"
-            />
+            <div v-if="notifications.length > 0">
+              <notification
+                v-for="(notif, index) in notifications"
+                :key="index"
+                :notification="notif"
+              />
+            </div>
+            <div
+              v-else
+              class="pa-3"
+            >
+              <span class="caption grey--text">
+                There are no notifications.
+              </span>
+            </div>
           </v-card-text>
         </v-card>
       </v-list>

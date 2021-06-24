@@ -33,8 +33,6 @@ export default {
       state.activeFile = payload
     },
     SET_COMMENT_SNAPSHOT (state, payload) {
-      console.log(typeof payload);
-
       state.fileCommentSnapshotUnsubscribe = payload
     }
   },
