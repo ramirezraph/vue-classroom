@@ -214,6 +214,8 @@
           title: this.$t(link.title),
         }
       },
+
+      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       signOut () {
         firebaseAuth.signOut().then(() => {
           this.$store.dispatch('user/userSignOut')

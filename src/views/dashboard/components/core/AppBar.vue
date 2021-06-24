@@ -17,6 +17,7 @@
       <v-icon v-if="value">
         mdi-view-quilt
       </v-icon>
+
       <v-icon v-else>
         mdi-dots-vertical
       </v-icon>
@@ -29,6 +30,83 @@
 
     <v-spacer />
 
+    <v-text-field
+      :label="$t('search')"
+      color="secondary"
+      hide-details
+      style="max-width: 250px;"
+    >
+      <template
+        v-if="$vuetify.breakpoint.mdAndUp"
+        #append-outer
+      >
+        <v-btn
+          class="mt-n2"
+          elevation="1"
+          fab
+          small
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </template>
+    </v-text-field>
+
+    <div class="mx-3" />
+
+    <v-btn
+      class="ml-2"
+      min-width="0"
+      text
+      to="/"
+      active-class="no-active-style"
+    >
+      <v-icon>mdi-view-dashboard</v-icon>
+    </v-btn>
+
+    <v-menu
+      bottom
+      left
+      offset-y
+      origin="top right"
+      transition="scale-transition"
+    >
+      <template #activator="{ attrs, on }">
+        <v-btn
+          class="ml-2"
+          min-width="0"
+          text
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-badge
+            color="red"
+            overlap
+            bordered
+          >
+            <template #badge>
+              <span>5</span>
+            </template>
+
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
+        </v-btn>
+      </template>
+
+      <v-list
+        :tile="false"
+        nav
+      >
+        <div>
+          <app-bar-item
+            v-for="(n, i) in notifications"
+            :key="`item-${i}`"
+          >
+            <v-list-item-title v-text="n" />
+          </app-bar-item>
+        </div>
+      </v-list>
+    </v-menu>
+
     <v-menu
       bottom
       left
@@ -37,32 +115,48 @@
       origin="top right"
       transition="scale-transition"
     >
+      <template #activator="{ attrs, on }">
+        <v-btn
+          class="ml-2"
+          min-width="0"
+          text
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-account</v-icon>
+        </v-btn>
+      </template>
+
       <v-list
         :tile="false"
         flat
         nav
       >
-        <template v-for="(p, i) in profile">
-          <v-divider
-            v-if="p.divider"
-            :key="`divider-${i}`"
-            class="mb-2 mt-2"
-          />
-
-          <app-bar-item
-            v-else
-            :key="`item-${i}`"
-            to="/"
+        <app-bar-item
+          v-for="(p, i) in profile"
+          :key="`item-${i}`"
+          :to="p.route"
+        >
+          <v-list-item-title v-text="p.title" />
+        </app-bar-item>
+        <v-divider class="mb-2 mt-2" />
+        <app-bar-item>
+          <v-list-item
+            class="ma-0 pa-0"
+            @click="signOut"
           >
-            <v-list-item-title v-text="p.title" />
-          </app-bar-item>
-        </template>
+            <v-list-item-title>
+              Sign out
+            </v-list-item-title>
+          </v-list-item>
+        </app-bar-item>
       </v-list>
     </v-menu>
   </v-app-bar>
 </template>
 
-<script>
+<script lang="ts">
+  import { firebaseAuth } from '@/fb'
   import Vue from 'vue'
   // Components
   import { VHover, VListItem } from 'vuetify/lib'
@@ -105,21 +199,21 @@
       },
     },
 
-    data: () => ({
-      notifications: [
-        'Mike John Responded to your email',
-        'You have 5 new tasks',
-        'You\'re now friends with Andrew',
-        'Another Notification',
-        'Another one',
-      ],
-      profile: [
-        { title: 'Profile' },
-        { title: 'Settings' },
-        { divider: true },
-        { title: 'Log out' },
-      ],
-    }),
+    data () {
+      return {
+        notifications: [
+          'Mike John Responded to your email',
+          'You have 5 new tasks',
+          'You\'re now friends with Andrew',
+          'Another Notification',
+          'Another one',
+        ],
+        profile: [
+          { title: 'Profile', route: '/settings/account' },
+          { title: 'Settings', route: '/settings/general' },
+        ],
+      }
+    },
 
     computed: {
       ...mapGetters(['drawer']),
@@ -129,6 +223,21 @@
       ...mapMutations({
         setDrawer: 'SET_DRAWER',
       }),
+      signOut (): void {
+        console.log('hello?')
+        firebaseAuth.signOut().then(() => {
+          this.$store.dispatch('user/userSignOut')
+          this.$router.replace({ name: 'Login' })
+        })
+      },
     },
   })
 </script>
+
+<style lang="scss" scoped>
+  .no-active-style.v-btn--active {
+    &::before {
+      opacity: 0;
+    }
+  }
+</style>
