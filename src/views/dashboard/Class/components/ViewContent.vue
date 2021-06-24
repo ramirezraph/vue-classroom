@@ -177,9 +177,82 @@
                 color="grey"
                 left
               >
-                mdi-clock-time-four-outline
+                mdi-comment-outline
               </v-icon>
-              <span class="grey--text">Recent Discussions</span>
+              <span class="grey--text">Comments</span>
+              <div>
+                <v-list
+                  :key="activeFile.file.id"
+                  three-line
+                >
+                  <template v-for="(item, index) in fileComments">
+                    <v-subheader
+                      v-if="item.header"
+                      :key="index"
+                      v-text="item.header"
+                    />
+
+                    <v-divider
+                      v-else-if="item.divider"
+                      :key="index"
+                      :inset="item.inset"
+                    />
+
+                    <v-list-item
+                      v-else
+                      :key="index"
+                      class="pa-0"
+                    >
+                      <v-list-item-avatar>
+                        <v-img :src="item.avatar" />
+                      </v-list-item-avatar>
+
+                      <v-list-item-content class="mb-n8">
+                        <v-list-item-title
+                          class="primary--text font-weight-medium"
+                          v-html="item.title"
+                        />
+                        <v-textarea
+                          class="text-h5 mt-n3"
+                          flat
+                          :value="item.subtitle"
+                          auto-grow
+                          readonly
+                          style="white-space: pre"
+                          rows="1"
+                        />
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-list>
+                <div class="mt-0">
+                  <v-textarea
+                    v-model="comment_message"
+                    full-width
+                    color="blue"
+                    outlined
+                    rows="1"
+                    append-icon="mdi-send"
+                    auto-grow
+                    dense
+                    label="Comment"
+                    placeholder="Write a comment here"
+                    @click:append="postComment(activeFile.file)"
+                  >
+                    <template #prepend>
+                      <v-avatar
+                        color="blue"
+                        size="40"
+                        class="mt-n2"
+                      >
+                        <img
+                          :src="currentUser.profile"
+                        >
+                      </v-avatar>
+                    </template>
+                  </v-textarea>
+                </div>
+              </div>
             </v-card>
           </v-col>
         </v-row>
@@ -207,8 +280,9 @@
   import firebase from 'firebase'
   import AccordionUnitItem from './AccordionUnitItem.vue'
   import { ClassFile } from '@/model/Lesson'
-  import { classesCollection } from '@/fb'
+  import { classesCollection, fileCommentsCollection } from '@/fb'
   import axios from 'axios'
+  import { User } from '@/model/User'
 
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference;
@@ -248,9 +322,14 @@
 
         // for light box
         imgIndex: null,
+
+        comment_message: '',
       }
     },
     computed: {
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
       dialog (): boolean {
         return this.vModel
       },
@@ -264,6 +343,9 @@
         const file = this.$store.getters['class/getActiveFile']
 
         return file
+      },
+      fileComments (): { avatar: string, title: string, subtitle: string }[] {
+        return this.activeFile.file.comments
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       player (): any {
@@ -364,6 +446,19 @@
       },
       getFileType (file: ClassFile): string {
         return file.name.split('.').reverse()[0]
+      },
+      postComment (activeFile: ClassFile) {
+        const newComment = {
+          userId: this.currentUser.id,
+          time: firebase.firestore.Timestamp.now(),
+          message: this.comment_message,
+        }
+        fileCommentsCollection.doc(activeFile.id).collection('comments')
+          .add(newComment).then(() => {
+            this.comment_message = ''
+          }).catch(error => {
+            console.log(error)
+          })
       },
     },
   })
