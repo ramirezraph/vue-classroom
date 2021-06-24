@@ -96,14 +96,33 @@
         :tile="false"
         nav
       >
-        <div>
-          <app-bar-item
-            v-for="(n, i) in notifications"
-            :key="`item-${i}`"
-          >
-            <v-list-item-title v-text="n" />
-          </app-bar-item>
-        </div>
+        <v-card
+          flat
+          class="my-0"
+          width="400"
+          max-height="700"
+          scrollable
+        >
+          <v-card-title class="d-flex full-width align-center">
+            <span class="subtitle-1">Earlier</span>
+            <v-spacer />
+            <v-btn
+              dense
+              class="ma-0 pa-0 primary--text text-right"
+              text
+            >
+              View All
+            </v-btn>
+          </v-card-title>
+          <v-divider />
+          <v-card-text class="ma-0 pa-0">
+            <notification
+              v-for="(notif, index) in notifications"
+              :key="index"
+              :notification="notif"
+            />
+          </v-card-text>
+        </v-card>
       </v-list>
     </v-menu>
 
@@ -156,6 +175,8 @@
 </template>
 
 <script lang="ts">
+  import firebase from 'firebase'
+
   import { firebaseAuth } from '@/fb'
   import Vue from 'vue'
   // Components
@@ -163,10 +184,15 @@
 
   // Utilities
   import { mapGetters, mapMutations } from 'vuex'
+  import Notification from '../component/Notification.vue'
+
+  // eslint-disable-next-line no-undef
+  import Timestamp = firebase.firestore.Timestamp
 
   export default Vue.extend({
     name: 'DashboardCoreAppBar',
     components: {
+      Notification,
       AppBarItem: {
         render (h) {
           return h(VHover, {
@@ -202,11 +228,38 @@
     data () {
       return {
         notifications: [
-          'Mike John Responded to your email',
-          'You have 5 new tasks',
-          'You\'re now friends with Andrew',
-          'Another Notification',
-          'Another one',
+          {
+            id: 'ASDFASDFASDFA',
+            userId: 'aASDFASDFASDFasdfa',
+            userName: 'Loren Doe',
+            type: 'Regular',
+            date: new Timestamp(1232154123, 123123),
+            content: 'Posted a kweng kweng in kwang kwang.',
+            read: false,
+          },
+          {
+            id: 'ASDFASDFASDFA',
+            userId: 'aASDFASDFASDFasdfa',
+            userName: 'John Doe',
+            type: 'ClassInvite',
+            date: new Timestamp(1232154123, 123123),
+            read: false,
+            classId: 'ASDFADSfaSDfasdfasdfa',
+            classCode: 'ASD 333',
+            classTitle: 'Sample Class Invite',
+          },
+          {
+            id: 'ASDFASDFASDFA',
+            userId: 'aASDFASDFASDFasdfa',
+            userName: 'Lorem Ipsum',
+            type: 'Assignment',
+            date: new Timestamp(1232154123, 123123),
+            read: false,
+            classId: 'ASDFADSfaSDfasdfasdfa',
+            classCode: 'ASD 333',
+            classTitle: 'Sample Class Invite',
+            due: new Timestamp(33312325, 1232522),
+          },
         ],
         profile: [
           { title: 'Profile', route: '/settings/account' },
