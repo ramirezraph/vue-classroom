@@ -20,19 +20,17 @@ firebase.initializeApp(firebaseConfig)
 
 const db = firebase.firestore()
 
-// firestore class collection reference
 const classesCollection = db.collection('classes')
 
-// firestore class collection reference
 const resourcesCollection = db.collection('resources')
 
-// firestore class collection reference
 const usersCollection = db.collection('users')
 
-// firestore class collection reference
 const lecturesCollection = db.collection('lectures')
 
 const fileCommentsCollection = db.collection('file-comments')
+
+const notificationsCollection = db.collection('notifications')
 
 // Get a reference to the storage service, which is used to create references in your storage bucket
 const storage = firebase.storage()
@@ -52,4 +50,5 @@ export {
   usersCollection,
   lecturesCollection,
   fileCommentsCollection,
+  notificationsCollection,
 }

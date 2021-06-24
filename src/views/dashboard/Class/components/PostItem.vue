@@ -199,14 +199,16 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { Comment, Post } from '@/model/Post.ts'
+  import { Comment, Post } from '@/model/Post'
   import { classesCollection, usersCollection } from '@/fb'
   import { User } from '@/model/User'
   import firebase from 'firebase'
   import CommentItem from './CommentItem.vue'
   // eslint-disable-next-line no-undef
-  import Timestamp = firebase.firestore.Timestamp;
+
+  import getFullName from '@/plugins/fullname'
   // eslint-disable-next-line no-undef
+  import Timestamp = firebase.firestore.Timestamp;
 
   export default Vue.extend({
     components: {
@@ -246,6 +248,8 @@
       convertedDate (): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = this.postItem.time.toDate()
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return theDate.toLocaleDateString('en-US', options)
       },
       currentUser (): User {
@@ -278,7 +282,7 @@
     mounted () {
       usersCollection.doc(this.postItem.userId).get().then(doc => {
         if (doc.exists) {
-          this.userName = this.getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+          this.userName = getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
           this.userProfile = doc.data()?.imgProfile
         }
       })
@@ -326,18 +330,6 @@
         }).finally(() => {
           this.comment_message = ''
         })
-      },
-      getFullName (firstName: string, middleName: string, lastName: string): string {
-        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
-      },
-      middleInitial (middleName: string): string {
-        const midName: string[] = middleName.split(' ')
-        let middleInitial = ''
-        for (let i = 0; i < midName.length; i++) {
-          middleInitial += midName[i].substring(0, 1) + '.'
-        }
-
-        return middleInitial
       },
       convertDate (time: Timestamp): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }

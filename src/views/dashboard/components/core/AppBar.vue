@@ -84,7 +84,7 @@
             bordered
           >
             <template #badge>
-              <span>5</span>
+              <span>{{ unreadNotifications }}</span>
             </template>
 
             <v-icon>mdi-bell</v-icon>
@@ -96,14 +96,33 @@
         :tile="false"
         nav
       >
-        <div>
-          <app-bar-item
-            v-for="(n, i) in notifications"
-            :key="`item-${i}`"
-          >
-            <v-list-item-title v-text="n" />
-          </app-bar-item>
-        </div>
+        <v-card
+          flat
+          class="my-0"
+          width="400"
+          max-height="700"
+          scrollable
+        >
+          <v-card-title class="d-flex full-width align-center">
+            <span class="subtitle-1">Earlier</span>
+            <v-spacer />
+            <v-btn
+              dense
+              class="ma-0 pa-0 primary--text text-right"
+              text
+            >
+              View All
+            </v-btn>
+          </v-card-title>
+          <v-divider />
+          <v-card-text class="ma-0 pa-0">
+            <notification
+              v-for="(notif, index) in notifications"
+              :key="index"
+              :notification="notif"
+            />
+          </v-card-text>
+        </v-card>
       </v-list>
     </v-menu>
 
@@ -163,10 +182,15 @@
 
   // Utilities
   import { mapGetters, mapMutations } from 'vuex'
+  import Notification from '../component/Notification.vue'
+
+  // eslint-disable-next-line no-undef
+  import { UserNotification } from '@/model/UserNotification'
 
   export default Vue.extend({
     name: 'DashboardCoreAppBar',
     components: {
+      Notification,
       AppBarItem: {
         render (h) {
           return h(VHover, {
@@ -201,13 +225,6 @@
 
     data () {
       return {
-        notifications: [
-          'Mike John Responded to your email',
-          'You have 5 new tasks',
-          'You\'re now friends with Andrew',
-          'Another Notification',
-          'Another one',
-        ],
         profile: [
           { title: 'Profile', route: '/settings/account' },
           { title: 'Settings', route: '/settings/general' },
@@ -217,6 +234,12 @@
 
     computed: {
       ...mapGetters(['drawer']),
+      notifications (): UserNotification[] {
+        return this.$store.getters['user/getNotifications']
+      },
+      unreadNotifications (): number {
+        return this.notifications.filter(n => n.read === false).length
+      },
     },
 
     methods: {
@@ -224,7 +247,6 @@
         setDrawer: 'SET_DRAWER',
       }),
       signOut (): void {
-        console.log('hello?')
         firebaseAuth.signOut().then(() => {
           this.$store.dispatch('user/userSignOut')
           this.$router.replace({ name: 'Login' })
