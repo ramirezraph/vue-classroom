@@ -1,26 +1,33 @@
 import { User } from "@/model/User";
-import {firebaseAuth, usersCollection} from "@/fb";
+import {firebaseAuth, notificationsCollection, usersCollection} from "@/fb";
 import firebase from "firebase";
 import UserCredential = firebase.auth.UserCredential;
-import {Class} from "@/model/Class";
+import { AssignmentNotification, ClassInviteNotification, ClassInviteResultNotification, RegularNotification, UserNotification } from "@/model/UserNotification";
 
 export default {
   namespaced: true,
   state: {
     currentUser: null,
+    notifications: null,
   },
   getters: {
     getCurrentUser (state): User {
       return state.currentUser
+    },
+    getNotifications (state): Array<UserNotification> {
+      return state.notifications
     }
   },
   mutations: {
     SET_CURRENT_USER (state, payload: User) {
       state.currentUser = payload
+    },
+    SET_NOTIFICATIONS (state, payload: Array<UserNotification>) {
+      state.notifications = payload
     }
   },
   actions: {
-    setCurrentUser (context, payload: { uid: string }) {
+    setCurrentUser ({ commit, dispatch }, payload: { uid: string }) {
        // set current user
        usersCollection.doc(payload.uid).onSnapshot(doc => {
            if (doc.exists) {
@@ -40,15 +47,15 @@ export default {
              user.studentNumber = doc.data()?.studentNumber
              user.course = doc.data()?.course
              user.section = doc.data()?.section
-             context.commit('SET_CURRENT_USER', user)
-             context.dispatch('classes/fetchClasses', user, { root: true })
+             commit('SET_CURRENT_USER', user)
+             dispatch('classes/fetchClasses', user, { root: true })
              setTimeout(() => {
-               context.dispatch('classes/fetchMeetings', { currentUser: user }, { root: true })
+               dispatch('classes/fetchMeetings', { currentUser: user }, { root: true })
              }, 1000)
            }
      })
      },
-     userSignIn(context, payload: { email: string, password: string }) {
+     userSignIn({ commit }, payload: { email: string, password: string }) {
       return new Promise<void>((resolve, reject) => {
         firebaseAuth.signInWithEmailAndPassword(payload.email, payload.password)
           .then(() => {
@@ -59,10 +66,10 @@ export default {
           })
       })
     },
-    userSignOut (context) {
-      context.commit('SET_CURRENT_USER', null)
+    userSignOut ({ commit }) {
+      commit('SET_CURRENT_USER', null)
     },
-    userRegister (context, payload: {
+    userRegister ({ commit }, payload: {
       user: {
         firstName: string,
         middleName: string,
@@ -88,6 +95,81 @@ export default {
             reject(error)
         })
       })
+    },
+    fetchNotifications ({ commit, getters }) {
+
+      let notifications: Array<UserNotification> = []
+
+      const currentUser = getters['getCurrentUser']
+      console.log(currentUser.id);
+
+      if (currentUser) {
+        notificationsCollection.doc(currentUser.id)
+        .collection('items')
+        .orderBy('date')
+        .onSnapshot(notifSnapshot => {
+          notifications = []
+          notifSnapshot.forEach(n => {
+            switch(n.data().type) {
+              case 'ClassInvite':
+                notifications.push(new ClassInviteNotification(
+                  n.id,
+                  n.data()?.userId,
+                  n.data()?.userName,
+                  n.data()?.type,
+                  n.data()?.date,
+                  n.data()?.read,
+                  n.data()?.classId,
+                  n.data()?.classTitle,
+                  n.data()?.classCode,
+                ))
+                break
+              case 'ClassInviteResult':
+                notifications.push(new ClassInviteResultNotification(
+                  n.id,
+                  n.data()?.userId,
+                  n.data()?.userName,
+                  n.data()?.type,
+                  n.data()?.date,
+                  n.data()?.read,
+                  n.data()?.classId,
+                  n.data()?.classTitle,
+                  n.data()?.classCode,
+                ))
+                break
+              case 'Assignment':
+                notifications.push(new AssignmentNotification(
+                  n.id,
+                  n.data()?.userId,
+                  n.data()?.userName,
+                  n.data()?.type,
+                  n.data()?.date,
+                  n.data()?.read,
+                  n.data()?.classId,
+                  n.data()?.classTitle,
+                  n.data()?.classCode,
+                  n.data()?.due
+                ))
+                break
+              case 'Regular':
+                notifications.push(new RegularNotification(
+                  n.id,
+                  n.data()?.userId,
+                  n.data()?.userName,
+                  n.data()?.type,
+                  n.data()?.date,
+                  n.data()?.read,
+                  n.data()?.content,
+                ))
+                break
+              default:
+                console.log('Unknown type');
+                return
+            }
+          })
+          commit('SET_NOTIFICATIONS', notifications)
+        })
+      }
     }
   },
 }

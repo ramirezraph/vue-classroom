@@ -8,7 +8,7 @@ export enum NotificationType {
   Regular,
 }
 
-export class Notification {
+export class UserNotification {
   // eslint-disable-next-line no-useless-constructor
   constructor (
     public id: string,
@@ -20,7 +20,7 @@ export class Notification {
   ) {}
 }
 
-export class RegularNotification extends Notification {
+export class RegularNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
@@ -34,7 +34,7 @@ export class RegularNotification extends Notification {
   }
 }
 
-export class AssignmentNotification extends Notification {
+export class AssignmentNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
@@ -51,7 +51,7 @@ export class AssignmentNotification extends Notification {
   }
 }
 
-export class ClassInviteNotification extends Notification {
+export class ClassInviteNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
@@ -60,14 +60,14 @@ export class ClassInviteNotification extends Notification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classCode: string,
     public classTitle: string,
+    public classCode: string,
   ) {
     super(id, userId, userName, type, date, read)
   }
 }
 
-export class ClassInviteResultNotification extends Notification {
+export class ClassInviteResultNotification extends UserNotification {
   constructor (
     public id: string,
     public userId: string,
@@ -76,8 +76,8 @@ export class ClassInviteResultNotification extends Notification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classCode: string,
     public classTitle: string,
+    public classCode: string,
   ) {
     super(id, userId, userName, type, date, read)
   }

@@ -58,11 +58,11 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { Notification, NotificationType } from '@/model/Notification'
+  import { UserNotification, NotificationType } from '@/model/UserNotification'
   export default Vue.extend({
     props: {
       notification: {
-        type: Object as PropType<Notification>,
+        type: Object as PropType<UserNotification>,
         required: true,
       },
     },

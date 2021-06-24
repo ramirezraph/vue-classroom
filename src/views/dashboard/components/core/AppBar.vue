@@ -84,7 +84,7 @@
             bordered
           >
             <template #badge>
-              <span>5</span>
+              <span>{{ unreadNotifications }}</span>
             </template>
 
             <v-icon>mdi-bell</v-icon>
@@ -175,8 +175,6 @@
 </template>
 
 <script lang="ts">
-  import firebase from 'firebase'
-
   import { firebaseAuth } from '@/fb'
   import Vue from 'vue'
   // Components
@@ -187,7 +185,7 @@
   import Notification from '../component/Notification.vue'
 
   // eslint-disable-next-line no-undef
-  import Timestamp = firebase.firestore.Timestamp
+  import { UserNotification } from '@/model/UserNotification'
 
   export default Vue.extend({
     name: 'DashboardCoreAppBar',
@@ -227,40 +225,6 @@
 
     data () {
       return {
-        notifications: [
-          {
-            id: 'ASDFASDFASDFA',
-            userId: 'aASDFASDFASDFasdfa',
-            userName: 'Loren Doe',
-            type: 'Regular',
-            date: new Timestamp(1232154123, 123123),
-            content: 'Posted a kweng kweng in kwang kwang.',
-            read: false,
-          },
-          {
-            id: 'ASDFASDFASDFA',
-            userId: 'aASDFASDFASDFasdfa',
-            userName: 'John Doe',
-            type: 'ClassInvite',
-            date: new Timestamp(1232154123, 123123),
-            read: false,
-            classId: 'ASDFADSfaSDfasdfasdfa',
-            classCode: 'ASD 333',
-            classTitle: 'Sample Class Invite',
-          },
-          {
-            id: 'ASDFASDFASDFA',
-            userId: 'aASDFASDFASDFasdfa',
-            userName: 'Lorem Ipsum',
-            type: 'Assignment',
-            date: new Timestamp(1232154123, 123123),
-            read: false,
-            classId: 'ASDFADSfaSDfasdfasdfa',
-            classCode: 'ASD 333',
-            classTitle: 'Sample Class Invite',
-            due: new Timestamp(33312325, 1232522),
-          },
-        ],
         profile: [
           { title: 'Profile', route: '/settings/account' },
           { title: 'Settings', route: '/settings/general' },
@@ -270,6 +234,12 @@
 
     computed: {
       ...mapGetters(['drawer']),
+      notifications (): UserNotification[] {
+        return this.$store.getters['user/getNotifications']
+      },
+      unreadNotifications (): number {
+        return this.notifications.filter(n => n.read === false).length
+      },
     },
 
     methods: {
@@ -277,7 +247,6 @@
         setDrawer: 'SET_DRAWER',
       }),
       signOut (): void {
-        console.log('hello?')
         firebaseAuth.signOut().then(() => {
           this.$store.dispatch('user/userSignOut')
           this.$router.replace({ name: 'Login' })
