@@ -107,6 +107,7 @@
   import { Comment } from '@/model/Post'
   import { usersCollection } from '@/fb'
   import { User } from '@/model/User'
+  import getFullName from '@/plugins/fullname'
 
   export default Vue.extend({
     name: 'CommentItem',
@@ -134,6 +135,8 @@
       convertedDate (): string {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' }
         const theDate = this.comment.time.toDate()
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return theDate.toLocaleDateString('en-US', options)
       },
       currentUser (): User {
@@ -152,24 +155,12 @@
     mounted () {
       usersCollection.doc(this.comment.userId).get().then(doc => {
         if (doc.exists) {
-          this.userName = this.getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+          this.userName = getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
           this.userProfile = doc.data()?.imgProfile
         }
       })
     },
     methods: {
-      getFullName (firstName: string, middleName: string, lastName: string): string {
-        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
-      },
-      middleInitial (middleName: string): string {
-        const midName: string[] = middleName.split(' ')
-        let middleInitial = ''
-        for (let i = 0; i < midName.length; i++) {
-          middleInitial += midName[i].substring(0, 1) + '.'
-        }
-
-        return middleInitial
-      },
       editComment () {
         this.$emit('edit-comment', this.comment.id)
       },
