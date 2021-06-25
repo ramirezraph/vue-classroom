@@ -179,11 +179,19 @@
           return
         }
 
-        this.alreadyOnClass(user).then(res => {
+        this.alreadyInvited(user).then(res => {
           if (res === true) {
-            throw Error('User already inside the class.')
+            throw Error('User has already been invited.')
           } else {
-            this.selected.push(user)
+            this.alreadyOnClass(user).then(res => {
+              if (res === true) {
+                throw Error('User already inside the class.')
+              } else {
+                this.selected.push(user)
+              }
+            }).catch(error => {
+              this.errorMessage = error.message
+            })
           }
         }).catch(error => {
           this.errorMessage = error.message
@@ -204,6 +212,23 @@
             exists = true
           } else {
             exists = false
+          }
+        })
+
+        return new Promise((resolve) => {
+          resolve(exists)
+        })
+      },
+      async alreadyInvited (user: SearchUser) {
+        let exists = false
+
+        const classId = this.activeClass.id
+        await classesCollection.doc(classId).get().then(doc => {
+          if (doc.exists) {
+            const pendingList: string[] = doc.data()?.pendingInvites
+            if (pendingList.includes(user.id)) {
+              exists = true
+            }
           }
         })
 
