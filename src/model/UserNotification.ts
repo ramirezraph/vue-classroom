@@ -40,8 +40,6 @@ export class AssignmentNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classTitle: string,
-    public classCode: string,
     public due: Timestamp,
   ) {
     super(id, userId, type, date, read)
@@ -56,8 +54,6 @@ export class ClassInviteNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classTitle: string,
-    public classCode: string,
   ) {
     super(id, userId, type, date, read)
   }
@@ -71,8 +67,6 @@ export class ClassInviteResultNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classTitle: string,
-    public classCode: string,
   ) {
     super(id, userId, type, date, read)
   }

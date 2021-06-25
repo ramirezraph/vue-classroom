@@ -23,17 +23,17 @@
             {{ notification.content }}
           </div>
           <div v-else-if="type === 'Assignment'">
-            Posted a new assignment in {{ notification.classCode }}: {{ notification.classTitle }}.
+            Posted a new assignment in {{ classCode }}: {{ classTitle }}.
             <br>
             <span class="caption grey--text">Due: 5/19/2021, 12:00 AM</span>
           </div>
           <div v-else-if="type === 'ClassInvite'">
             Invited you to join the class:
-            <strong>{{ notification.classCode }}: {{ notification.classTitle }}</strong>.
+            <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
           <div v-else-if="type === 'ClassInviteResult'">
             Accepted your request to join the class: <br>
-            <strong>{{ notification.classCode }}: {{ notification.classTitle }}</strong>.
+            <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
         </v-card-text>
       </div>
@@ -61,7 +61,7 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { UserNotification, NotificationType } from '@/model/UserNotification'
-  import { usersCollection } from '@/fb'
+  import { classesCollection, usersCollection } from '@/fb'
   import getFullName from '@/plugins/fullname'
 
   export default Vue.extend({
@@ -75,6 +75,10 @@
       return {
         imgProfileLink: null,
         fullName: '',
+        classTitle: '',
+        classCode: '',
+
+        requiresClassInfo: false,
       }
     },
     computed: {
@@ -91,6 +95,17 @@
           }
         },
       )
+
+      if (this.type.toString() === 'ClassInvite' || this.type.toString() === 'ClassInviteResult' || this.type.toString() === 'Assignment') {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        classesCollection.doc(this.notification?.classId).get().then(doc => {
+          if (doc.exists) {
+            this.classTitle = doc.data()?.title
+            this.classCode = doc.data()?.code
+          }
+        })
+      }
     },
   })
 </script>

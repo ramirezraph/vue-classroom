@@ -136,8 +136,6 @@ export default {
                   n.data()?.date,
                   n.data()?.read,
                   n.data()?.classId,
-                  n.data()?.classTitle,
-                  n.data()?.classCode,
                 ))
                 break
               case 'ClassInviteResult':
@@ -148,8 +146,6 @@ export default {
                   n.data()?.date,
                   n.data()?.read,
                   n.data()?.classId,
-                  n.data()?.classTitle,
-                  n.data()?.classCode,
                 ))
                 break
               case 'Assignment':
@@ -160,8 +156,6 @@ export default {
                   n.data()?.date,
                   n.data()?.read,
                   n.data()?.classId,
-                  n.data()?.classTitle,
-                  n.data()?.classCode,
                   n.data()?.due
                 ))
                 break
