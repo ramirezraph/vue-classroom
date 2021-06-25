@@ -244,7 +244,21 @@
             read: false,
             date: firebase.firestore.Timestamp.now(),
             classId: this.selectedClass.id,
+          }).catch(error => {
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Failed',
+              text: error.message,
+              type: 'error',
+            })
           })
+        })
+
+        this.$notify({
+          group: 'appWideNotification',
+          title: 'Success',
+          text: 'Class invitation sent.',
+          type: 'success',
         })
 
         this.dialogSendInvite = false
