@@ -46,11 +46,13 @@
         color="primary"
         width="150"
         class="ma-0 ml-1"
+        @click="inviteAccept()"
       >
         Accept
       </v-btn>
       <v-btn
         class="ma-0 ml-3"
+        @click="inviteDecline()"
       >
         Decline
       </v-btn>
@@ -60,9 +62,12 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { UserNotification, NotificationType } from '@/model/UserNotification'
-  import { classesCollection, usersCollection } from '@/fb'
+  import { UserNotification, NotificationType, ClassInviteNotification } from '@/model/UserNotification'
+  import { classesCollection, notificationsCollection, usersCollection } from '@/fb'
   import getFullName from '@/plugins/fullname'
+  import firebase from 'firebase'
+  import { Class } from '@/model/Class'
+  import { User } from '@/model/User'
 
   export default Vue.extend({
     props: {
@@ -85,6 +90,12 @@
       type (): NotificationType {
         return this.notification.type
       },
+      activeClass (): Class {
+        return this.$store.getters['class/getActiveClass']
+      },
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
     },
     mounted () {
       usersCollection.doc(this.notification.userId).get().then(
@@ -106,6 +117,43 @@
           }
         })
       }
+    },
+    methods: {
+      inviteAccept (): void {
+        console.log('accept')
+      },
+      inviteDecline (): void {
+        // remove from pending invites list
+        classesCollection.doc((this.notification as ClassInviteNotification).classId).update({
+          pendingInvites: firebase.firestore.FieldValue.arrayRemove(this.currentUser.id),
+        })
+          .then(() => {
+            // remove notification
+            notificationsCollection.doc(this.currentUser.id).collection('items').where('classId', '==', (this.notification as ClassInviteNotification).classId).get()
+              .then(snapshot => {
+                snapshot.forEach(doc => {
+                  if (doc.exists) {
+                    notificationsCollection.doc(this.currentUser.id).collection('items').doc(doc.id).delete()
+                  }
+                })
+              }).catch(error => {
+                this.$notify({
+                  group: 'appWideNotification',
+                  title: 'Failed',
+                  text: error.message,
+                  type: 'error',
+                })
+              })
+          })
+          .catch(error => {
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Failed',
+              text: error.message,
+              type: 'error',
+            })
+          })
+      },
     },
   })
 </script>
