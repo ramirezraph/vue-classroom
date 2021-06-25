@@ -2,21 +2,33 @@
   <v-card
     class="mt-0 pa-8"
   >
-    <v-card-title v-if="hasEditAccess">
-      <div>
-        <v-btn
-          color="info"
-          rounded
-          class="mb-6 ml-n1"
-          :loading="sendInviteLoading"
-          @click="dialogSendInvite = true"
-        >
-          <v-icon left>
-            mdi-account-plus-outline
-          </v-icon>
-          <span class="text-none">Send Invite</span>
-        </v-btn>
-      </div>
+    <v-card-title
+      v-if="hasEditAccess"
+      class="d-flex align-center pb-8"
+    >
+      <v-btn
+        color="info"
+        rounded
+        :loading="sendInviteLoading"
+        @click="dialogSendInvite = true"
+      >
+        <v-icon left>
+          mdi-account-plus-outline
+        </v-icon>
+        <span class="text-none">Send Invite</span>
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        color="info"
+        rounded
+        text
+        @click="dialogPendingInvites = true"
+      >
+        <v-icon left>
+          mdi-menu
+        </v-icon>
+        <span class="text-none">Pending Invites</span>
+      </v-btn>
     </v-card-title>
     <v-card-text>
       <div>
@@ -123,6 +135,12 @@
       @close="dialogSendInvite = false"
       @send-invite="sendClassInvite"
     />
+
+    <pending-invites-dialog
+      v-if="dialogPendingInvites"
+      :v-model="dialogPendingInvites"
+      @close="dialogPendingInvites = false"
+    />
   </v-card>
 </template>
 
@@ -135,12 +153,14 @@
   import SendInviteDialog, { SearchUser } from './SendInviteDialog.vue'
   import { NotificationType } from '@/model/UserNotification'
   import { Class } from '@/model/Class'
+  import PendingInvitesDialog from './PendingInvitesDialog.vue'
 
   export default Vue.extend({
     name: 'ClassPeople',
     components: {
       PeopleItem,
       SendInviteDialog,
+      PendingInvitesDialog,
     },
     props: {
       people: {
@@ -165,6 +185,8 @@
       return {
         dialogConfirmRemovePerson: false,
         dialogSendInvite: false,
+        dialogPendingInvites: false,
+
         remove_userId: '',
         remove_userName: '',
 

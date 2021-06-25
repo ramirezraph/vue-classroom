@@ -16,7 +16,6 @@ import { excluded, min_value, required } from 'vee-validate/dist/rules'
 import firebase from 'firebase'
 import { User, UserType } from '@/model/User'
 import ViewContent from './components/ViewContent.vue'
-import { ClassFile } from '@/model/Lesson'
 import CreateClassDialog from '@/views/dashboard/Classes/components/CreateClassDialog.vue'
 import { Meeting } from '@/model/Meeting'
 import DocumentReference = firebase.firestore.DocumentReference;
