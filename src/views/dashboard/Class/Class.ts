@@ -381,7 +381,7 @@ export default Vue.extend({
       this.numberOfPostLimit += 3
       this.fetchDiscussions()
     },
-  editClass (): void {
+    editClass (): void {
       this.dialogEditClass = true
       this.destroyClassDialog = false
     },

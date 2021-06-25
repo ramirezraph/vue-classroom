@@ -8,6 +8,8 @@
           color="info"
           rounded
           class="mb-6 ml-n1"
+          :loading="sendInviteLoading"
+          @click="dialogSendInvite = true"
         >
           <v-icon left>
             mdi-account-plus-outline
@@ -115,6 +117,12 @@
       text="Are you sure you want to remove this person?"
       @goto-response="confirmRemovePerson"
     />
+    <send-invite-dialog
+      v-if="dialogSendInvite"
+      :v-model="dialogSendInvite"
+      @close="dialogSendInvite = false"
+      @send-invite="sendClassInvite"
+    />
   </v-card>
 </template>
 
@@ -122,13 +130,17 @@
   import { User, UserType } from '@/model/User'
   import Vue, { PropType } from 'vue'
   import PeopleItem from './PeopleItem.vue'
-  import { classesCollection } from '@/fb'
+  import { classesCollection, notificationsCollection } from '@/fb'
   import firebase from 'firebase/app'
+  import SendInviteDialog, { SearchUser } from './SendInviteDialog.vue'
+  import { NotificationType } from '@/model/UserNotification'
+  import { Class } from '@/model/Class'
 
   export default Vue.extend({
     name: 'ClassPeople',
     components: {
       PeopleItem,
+      SendInviteDialog,
     },
     props: {
       people: {
@@ -152,8 +164,11 @@
     data () {
       return {
         dialogConfirmRemovePerson: false,
+        dialogSendInvite: false,
         remove_userId: '',
         remove_userName: '',
+
+        sendInviteLoading: false,
       }
     },
     computed: {
@@ -168,6 +183,9 @@
       classId (): string {
         const path = this.$route.path.split('/')
         return path[path.length - 1]
+      },
+      selectedClass (): Class {
+        return this.$store.getters['class/getSelectedClass']
       },
     },
     methods: {
@@ -211,6 +229,26 @@
         }
 
         this.dialogConfirmRemovePerson = false
+      },
+      sendClassInvite (selectedUser: SearchUser[]): void {
+        if (selectedUser.length <= 0) return
+
+        this.sendInviteLoading = true
+
+        selectedUser.forEach(user => {
+          notificationsCollection.doc(user.id).collection('items').add({
+            userId: '',
+            type: NotificationType.ClassInvite,
+            read: false,
+            data: firebase.firestore.Timestamp.now(),
+            classId: this.selectedClass.id,
+            classTitle: this.selectedClass.title,
+            classCode: this.selectedClass.code,
+          })
+        })
+
+        this.dialogSendInvite = false
+        this.sendInviteLoading = false
       },
     },
   })
