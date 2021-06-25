@@ -174,6 +174,7 @@ export default {
                 return
             }
           })
+          console.log(notifications)
 
           commit('SET_NOTIFICATIONS_SNAPSHOT', unsubscribe)
           commit('SET_NOTIFICATIONS', notifications)

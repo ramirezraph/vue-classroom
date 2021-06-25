@@ -2,10 +2,10 @@ import firebase from 'firebase'
 import Timestamp = firebase.firestore.Timestamp;
 
 export enum NotificationType {
-  ClassInvite,
-  ClassInviteResult,
-  Assignment,
-  Regular,
+  ClassInvite = 'ClassInvite',
+  ClassInviteResult = 'ClassInviteResult',
+  Assignment = 'Assignment',
+  Regular = 'Regular',
 }
 
 export class UserNotification {

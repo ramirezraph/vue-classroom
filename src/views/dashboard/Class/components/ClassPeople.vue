@@ -2,7 +2,7 @@
   <v-card
     class="mt-0 pa-8"
   >
-    <v-card-title>
+    <v-card-title v-if="hasEditAccess">
       <div>
         <v-btn
           color="info"
@@ -185,7 +185,7 @@
         return path[path.length - 1]
       },
       selectedClass (): Class {
-        return this.$store.getters['class/getSelectedClass']
+        return this.$store.getters['class/getActiveClass']
       },
     },
     methods: {
@@ -230,20 +230,20 @@
 
         this.dialogConfirmRemovePerson = false
       },
-      sendClassInvite (selectedUser: SearchUser[]): void {
-        if (selectedUser.length <= 0) return
+      sendClassInvite (selectedUsers: SearchUser[]): void {
+        if (!this.hasEditAccess) return
+
+        if (selectedUsers.length <= 0) return
 
         this.sendInviteLoading = true
 
-        selectedUser.forEach(user => {
+        selectedUsers.forEach(user => {
           notificationsCollection.doc(user.id).collection('items').add({
-            userId: '',
+            userId: this.$store.getters['user/getCurrentUser'].id,
             type: NotificationType.ClassInvite,
             read: false,
-            data: firebase.firestore.Timestamp.now(),
+            date: firebase.firestore.Timestamp.now(),
             classId: this.selectedClass.id,
-            classTitle: this.selectedClass.title,
-            classCode: this.selectedClass.code,
           })
         })
 
