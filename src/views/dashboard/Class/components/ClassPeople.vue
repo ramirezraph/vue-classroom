@@ -266,25 +266,32 @@
             read: false,
             date: firebase.firestore.Timestamp.now(),
             classId: this.selectedClass.id,
-          }).catch(error => {
-            this.$notify({
-              group: 'appWideNotification',
-              title: 'Failed',
-              text: error.message,
-              type: 'error',
-            })
           })
+            .then(() => {
+              // add to pending list
+              classesCollection.doc(this.selectedClass.id).update({
+                pendingInvites: firebase.firestore.FieldValue.arrayUnion(user.id),
+              }).then(() => {
+                this.$notify({
+                  group: 'appWideNotification',
+                  title: 'Success',
+                  text: 'Class invitation sent.',
+                  type: 'success',
+                })
+              })
+            })
+            .catch(error => {
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Failed',
+                text: error.message,
+                type: 'error',
+              })
+            }).finally(() => {
+              this.dialogSendInvite = false
+              this.sendInviteLoading = false
+            })
         })
-
-        this.$notify({
-          group: 'appWideNotification',
-          title: 'Success',
-          text: 'Class invitation sent.',
-          type: 'success',
-        })
-
-        this.dialogSendInvite = false
-        this.sendInviteLoading = false
       },
     },
   })
