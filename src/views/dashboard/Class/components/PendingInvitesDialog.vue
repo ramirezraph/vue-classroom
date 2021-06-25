@@ -123,7 +123,7 @@
           this.userIdList = [...doc.data()?.pendingInvites]
 
           // get some info of the user
-          this.userIdList.forEach(id => {
+          this.userIdList.reverse().forEach(id => {
             usersCollection.doc(id).get().then(userDoc => {
               if (userDoc.exists) {
                 const name = getFullName(userDoc.data()?.firstName, userDoc.data()?.middleName, userDoc.data()?.lastName)
