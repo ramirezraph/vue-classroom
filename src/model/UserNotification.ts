@@ -54,6 +54,7 @@ export class ClassInviteNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
+    public result: string,
   ) {
     super(id, userId, type, date, read)
   }

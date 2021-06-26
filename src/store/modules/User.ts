@@ -123,7 +123,7 @@ export default {
 
         unsubscribe = notificationsCollection.doc(currentUser.id)
         .collection('items')
-        .orderBy('date')
+        .orderBy('date', 'desc')
         .onSnapshot(notifSnapshot => {
           notifications = []
           notifSnapshot.forEach(n => {
@@ -136,6 +136,7 @@ export default {
                   n.data()?.date,
                   n.data()?.read,
                   n.data()?.classId,
+                  n.data()?.result,
                 ))
                 break
               case 'ClassInviteResult':
