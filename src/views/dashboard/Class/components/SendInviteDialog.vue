@@ -67,52 +67,52 @@
           />
           <v-expand-transition>
             <v-list
-              v-if="searchResults.length > 0"
               subheader
             >
               <v-subheader class="pa-0">
                 Search Result: <span class="ml-3 font-weight-bold">{{ searchResults.length }}</span>
               </v-subheader>
+              <div v-if="searchResults.length > 0">
+                <v-list-item
+                  v-for="(result, index) in searchResults"
+                  :key="index"
+                  class="pa-0"
+                >
+                  <v-list-item-avatar>
+                    <v-img
+                      alt="avatar"
+                      :src="result.imgLink"
+                      style="object-fit: cover;"
+                    />
+                  </v-list-item-avatar>
 
-              <v-list-item
-                v-for="(result, index) in searchResults"
-                :key="index"
-                class="pa-0"
-              >
-                <v-list-item-avatar>
-                  <v-img
-                    alt="avatar"
-                    :src="result.imgLink"
-                    style="object-fit: cover;"
-                  />
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ result.fullname }}
-                  </v-list-item-title>
-                </v-list-item-content>
-                <v-scale-transition>
-                  <v-list-item-icon v-if="alreadySelected(result)">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ result.fullname }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                  <v-scale-transition>
+                    <v-list-item-icon v-if="alreadySelected(result)">
+                      <v-icon
+                        size="28"
+                        color="success"
+                      >
+                        mdi-check
+                      </v-icon>
+                    </v-list-item-icon>
+                  </v-scale-transition>
+                  <v-list-item-icon
+                    @click="addToSelected(result)"
+                  >
                     <v-icon
                       size="28"
-                      color="success"
+                      color="primary"
                     >
-                      mdi-check
+                      mdi-plus-box-outline
                     </v-icon>
                   </v-list-item-icon>
-                </v-scale-transition>
-                <v-list-item-icon
-                  @click="addToSelected(result)"
-                >
-                  <v-icon
-                    size="28"
-                    color="primary"
-                  >
-                    mdi-plus-box-outline
-                  </v-icon>
-                </v-list-item-icon>
-              </v-list-item>
+                </v-list-item>
+              </div>
             </v-list>
           </v-expand-transition>
         </v-card>
