@@ -226,8 +226,12 @@
         await classesCollection.doc(classId).get().then(doc => {
           if (doc.exists) {
             const pendingList: string[] = doc.data()?.pendingInvites
-            if (pendingList.includes(user.id)) {
-              exists = true
+            if (pendingList) {
+              if (pendingList.includes(user.id)) {
+                exists = true
+              }
+            } else {
+              exists = false
             }
           }
         })
