@@ -86,7 +86,12 @@ export default Vue.extend({
             this.dialogClassNotFound = true
           }
         }).catch(error => {
-          console.log(error)
+          this.$notify({
+            group: 'appWideNotification',
+            title: 'Join Class Failed.',
+            text: error.message,
+            type: 'error',
+          })
         })
     },
     cancelJoinClass (): void {

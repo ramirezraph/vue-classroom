@@ -356,7 +356,6 @@
     watch: {
       '$route.params.id' () {
         this.dbRef = classesCollection.doc(this.classId)
-        console.log(this.dbRef)
 
         this.fetchUnits().then(() => {
           console.log('fetch Unit success on ViewContent Mounted')
@@ -381,7 +380,6 @@
     },
     mounted () {
       this.dbRef = classesCollection.doc(this.classId)
-      console.log(this.dbRef)
       this.fetchUnits().then(() => {
         console.log('fetch Unit success on ViewContent Mounted')
       }).catch(error => {
@@ -394,9 +392,6 @@
       },
       fileClicked ({ file, lessonId }): void {
         this.$store.dispatch('class/setActiveFile', { lessonId: lessonId, file: file })
-
-        console.log('active file: ', file)
-        console.log('active lessonId: ', lessonId)
       },
       async fetchUnits () {
         this.unitDataLoading = true

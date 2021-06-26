@@ -1,79 +1,77 @@
 <template>
-  <v-row justify="center">
-    <v-dialog
-      v-model="modelValue"
-      max-width="700px"
-      persistent
-    >
-      <v-card>
-        <v-card-title class="pb-3">
-          <div class="d-flex">
-            <div class="headline">
-              Edit Post
-            </div>
-            <div class="ml-auto">
-              <v-btn
-                text
-                outlined
-                class="px-6 text-none"
-                @click="close"
+  <v-dialog
+    v-model="modelValue"
+    max-width="700px"
+    persistent
+  >
+    <v-card>
+      <v-card-title class="pb-3">
+        <div class="d-flex">
+          <div class="headline">
+            Edit Post
+          </div>
+          <div class="ml-auto">
+            <v-btn
+              text
+              outlined
+              class="px-6 text-none"
+              @click="close"
+            >
+              Cancel
+            </v-btn>
+          </div>
+        </div>
+      </v-card-title>
+      <v-divider />
+      <v-card-text>
+        <div class="d-flex">
+          <div>
+            <v-avatar class="mt-0">
+              <img
+                :src="userProfile"
               >
-                Cancel
-              </v-btn>
-            </div>
+            </v-avatar>
           </div>
-        </v-card-title>
-        <v-divider />
-        <v-card-text>
-          <div class="d-flex">
-            <div>
-              <v-avatar class="mt-0">
-                <img
-                  :src="userProfile"
-                >
-              </v-avatar>
+          <div class="ml-3">
+            <div
+              class="d-block subtitle-2 font-weight-medium"
+            >
+              {{ userName }}
             </div>
-            <div class="ml-3">
-              <div
-                class="d-block subtitle-2 font-weight-medium"
+            <div class="d-block caption grey--text">
+              <v-icon
+                small
+                color="grey"
               >
-                {{ userName }}
-              </div>
-              <div class="d-block caption grey--text">
-                <v-icon
-                  small
-                  color="grey"
-                >
-                  mdi-clock-time-eight-outline
-                </v-icon>
-                {{ convertedDate }}
-              </div>
+                mdi-clock-time-eight-outline
+              </v-icon>
+              {{ convertedDate }}
             </div>
           </div>
-          <div class="mt-3">
-            <v-textarea
-              v-model="message"
-              rows="5"
-              autofocus
-              auto-grow
-              placeholder="Write something ..."
-              style="white-space: pre"
-              flat
-            />
-          </div>
-        </v-card-text>
-        <v-card-actions class="ma-0 pa-3 mt-n6">
-          <v-btn
-            block
-            class="primary"
-            @click="saveChanges"
-          >
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+        </div>
+        <div class="mt-3">
+          <v-textarea
+            v-model="message"
+            rows="5"
+            autofocus
+            auto-grow
+            placeholder="Write something ..."
+            style="white-space: pre"
+            flat
+          />
+        </div>
+      </v-card-text>
+      <v-card-actions class="ma-0 pa-3 mt-n6">
+        <v-btn
+          block
+          class="primary"
+          @click="saveChanges"
+        >
+          Save
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">

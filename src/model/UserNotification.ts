@@ -2,10 +2,10 @@ import firebase from 'firebase'
 import Timestamp = firebase.firestore.Timestamp;
 
 export enum NotificationType {
-  ClassInvite,
-  ClassInviteResult,
-  Assignment,
-  Regular,
+  ClassInvite = 'ClassInvite',
+  ClassInviteResult = 'ClassInviteResult',
+  Assignment = 'Assignment',
+  Regular = 'Regular',
 }
 
 export class UserNotification {
@@ -40,8 +40,6 @@ export class AssignmentNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classTitle: string,
-    public classCode: string,
     public due: Timestamp,
   ) {
     super(id, userId, type, date, read)
@@ -56,8 +54,7 @@ export class ClassInviteNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classTitle: string,
-    public classCode: string,
+    public result: string,
   ) {
     super(id, userId, type, date, read)
   }
@@ -71,8 +68,6 @@ export class ClassInviteResultNotification extends UserNotification {
     public date: Timestamp,
     public read: boolean,
     public classId: string,
-    public classTitle: string,
-    public classCode: string,
   ) {
     super(id, userId, type, date, read)
   }
