@@ -72,6 +72,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
+
   export default Vue.extend({
     name: 'ClassItem',
     props: {
@@ -101,6 +102,10 @@
         required: false,
         default: '',
       },
+      ownerId: {
+        type: String,
+        required: true,
+      },
       color: {
         type: String,
         required: false,
@@ -113,9 +118,7 @@
       },
     },
     data () {
-      return {
-
-      }
+      return {}
     },
     computed: {
       // eslint-disable-next-line vue/return-in-computed-property

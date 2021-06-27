@@ -126,9 +126,10 @@
         :title="item.title"
         :description="item.description"
         :code="item.code"
-        :teacher-name="item.teacherName"
         :image-source="item.imageSource"
         :color="item.color"
+        :teacher-name="item.teacherName"
+        :owner-id="item.ownerId"
         class="mr-4 mb-n3"
       />
     </v-card>

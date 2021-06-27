@@ -47,7 +47,7 @@
               <v-avatar left>
                 <v-icon>mdi-teach</v-icon>
               </v-avatar>
-              {{ teacher }}
+              {{ teacherName }}
             </v-chip>
           </v-row>
         </v-card>
@@ -84,7 +84,11 @@
         type: String,
         required: true,
       },
-      teacher: {
+      ownerId: {
+        type: String,
+        required: true,
+      },
+      teacherName: {
         type: String,
         required: true,
       },
