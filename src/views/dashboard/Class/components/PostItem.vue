@@ -239,6 +239,7 @@
         commentIdToBeDeleted: '',
 
         numberOfComments: 0,
+        numberOfCommentLimit: 3,
       }
     },
     computed: {
@@ -292,7 +293,8 @@
         let fetchComm: Comment[] = []
         classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
           .collection('comments')
-          .orderBy('time', 'asc')
+          .orderBy('time')
+          .limitToLast(this.numberOfCommentLimit)
           .onSnapshot(querySnapshot => {
             fetchComm = []
             querySnapshot.forEach(commentItem => {
@@ -339,14 +341,8 @@
         return theDate.toLocaleDateString('en-US', options)
       },
       viewMoreComments (): void {
-        // classesCollection.doc(this.classId).collection('discussions').doc(this.postItem.id)
-        //   .collection('comments').get()
-        //   .then(querySnapshot => {
-        //     if (this.commentLimit < querySnapshot.size) {
-        //       console.log('extend limit!')
-        //       this.commentLimit += 5
-        //     }
-        //   })
+        this.numberOfCommentLimit += 3
+        this.fetchComments()
       },
       editComment (commentId: string): void {
         console.log(commentId)
