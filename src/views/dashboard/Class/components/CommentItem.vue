@@ -15,7 +15,7 @@
         >
       </v-avatar>
     </div>
-    <div class="py-3 ml-1 d-flex flex-column tangina">
+    <div class="py-3 ml-1 d-flex flex-column custom-full-width">
       <div
         class="d-flex subtitle-2 font-weight-medium mb-n3"
       >
@@ -39,7 +39,7 @@
           </template>
           <span>{{ convertedDate }}</span>
         </v-tooltip>
-        <div class="mt-n3 ml-auto">
+        <div class="ml-auto">
           <v-menu
             v-if="editAccess || deleteAccess"
             rounded
@@ -49,6 +49,7 @@
               <v-btn
                 icon
                 v-bind="attrs"
+                class="mt-n4"
                 v-on="on"
               >
                 <v-icon>
@@ -82,7 +83,7 @@
           </v-menu>
         </div>
       </div>
-      <div class="tangina">
+      <div class="mt-3">
         <v-textarea
           v-model="commentItem.message"
           rows="1"
@@ -168,7 +169,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .tangina {
+  .custom-full-width {
     width: 100%;
   }
 </style>
