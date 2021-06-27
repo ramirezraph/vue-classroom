@@ -1,6 +1,7 @@
 import { fileCommentsCollection, usersCollection } from "@/fb";
 import { Class } from "@/model/Class";
 import { ClassFile } from "@/model/Lesson";
+import { Comment } from "@/model/Post";
 import getFullName from "@/plugins/fullname"
 
 export default {
@@ -46,31 +47,31 @@ export default {
     },
     setActiveFile({ commit, getters }, payload: { lessonId: String, file: ClassFile }) {
 
-      // fetch comments
-      let comments: { avatar: string, title: string, subtitle: string }[] = []
-
       const snapshot = getters['fileCommentSnapshotUnsubscribe']
 
       if (snapshot) {
         snapshot() // detach a listener
       }
 
+      let fetchComm: Comment[] = []
       const unsubscribe = fileCommentsCollection.doc(payload.file.id)
-      .collection('comments')
-      .orderBy('time')
-      .onSnapshot(commentSnapshot => {
-        comments = []
-        commentSnapshot.forEach(comment => {
-          usersCollection.doc(comment.data()?.userId).get().then(user => {
-            comments.push({
-              avatar: user.data()?.imgProfile,
-              title: getFullName(user.data()?.firstName, user.data()?.middleName, user.data()?.lastName),
-              subtitle: comment.data()?.message,
+          .collection('comments')
+          .orderBy('time', 'asc')
+          .onSnapshot(querySnapshot => {
+            fetchComm = []
+            querySnapshot.forEach(commentItem => {
+              if (commentItem.exists) {
+                const comment = new Comment(
+                  commentItem.id,
+                  commentItem.data()?.userId,
+                  commentItem.data()?.time,
+                  commentItem.data()?.message,
+                )
+                fetchComm.push(comment)
+              }
             })
+             payload.file.comments = fetchComm
           })
-        })
-        payload.file.comments = comments
-      })
 
       commit('SET_COMMENT_SNAPSHOT', unsubscribe)
       commit('SET_ACTIVE_FILE', { lessonId: payload.lessonId, file: payload.file })
