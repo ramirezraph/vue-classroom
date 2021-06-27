@@ -218,6 +218,8 @@
                       color="info"
                       small
                       class="text-none"
+                      :loading="loadingBtnGenerateNewCode"
+                      @click="generateNewClassInviteCode()"
                     >
                       Generate New Code
                     </v-btn>
@@ -361,7 +363,7 @@
           return new Class(
             '', '', '',
             '', '', '',
-            'green', '')
+            'green', '', '')
         },
       },
       teacher: {
@@ -380,6 +382,7 @@
         imageFile: {} as File,
         imageSource: '',
         color: '',
+        inviteCode: '',
 
         dialogConfirmAddClass: false,
 
@@ -397,6 +400,8 @@
         ],
 
         submitChangesLoading: false,
+
+        loadingBtnGenerateNewCode: false,
       }
     },
     computed: {
@@ -429,7 +434,7 @@
         return colors
       },
       classInviteCode (): string {
-        return this.classEdit.id
+        return this.inviteCode || this.classEdit.inviteCode
       },
     },
     mounted () {
@@ -439,6 +444,7 @@
         this.code = this.classEdit.code
         this.color = this.classEdit.color
         this.imageSource = this.classEdit.imageSource
+        this.inviteCode = this.classEdit.inviteCode
       }
     },
     methods: {
@@ -452,7 +458,7 @@
       submit (dialogResponse: boolean): void {
         if (dialogResponse) {
           const currentUser: User = this.$store.getters['user/getCurrentUser']
-          let newClassId = ''
+          const newClassId = classesCollection.doc().id
 
           const newClass = {
             code: this.code,
@@ -465,10 +471,10 @@
             userList: [
               this.teacher.id,
             ],
+            inviteCode: newClassId,
           }
-          classesCollection.add(newClass)
-            .then((doc) => {
-              newClassId = doc.id
+          classesCollection.doc(newClassId).set(newClass)
+            .then(() => {
               // update people subcollection
               classesCollection.doc(newClassId).collection('people')
                 .doc(currentUser.id)
@@ -476,16 +482,16 @@
                   type: 'Teacher',
                 }).then(() => {
                   // update userList Array
-                  classesCollection.doc(doc.id).update({
+                  classesCollection.doc(newClassId).update({
                     userList: firebase.firestore.FieldValue.arrayUnion(currentUser.id),
                   }).then(() => {
                     if (this.imageSource) {
                       // upload the class image on storage
-                      const classImageRef = storageRef.child('classes').child(doc.id).child('classImage')
+                      const classImageRef = storageRef.child('classes').child(newClassId).child('classImage')
                       classImageRef.put(this.imageFile).then(() => {
                         // and update the imgSource url in firestore db
                         classImageRef.getDownloadURL().then(url => {
-                          classesCollection.doc(doc.id).set({
+                          classesCollection.doc(newClassId).set({
                             imageSource: url,
                           }, { merge: true })
                         })
@@ -514,6 +520,7 @@
         this.imageFile = {} as File
         this.imageSource = ''
         this.color = ClassColor.Green
+        this.inviteCode = ''
         this.$emit('cancel')
       },
       fullName (teacher: User): string {
@@ -580,6 +587,26 @@
           text: 'Copied to clipboard',
           type: 'success',
         })
+      },
+      generateNewClassInviteCode () {
+        this.loadingBtnGenerateNewCode = true
+        const newlyGeneratedId = classesCollection.doc().id
+        classesCollection.doc(this.classEdit.id).set({
+          inviteCode: newlyGeneratedId,
+        }, { merge: true })
+          .then(() => {
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Class Invite Code',
+              text: 'Generate new code success.',
+              type: 'success',
+            })
+
+            // sync the textbox
+            this.inviteCode = newlyGeneratedId
+          }).finally(() => {
+            this.loadingBtnGenerateNewCode = false
+          })
       },
     },
   })

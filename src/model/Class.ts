@@ -15,5 +15,6 @@ export class Class {
     public imageSource: string,
     public color: string,
     public ownerId: string,
+    public inviteCode: string,
   ) {}
 }

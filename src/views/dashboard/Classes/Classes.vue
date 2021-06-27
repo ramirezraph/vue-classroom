@@ -99,6 +99,7 @@
                 color="info"
                 :disabled="invalid"
                 type="submit"
+                :loading="loadingBtnJoinClass"
               >
                 Join
               </v-btn>

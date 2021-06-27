@@ -29,6 +29,8 @@ export default Vue.extend({
       dialogCreateClass: false,
       dialogClassNotFound: false,
       join_classCode: '',
+
+      loadingBtnJoinClass: false,
     }
   },
   computed: {
@@ -38,6 +40,7 @@ export default Vue.extend({
   },
   methods: {
     submitJoinClass (): void {
+      this.loadingBtnJoinClass = true
       // check if already enrolled
       const foundClass = this.$store.getters['classes/getClass'](this.join_classCode)
       if (foundClass) {
@@ -49,18 +52,21 @@ export default Vue.extend({
           text: 'You are already enrolled in this class.',
           type: 'warn',
         })
+        this.loadingBtnJoinClass = false
         return
       }
-      const data = classesCollection.doc(this.join_classCode).get()
-        data.then(doc => {
-          if (doc.exists) {
+      const data = classesCollection.where('inviteCode', '==', this.join_classCode).get()
+        data.then(snapshot => {
+          let foundIt = false
+          snapshot.forEach(foundClass => {
+            foundIt = true
             const currentUser: User = this.$store.getters['user/getCurrentUser']
-            classesCollection.doc(doc.id).collection('people')
+            classesCollection.doc(foundClass.id).collection('people')
               .doc(currentUser.id)
               .set({
                 type: 'Student',
               }).then(() => {
-                classesCollection.doc(doc.id).update({
+                classesCollection.doc(foundClass.id).update({
                   userList: firebase.firestore.FieldValue.arrayUnion(currentUser.id),
                 }).then(() => {
                   this.join_classCode = ''
@@ -82,7 +88,9 @@ export default Vue.extend({
                 type: 'error',
               })
               })
-          } else {
+          })
+
+          if (!foundIt) {
             this.dialogClassNotFound = true
           }
         }).catch(error => {
@@ -92,6 +100,8 @@ export default Vue.extend({
             text: error.message,
             type: 'error',
           })
+        }).finally(() => {
+          this.loadingBtnJoinClass = false
         })
     },
     cancelJoinClass (): void {
