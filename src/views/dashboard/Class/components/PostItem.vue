@@ -122,6 +122,7 @@
 
             <div>
               <v-btn
+                v-if="postItem.numberOfComments > comments.length"
                 small
                 text
                 class="text-none mb-3 mt-1"
