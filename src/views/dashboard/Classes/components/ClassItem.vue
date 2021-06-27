@@ -17,7 +17,7 @@
       class="pa-6"
     >
       <v-card-title
-        class="classes-title white--text headline"
+        class="classes-title white--text headline py-0 px-2"
       >
         <v-row dense>
           <v-col
@@ -43,28 +43,26 @@
         </v-row>
       </v-card-title>
       <v-card-text
-        class="white--text caption"
+        class="py-0 px-2 d-flex flex-column"
+        style="height: 175px"
       >
-        <p>{{ description }}</p>
-      </v-card-text>
-      <v-card-text
-        class="white--text caption pa-6"
-        :class="title.length > 24 ? 'mt-4' : 'mt-12'"
-      >
-        <v-row>
-          <h2 class="text-h2">
-            {{ code }}
-          </h2>
-          <v-spacer />
-          <v-chip
-            class="ma-2 px-6"
-          >
-            <v-avatar left>
-              <v-icon>mdi-teach</v-icon>
-            </v-avatar>
-            {{ teacherName }}
-          </v-chip>
-        </v-row>
+        <div class="white--text caption">
+          <p>{{ description }}</p>
+        </div>
+        <div class="white--text caption mt-auto">
+          <div class="d-flex align-center">
+            <h2 class="text-h2">
+              {{ code }}
+            </h2>
+            <v-spacer />
+            <v-chip>
+              <v-avatar left>
+                <v-icon>mdi-teach</v-icon>
+              </v-avatar>
+              {{ teacherName }}
+            </v-chip>
+          </div>
+        </div>
       </v-card-text>
     </v-img>
   </v-card>
