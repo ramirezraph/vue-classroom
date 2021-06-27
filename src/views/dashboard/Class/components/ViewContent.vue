@@ -181,50 +181,23 @@
               </v-icon>
               <span class="grey--text">Comments</span>
               <div>
-                <v-list
-                  :key="activeFile.file.id"
-                  three-line
-                >
-                  <template v-for="(item, index) in fileComments">
-                    <v-subheader
-                      v-if="item.header"
-                      :key="index"
-                      v-text="item.header"
-                    />
-
-                    <v-divider
-                      v-else-if="item.divider"
-                      :key="index"
-                      :inset="item.inset"
-                    />
-
-                    <v-list-item
-                      v-else
-                      :key="index"
-                      class="pa-0"
-                    >
-                      <v-list-item-avatar>
-                        <v-img :src="item.avatar" />
-                      </v-list-item-avatar>
-
-                      <v-list-item-content class="mb-n8">
-                        <v-list-item-title
-                          class="primary--text font-weight-medium"
-                          v-html="item.title"
-                        />
-                        <v-textarea
-                          class="text-h5 mt-n3"
-                          flat
-                          :value="item.subtitle"
-                          auto-grow
-                          readonly
-                          style="white-space: pre"
-                          rows="1"
-                        />
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-list>
+                <div class="mt-6">
+                  <transition-group
+                    name="list"
+                    tag="p"
+                  >
+                    <template v-for="comment in fileComments">
+                      <comment-item
+                        :key="comment.id"
+                        :comment="comment"
+                        class="mt-n3"
+                        :teacher-access="hasEditAccess"
+                        @edit-comment="editComment"
+                        @remove-comment="deleteComment"
+                      />
+                    </template>
+                  </transition-group>
+                </div>
                 <div class="mt-0">
                   <v-textarea
                     v-model="comment_message"
@@ -283,6 +256,8 @@
   import { classesCollection, fileCommentsCollection } from '@/fb'
   import axios from 'axios'
   import { User } from '@/model/User'
+  import CommentItem from './CommentItem.vue'
+  import { Comment } from '@/model/Post'
 
   // eslint-disable-next-line no-undef
   import DocumentReference = firebase.firestore.DocumentReference;
@@ -293,6 +268,7 @@
       CoolLightBox,
       AccordionUnitItem,
       videoPlayer,
+      CommentItem,
     },
     props: {
       vModel: {
@@ -344,7 +320,7 @@
 
         return file
       },
-      fileComments (): { avatar: string, title: string, subtitle: string }[] {
+      fileComments (): Comment[] {
         return this.activeFile.file.comments
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -454,6 +430,12 @@
           }).catch(error => {
             console.log(error)
           })
+      },
+      editComment (): void {
+        console.log('edit comment clicked')
+      },
+      deleteComment (): void {
+        console.log('delete comment clicked')
       },
     },
   })
