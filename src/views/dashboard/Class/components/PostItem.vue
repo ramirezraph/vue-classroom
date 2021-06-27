@@ -103,7 +103,7 @@
           text
           outlined
           rounded
-          color="primary"
+          color="info"
           @click="toggleComments"
           @click.once="fetchComments"
         >
