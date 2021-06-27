@@ -1,7 +1,8 @@
 import { Class } from '@/model/Class'
-import {classesCollection, lecturesCollection} from '@/fb'
+import {classesCollection, lecturesCollection, usersCollection} from '@/fb'
 import { User } from '@/model/User';
 import {Meeting} from "@/model/Meeting";
+import getFullName from '@/plugins/fullname';
 
 export default {
   namespaced: true,
@@ -36,17 +37,25 @@ export default {
              const classes: Class[] = []
              snapshot.forEach(doc => {
                if (doc.exists) {
-                 const generatedClass = new Class(
-                   doc.id,
-                   doc.data().title,
-                   doc.data().description,
-                   doc.data().code,
-                   doc.data().imageSource,
-                   doc.data().color,
-                   doc.data().ownerId,
-                   doc.data().inviteCode,
-                 )
-                 classes.push(generatedClass)
+
+                usersCollection.doc(doc.data().ownerId).get().then(userDoc => {
+                  if (userDoc.exists) {
+                    const teacherName = getFullName(userDoc.data()?.firstName, userDoc.data()?.middleName, userDoc.data()?.lastName)
+
+                    const generatedClass = new Class(
+                      doc.id,
+                      doc.data().title,
+                      doc.data().description,
+                      doc.data().code,
+                      teacherName,
+                      doc.data().imageSource,
+                      doc.data().color,
+                      doc.data().ownerId,
+                      doc.data().inviteCode,
+                    )
+                    classes.push(generatedClass)
+                  }
+                })
                }
              })
 

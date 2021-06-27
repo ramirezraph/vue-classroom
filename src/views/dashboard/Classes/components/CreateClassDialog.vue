@@ -33,6 +33,7 @@
               :code="displayCode"
               :owner-id="teacher.id"
               :image="displayImage"
+              :teacher-name="teacherName"
             />
           </v-col>
         </v-row>
@@ -362,7 +363,7 @@
         default: function () {
           return new Class(
             '', '', '',
-            '', '',
+            '', '', '',
             'green', '', '')
         },
       },
@@ -409,7 +410,7 @@
         return this.vModel
       },
       teacherName (): string {
-        return this.fullName(this.teacher)
+        return this.teacher.fullName
       },
       displayTitle (): string {
         return this.title || 'Class Title'
@@ -465,7 +466,6 @@
             color: this.color,
             description: this.description,
             imageSource: '',
-            teacherName: this.teacherName,
             ownerId: currentUser.id,
             title: this.title,
             userList: [
@@ -523,18 +523,6 @@
         this.inviteCode = ''
         this.$emit('cancel')
       },
-      fullName (teacher: User): string {
-        return `${teacher.firstName} ${this.middleInitial(teacher)} ${teacher.lastName}`
-      },
-      middleInitial (teacher: User): string {
-        const midName: string[] = teacher.middleName.split(' ')
-        let middleInitial = ''
-        for (let i = 0; i < midName.length; i++) {
-          middleInitial += midName[i].substring(0, 1) + '.'
-        }
-
-        return middleInitial
-      },
       async submitEditClass () {
         console.log(this.imageSource)
         this.submitChangesLoading = true
@@ -543,7 +531,6 @@
           color: this.color,
           description: this.description,
           title: this.title,
-          teacherName: this.teacherName,
         }).then(() => {
           if (this.imageSource && this.imageSource !== this.classEdit.imageSource) {
             storageRef.child('classes').child(this.classEdit.id)

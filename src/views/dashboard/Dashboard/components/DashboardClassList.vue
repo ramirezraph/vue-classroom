@@ -27,7 +27,7 @@
           dark
           small
           class="blue white--text justify-center"
-          style="width: 45%;"
+          style="min-width: 45%;"
         >
           {{ item.teacher }}
         </v-chip>
@@ -76,6 +76,7 @@
         const classes: {counter: number, name: string, code: string, teacher: string}[] = []
         this.classList.forEach(c => {
           counter += 1
+
           classes.push(
             {
               counter: counter,
@@ -87,20 +88,6 @@
         })
 
         return classes
-      },
-    },
-    methods: {
-      getFullName (firstName: string, middleName: string, lastName: string): string {
-        return `${firstName} ${this.middleInitial(middleName)} ${lastName}`
-      },
-      middleInitial (middleName: string): string {
-        const midName: string[] = middleName.split(' ')
-        let middleInitial = ''
-        for (let i = 0; i < midName.length; i++) {
-          middleInitial += midName[i].substring(0, 1) + '.'
-        }
-
-        return middleInitial
       },
     },
   })

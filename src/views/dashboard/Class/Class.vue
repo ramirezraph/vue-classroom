@@ -19,6 +19,7 @@
             :description="selectedClass.description"
             :code="selectedClass.code"
             :owner-id="selectedClass.ownerId"
+            :teacher-name="selectedClass.teacherName"
             class="mr-4 mb-n4"
           />
         </v-row>

@@ -11,6 +11,7 @@ export class Class {
     public title: string,
     public description: string,
     public code: string,
+    public teacherName: string,
     public imageSource: string,
     public color: string,
     public ownerId: string,

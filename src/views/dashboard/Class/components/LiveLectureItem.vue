@@ -203,6 +203,8 @@
       convertedDate (): string {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
         const theDate = this.meeting.date.toDate()
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return theDate.toLocaleDateString(undefined, options)
       },
     },
