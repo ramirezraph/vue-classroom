@@ -46,7 +46,7 @@ export default {
     }
   },
   actions: {
-     fetchClasses (context, payload: User): void {
+     fetchClasses ({ commit }, payload: User): void {
        if (payload) {
          classesCollection.where('userList', 'array-contains', payload.id)
            .onSnapshot(snapshot => {
@@ -62,13 +62,13 @@ export default {
                    doc.data().imageSource,
                    doc.data().color,
                    doc.data().ownerId,
+                   doc.data().inviteCode,
                  )
-
                  classes.push(generatedClass)
                }
              })
 
-             context.commit('SET_CLASSES', classes)
+             commit('SET_CLASSES', classes)
            })
        }
     },
