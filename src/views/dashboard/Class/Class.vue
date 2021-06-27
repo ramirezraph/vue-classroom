@@ -218,7 +218,7 @@
             v-model="tabs"
             fixed-tabs
           >
-            <v-tabs-slider color="info" />
+            <v-tabs-slider color="primary" />
             <v-tooltip bottom>
               <template #activator="{ on, attrs }">
                 <v-tab
@@ -240,7 +240,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#classwork"
-                  class="text-none info--text"
+                  class="text-none primary--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -255,7 +255,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#people"
-                  class="text-none info--text"
+                  class="text-none primary--text"
                   v-bind="attrs"
                   v-on="on"
                 >
@@ -270,7 +270,7 @@
               <template #activator="{ on, attrs }">
                 <v-tab
                   href="#livelecture"
-                  class="text-none info--text"
+                  class="text-none primary--text"
                   v-bind="attrs"
                   v-on="on"
                 >

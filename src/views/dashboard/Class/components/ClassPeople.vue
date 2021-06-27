@@ -7,7 +7,7 @@
       class="d-flex align-center pb-8"
     >
       <v-btn
-        color="info"
+        color="primary"
         rounded
         :loading="sendInviteLoading"
         @click="dialogSendInvite = true"
@@ -49,12 +49,12 @@
         </v-list>
       </div>
       <div class="mt-8">
-        <span class="display-2 info--text ml-2">
+        <span class="display-2 info--text">
           Classmates
         </span>
         <v-card
           flat
-          class="d-flex align-center mt-2"
+          class="d-flex align-center mt-6"
           max-height="50"
         >
           <v-checkbox

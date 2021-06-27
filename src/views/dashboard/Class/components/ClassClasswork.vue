@@ -9,7 +9,7 @@
       <v-btn
         rounded
         depressed
-        color="info"
+        color="primary"
         class="ml-6"
       >
         <v-icon left>

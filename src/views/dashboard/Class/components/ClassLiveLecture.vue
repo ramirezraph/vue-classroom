@@ -6,7 +6,7 @@
   >
     <v-card-title>
       <v-btn
-        color="info"
+        color="primary"
         rounded
         class="mt-4 ml-5"
         @click="createLiveLectureDialog = true"

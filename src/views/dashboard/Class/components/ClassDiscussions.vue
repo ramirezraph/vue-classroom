@@ -73,7 +73,7 @@
             <v-spacer />
             <v-col>
               <v-btn
-                color="info"
+                color="primary"
                 min-width="150"
                 :loading="postLoading"
                 @click="postDiscussion"
