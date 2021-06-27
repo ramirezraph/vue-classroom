@@ -77,6 +77,7 @@
           text
           v-bind="attrs"
           v-on="on"
+          @click="readNotifications()"
         >
           <v-badge
             color="red"
@@ -188,7 +189,7 @@
 </template>
 
 <script lang="ts">
-  import { firebaseAuth } from '@/fb'
+  import { firebaseAuth, notificationsCollection } from '@/fb'
   import Vue from 'vue'
   // Components
   import { VHover, VListItem } from 'vuetify/lib'
@@ -199,6 +200,7 @@
 
   // eslint-disable-next-line no-undef
   import { UserNotification } from '@/model/UserNotification'
+  import { User } from '@/model/User'
 
   export default Vue.extend({
     name: 'DashboardCoreAppBar',
@@ -253,6 +255,7 @@
       unreadNotifications (): number {
         return this.notifications.filter(n => n.read === false).length
       },
+
     },
 
     methods: {
@@ -264,6 +267,23 @@
           this.$store.dispatch('user/userSignOut')
           this.$router.replace({ name: 'Login' })
         })
+      },
+      readNotifications (): void {
+        const currentUser: User = this.$store.getters['user/getCurrentUser']
+
+        if (this.unreadNotifications <= 0) return
+
+        if (currentUser) {
+          console.log('update read notif')
+          notificationsCollection.doc(currentUser.id).collection('items').get().then(snapshot => {
+            snapshot.forEach(notification => {
+              // update all notification to read
+              notificationsCollection.doc(currentUser.id).collection('items').doc(notification.id).set({
+                read: true,
+              }, { merge: true })
+            })
+          })
+        }
       },
     },
   })
