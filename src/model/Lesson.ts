@@ -1,6 +1,12 @@
 
+export type ClassFileComment = {
+  avatar: string,
+  title: string,
+  subtitle: string,
+}
+
 export class ClassFile {
-  public comments: { avatar: string, title: string, subtitle: string }[] = []
+  public comments: ClassFileComment[] = []
 
   // eslint-disable-next-line no-useless-constructor
   constructor (
