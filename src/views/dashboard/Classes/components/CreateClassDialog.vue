@@ -536,6 +536,7 @@
         return middleInitial
       },
       async submitEditClass () {
+        console.log(this.imageSource)
         this.submitChangesLoading = true
         await classesCollection.doc(this.classEdit.id).update({
           code: this.code,
@@ -560,7 +561,35 @@
                     })
                   })
                 }
+              }).catch(error => {
+                if (error.code === 'storage/object-not-found') {
+                  if (this.imageSource) {
+                    // upload the class image on storage
+                    const classImageRef = storageRef.child('classes').child(this.classEdit.id).child('classImage')
+                    classImageRef.put(this.imageFile).then(() => {
+                      // and update the imgSource url in firestore db
+                      classImageRef.getDownloadURL().then(url => {
+                        classesCollection.doc(this.classEdit.id).set({
+                          imageSource: url,
+                        }, { merge: true })
+                      })
+                    })
+                  }
+                }
               })
+          } else {
+            // image source is empty or the user removes it
+            if (!this.imageSource) {
+              storageRef.child('classes').child(this.classEdit.id)
+                .child('classImage')
+                .delete()
+                .then(() => {
+                  // and update the imgSource url in firestore db
+                  classesCollection.doc(this.classEdit.id).set({
+                    imageSource: '',
+                  }, { merge: true })
+                })
+            }
           }
           this.$notify({
             group: 'appWideNotification',
