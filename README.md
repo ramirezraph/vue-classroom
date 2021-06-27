@@ -13,8 +13,6 @@ Project is created with:
 ## Developers
 Raphael Isiah L. Ramirez <br />
 Hanz Josemer L. Cruz <br />
-Hirold B. Bartolay <br />
-Jeff Andrei M. Lacerna <br />
 
 ## Project Status
 The project is still being developed.
