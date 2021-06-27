@@ -225,11 +225,16 @@
         }
         const path = this.$route.path.split('/')
         const classId = path[path.length - 1]
+        this.post_message = ''
         await classesCollection.doc(classId).collection('discussions')
-          .add(newPost).then(() => {
-            this.post_message = ''
-          }).catch(addError => {
-            console.log(addError, addError.message)
+          .add(newPost)
+          .catch(addError => {
+            this.$notify({
+              group: 'appWideNotification',
+              title: 'Posting Failed',
+              text: addError.message,
+              type: 'error',
+            })
           }).finally(() => {
             this.postLoading = false
           })
