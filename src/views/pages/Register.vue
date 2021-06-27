@@ -5,23 +5,26 @@
     tag="section"
   >
     <v-card
-      class="vcard1 pa-5"
+      class="vcard1"
       light
-      height="100%"
+      height="700px"
+      max-height="700px"
       width="100%"
     >
-      <v-row>
+      <v-row no-gutters>
         <v-col
           cols="12"
+          class="ml-auto mr-auto"
           md="6"
         >
           <v-card
-            class="vcard2"
-            width="670px"
+            class="vcard2 mt-3 pa-5"
+            height="600px"
+            width="750px"
             flat
           >
-            <div class="text-start pl-15">
-              <h1 class="font-weight-light">
+            <div class="text-start">
+              <h1 class="display-3 pl-5">
                 Register an Account
               </h1>
             </div>
@@ -31,70 +34,92 @@
               class="elevation-0"
             >
               <v-stepper-header>
-                <template v-for="n in steps">
-                  <v-stepper-step
-                    :key="`${n}-step`"
-                    :complete="e1 > n"
-                    :step="n"
-                    linear
-                  >
-                    {{ n }}
-                  </v-stepper-step>
-                  <v-divider
-                    v-if="n !== steps"
-                    :key="n"
-                  />
-                </template>
+                <v-stepper-step
+                  :complete="e1 > 1"
+                  step="1"
+                >
+                  Register
+                </v-stepper-step>
+
+                <v-divider />
+
+                <v-stepper-step
+                  :complete="e1 > 2"
+                  step="2"
+                >
+                  Confirmation
+                </v-stepper-step>
+
+                <v-divider />
+
+                <v-stepper-step
+                  :complete="e1 > 3"
+                  step="3"
+                >
+                  Information
+                </v-stepper-step>
+
+                <v-divider />
+
+                <v-stepper-step
+                  :complete="e1 > 4"
+                  step="4"
+                >
+                  Information
+                </v-stepper-step>
               </v-stepper-header>
+
               <v-stepper-items>
                 <v-stepper-content step="1">
                   <v-card
-                    class="mb-6 mt-0 ml-10"
+                    class="pl-8 py-2"
                     color="grey"
-                    height="250px"
+                    height="260px"
                     width="550px"
                   >
-                    <v-text-field
-                      color="white"
-                      label="Email"
-                      prepend-icon="mdi-email-outline"
-                      dark
-                    />
-                    <v-text-field
-                      class="mt-0"
-                      color="white"
-                      label="Password"
-                      prepend-icon="mdi-lock-outline"
-                      dark
-                    />
-                    <v-text-field
-                      class="mt-0"
-                      color="white"
-                      label="Confirm Password"
-                      prepend-icon="mdi-lock-outline"
-                      dark
-                    />
-                    <v-checkbox
-                      color="white"
-                      class="mt-0 pl-10"
-                      dark
-                    >
-                      <template #label>
-                        <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
-                        <a
-                          class="white--text ml-1"
-                          href="#"
+                    <v-row>
+                      <v-col
+                        class="pt-0 pl-5"
+                        md="10"
+                      >
+                        <v-text-field
+                          label="Email"
+                          prepend-icon="mdi-email-outline"
+                          dark
+                        />
+                        <v-text-field
+                          class="mt-0"
+                          label="Password"
+                          prepend-icon="mdi-lock-outline"
+                          dark
+                        />
+                        <v-text-field
+                          class="mt-0"
+                          label="Confirm Password"
+                          prepend-icon="mdi-lock-outline"
+                          dark
+                        />
+                        <v-checkbox
+                          class="mt-0"
+                          dark
                         >
-                          Terms and Conditions
-                        </a>
-                      </template>
-                    </v-checkbox>
+                          <template #label>
+                            <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
+                            <a
+                              class="white--text ml-1"
+                              href="#"
+                            >
+                              Terms and Conditions
+                            </a>
+                          </template>
+                        </v-checkbox>
+                      </v-col>
+                    </v-row>
                   </v-card>
                   <v-row>
                     <v-col
-                      class="pr-15"
                       cols="12"
-                      md="9"
+                      md="6"
                     >
                       <v-btn
                         color="primary"
@@ -109,6 +134,7 @@
                         text
                         width="150px"
                         height="35px"
+                        @click="e1 = 1"
                       >
                         Cancel
                       </v-btn>
@@ -118,42 +144,48 @@
 
                 <v-stepper-content step="2">
                   <v-card
-                    class="mb-6 mt-0 ml-10"
+                    class="pl-8 py-2"
                     color="grey"
-                    height="250px"
+                    height="260px"
                     width="550px"
                   >
-                    <div class="text-start pa-6 ml-4">
-                      <h1 class="white--text display-2 small">
-                        Verify your email to continue signing up
-                      </h1>
-                    </div>
-                    <div class="text-start caption mx-11">
-                      <p class="white--text">
-                        Hello, World!
-                      </p>
-                      <span class="white--text small">
-                        To verify that you are the owner
-                        <span class="white--text small font-weight-bold">sample@gmail.com,</span>
-                        please check your email and enter the verification code that we just sent.&nbsp;
-                      </span>
-                      <a
-                        href="#"
-                        class="blue--text text--lighten-3 text-decoration-none"
-                      >Resend verification code</a>
-                    </div>
-                    <v-text-field
-                      color="white"
-                      label="Enter the code here"
-                      prepend-icon="mdi-email-outline"
-                      dark
-                    />
+                    <v-row>
+                      <v-col
+                        class="pt-0 pl-7"
+                        md="10"
+                      >
+                        <div class="text-start py-6">
+                          <h1 class="white--text display-2 small">
+                            Verify your email to continue signing up
+                          </h1>
+                        </div>
+                        <div class="text-start caption">
+                          <p class="white--text">
+                            Hello, World!
+                          </p>
+                          <span class="white--text small">
+                            To verify that you are the owner
+                            <span class="white--text small font-weight-bold">sample@gmail.com,</span>
+                            please check your email and enter the verification code that we just sent.&nbsp;
+                          </span>
+                          <a
+                            href="#"
+                            class="blue--text text--lighten-3 text-decoration-none"
+                          >Resend verification code</a>
+                        </div>
+                        <v-text-field
+                          color="white"
+                          label="Enter the code here"
+                          prepend-icon="mdi-email-outline"
+                          dark
+                        />
+                      </v-col>
+                    </v-row>
                   </v-card>
                   <v-row>
                     <v-col
-                      class="pr-15"
                       cols="12"
-                      md="9"
+                      md="6"
                     >
                       <v-btn
                         color="primary"
@@ -161,7 +193,7 @@
                         height="35px"
                         @click="e1 = 3"
                       >
-                        Save and Continue
+                        Verify and Continue
                       </v-btn>
 
                       <v-btn
@@ -169,6 +201,337 @@
                         width="150px"
                         height="35px"
                         @click="e1 = 1"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-stepper-content>
+
+                <v-stepper-content step="3">
+                  <v-card
+                    class="py-2"
+                    color="grey"
+                    height="350px"
+                    width="650px"
+                  >
+                    <v-row no-gutters>
+                      <v-col
+                        class="px-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="First Name"
+                          dark
+                        />
+                      </v-col>
+
+                      <v-col
+                        class="pr-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="School/ University"
+                          dark
+                        />
+                      </v-col>
+                    </v-row>
+
+                    <v-row no-gutters>
+                      <v-col
+                        class="px-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="Middle Name"
+                          dark
+                        />
+                      </v-col>
+
+                      <v-col
+                        class="pr-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="Student Number"
+                          dark
+                        />
+                      </v-col>
+                    </v-row>
+
+                    <v-row no-gutters>
+                      <v-col
+                        class="px-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="Last Name"
+                          dark
+                        />
+                      </v-col>
+
+                      <v-col
+                        class="pr-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="Course &amp; Section"
+                          dark
+                        />
+                      </v-col>
+                    </v-row>
+
+                    <v-row no-gutters>
+                      <v-col
+                        class="px-10"
+                        md="6"
+                      >
+                        <v-text-field
+                          label="Birthdate"
+                          persistent-hint
+                          append-icon="mdi-calendar"
+                          readonly
+                          dark
+                        />
+                      </v-col>
+                    </v-row>
+
+                    <v-row no-gutters>
+                      <v-col
+                        class="px-10"
+                        md="12"
+                      >
+                        <v-text-field
+                          label="Home Address"
+                          dark
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      md="6"
+                    >
+                      <v-btn
+                        color="primary"
+                        width="150px"
+                        height="35px"
+                        @click="e1 = 4"
+                      >
+                        Continue
+                      </v-btn>
+
+                      <v-btn
+                        text
+                        width="150px"
+                        height="35px"
+                        @click="e1 = 2"
+                      >
+                        Cancel
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-stepper-content>
+                <v-stepper-content step="4">
+                  <v-card
+                    class="pl-8 py-3"
+                    color="grey"
+                    height="300px"
+                    width="550px"
+                  >
+                    <v-row>
+                      <v-col
+                        md="6"
+                      >
+                        <v-card-flex
+                          flex-wrap
+                        >
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/1.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/2.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/3.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/4.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/5.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/6.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/7.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/8.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+
+                          <v-btn
+                            icon
+                            class="pa-2"
+                            width="auto"
+                            height="auto"
+                          >
+                            <v-avatar
+                              size="60"
+                            >
+                              <img
+                                src="@/assets/avatars/9.png"
+                              >
+                            </v-avatar>
+                          </v-btn>
+                        </v-card-flex>
+                      </v-col>
+                      <v-col>
+                        <v-avatar
+                          size="150"
+                        >
+                          <img
+                            src="@/assets/avatars/1.png"
+                          >
+                        </v-avatar>
+                        <v-btn
+                          class="btn1 mt-3 mx-4"
+                          color="grey darken-2"
+                          width="150px"
+                          height="35px"
+                          @click="uploadImage"
+                        >
+                          Upload an image
+                        </v-btn>
+
+                        <v-btn
+                          class="btn1"
+                          text
+                          dark
+                          width="150px"
+                          height="35px"
+                        >
+                          Remove
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                  <v-row>
+                    <v-col
+                      cols="12"
+                      md="6"
+                    >
+                      <v-btn
+                        color="primary"
+                        width="150px"
+                        height="35px"
+                        @click="e1 = 4"
+                      >
+                        Continue
+                      </v-btn>
+
+                      <v-btn
+                        text
+                        width="150px"
+                        height="35px"
+                        @click="e1 = 3"
                       >
                         Cancel
                       </v-btn>
@@ -192,6 +555,9 @@
     data: () => ({
       steps: 4,
       e1: 1,
+      avatar: null,
+      saving: false,
+      saved: false,
     }),
     watch: {
       steps (val) {
@@ -220,34 +586,32 @@
 </script>
 
 <style lang="scss" scoped>
-.v-text-field{
-      width: 400px;
-      margin-left: 40px;
-}
 
 .vcard1::before{
   content: '';
   background: rgb(41, 57, 209);
   position: absolute;
   width: 20%;
-  height: 85%;
+  max-height: 550px;
+  height: 550px;
   left: 100px;
   top: 0px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
-.vcard1{
- border-radius: 20px;
+
+.vcard2{
+  left: 100px;
 }
 
-.vcard2 {
-  position: relative;
-  left: 450px;
+.btn1 {
+     text-transform: unset !important;
 }
 
 .v-stepper__header{
     box-shadow: none !important;
-    height: 72px;
+    height: 30px;
+    max-width: 600px;
 }
 
 </style>
