@@ -204,7 +204,6 @@ export default Vue.extend({
               fetchUnit.push(unit)
             })
             this.units = fetchUnit
-            this.$store.dispatch('classes/fetchUnits', { class: this.selectedClass, units: fetchUnit })
           })
       } finally {
         this.unitDataLoading = false
@@ -272,7 +271,7 @@ export default Vue.extend({
       }
     },
     async fetchLectures () {
-      await lecturesCollection.where('classId', '==', this.selectedClass.id)
+      await lecturesCollection.where('classId', '==', this.id)
         .onSnapshot(snapshot => {
           const lectures: Meeting[] = []
           snapshot.forEach(meet => {
@@ -386,7 +385,7 @@ export default Vue.extend({
     },
     closeEditClass (): void {
       this.dialogEditClass = false
-
+      this.$store.dispatch('class/setActiveClass', { classId: this.id })
       setTimeout(() => {
         this.destroyClassDialog = true
       }, 1000)

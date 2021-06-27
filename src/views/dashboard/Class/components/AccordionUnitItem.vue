@@ -474,10 +474,7 @@
                 }
               }
             })
-            const classId = this.unitDbRef.path.split('/')[1]
             this.lessons = fetchLessons
-
-            this.$store.dispatch('classes/fetchLessons', { classId: classId, unitId: this.unitItem.id, lessons: this.lessons })
           })
       },
       unitOpened (): void {
