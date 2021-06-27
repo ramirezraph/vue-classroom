@@ -71,7 +71,10 @@
 </template>
 
 <script lang="ts">
+  import { usersCollection } from '@/fb'
+  import getFullName from '@/plugins/fullname'
   import Vue from 'vue'
+
   export default Vue.extend({
     name: 'ClassItem',
     props: {
@@ -92,14 +95,14 @@
         type: String,
         required: true,
       },
-      teacherName: {
-        type: String,
-        required: true,
-      },
       imageSource: {
         type: String,
         required: false,
         default: '',
+      },
+      ownerId: {
+        type: String,
+        required: true,
       },
       color: {
         type: String,
@@ -114,7 +117,7 @@
     },
     data () {
       return {
-
+        teacherName: '',
       }
     },
     computed: {
@@ -128,6 +131,13 @@
           case 'xl': return 620
         }
       },
+    },
+    mounted () {
+      usersCollection.doc(this.ownerId).get().then(doc => {
+        if (doc.exists) {
+          this.teacherName = getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+        }
+      })
     },
     methods: {
       classOnClicked () {

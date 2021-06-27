@@ -41,7 +41,6 @@ export default {
                    doc.data().title,
                    doc.data().description,
                    doc.data().code,
-                   doc.data().teacherName,
                    doc.data().imageSource,
                    doc.data().color,
                    doc.data().ownerId,

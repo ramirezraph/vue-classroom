@@ -47,7 +47,7 @@
               <v-avatar left>
                 <v-icon>mdi-teach</v-icon>
               </v-avatar>
-              {{ teacher }}
+              {{ teacherName }}
             </v-chip>
           </v-row>
         </v-card>
@@ -57,6 +57,8 @@
 </template>
 
 <script lang="ts">
+  import { usersCollection } from '@/fb'
+  import getFullName from '@/plugins/fullname'
   import Vue from 'vue'
 
   export default Vue.extend({
@@ -84,13 +86,15 @@
         type: String,
         required: true,
       },
-      teacher: {
+      ownerId: {
         type: String,
         required: true,
       },
     },
     data () {
-      return {}
+      return {
+        teacherName: '',
+      }
     },
     computed: {
       imageSource (): string {
@@ -107,6 +111,13 @@
           return 'mt-16'
         }
       },
+    },
+    mounted () {
+      usersCollection.doc(this.ownerId).get().then(doc => {
+        if (doc.exists) {
+          this.teacherName = getFullName(doc.data()?.firstName, doc.data()?.middleName, doc.data()?.lastName)
+        }
+      })
     },
   })
 </script>

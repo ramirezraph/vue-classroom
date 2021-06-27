@@ -31,7 +31,7 @@
               :title="displayTitle"
               :description="displayDescription"
               :code="displayCode"
-              :teacher="teacherName"
+              :owner-id="teacher.id"
               :image="displayImage"
             />
           </v-col>
@@ -362,7 +362,7 @@
         default: function () {
           return new Class(
             '', '', '',
-            '', '', '',
+            '', '',
             'green', '', '')
         },
       },
