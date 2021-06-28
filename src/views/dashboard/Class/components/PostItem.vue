@@ -152,10 +152,10 @@
           </div>
           <div class="mt-n6">
             <v-divider />
-            <v-row>
+            <v-row class="justify-center">
               <v-col cols="2">
                 <v-avatar
-                  class="ml-n3 ml-sm-3"
+                  class="ml-n3 ml-sm-3 mt-1"
                   style="border: 1px solid lightgray"
                 >
                   <img
@@ -177,10 +177,6 @@
                     color="primary"
                     style="white-space: pre"
                     @click:append="postComment(postItem.id)"
-                  />
-                  <v-btn
-                    v-show="false"
-                    type="submit"
                   />
                 </v-form>
               </v-col>
