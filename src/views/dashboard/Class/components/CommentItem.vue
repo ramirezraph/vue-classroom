@@ -83,7 +83,9 @@
           </v-menu>
         </div>
       </div>
-      <div class="mt-3">
+      <div
+        :class="editAccess || deleteAccess ? 'mt-1' : 'mt-2'"
+      >
         <v-textarea
           v-model="commentItem.message"
           rows="1"
