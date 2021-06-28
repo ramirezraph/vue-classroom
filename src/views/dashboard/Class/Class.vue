@@ -48,7 +48,28 @@
                       icon
                       v-bind="attrs"
                       v-on="on"
-                      @click="editClass"
+                      @click="editClass()"
+                    >
+                      <v-icon>mdi-cog</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Class Settings</span>
+                </v-tooltip>
+              </div>
+              <div
+                v-else
+                class="ml-auto"
+              >
+                <v-tooltip
+                  color="info"
+                  bottom
+                >
+                  <template #activator="{attrs, on}">
+                    <v-btn
+                      icon
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="openGeneralClassSettings()"
                     >
                       <v-icon>mdi-cog</v-icon>
                     </v-btn>
@@ -351,6 +372,12 @@
       :class-edit="selectedClass"
       :teacher="selectedClassOwner"
       @cancel="closeEditClass"
+    />
+    <class-settings-general
+      v-if="!destroyGeneralClassSettingsDialog"
+      :v-model="dialogGeneralClassSettings"
+      :class-on-active="selectedClass"
+      @cancel="closeGeneralClassSettings"
     />
   </v-container>
 </template>

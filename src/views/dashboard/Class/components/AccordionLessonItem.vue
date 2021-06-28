@@ -573,41 +573,15 @@
         this.toggleUploadFileCard()
       },
       submitUploadFile (): void {
-        let fileExtension = ''
-        switch (this.uploadFileFile.type) {
-          case 'image/png':
-            fileExtension = '.png'
-            break
-          case 'image/jpeg':
-            fileExtension = '.jpg'
-            break
-          case 'video/mp4':
-            fileExtension = '.mp4'
-            break
-          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            fileExtension = '.docx'
-            break
-          case 'application/msword':
-            fileExtension = '.doc'
-            break
-          case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-            fileExtension = '.pptx'
-            break
-          case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-            fileExtension = '.xlsx'
-            break
-          case 'application/pdf':
-            fileExtension = '.pdf'
-            break
-        }
         this.uploadingInProgress = true
+        const fileExtension = this.uploadFileFile.name.split('.').reverse()[0]
         const path = this.lessonDbRef.path.split('/')
         const classId = path[1]
         const resourceRef = storageRef.child('classes')
           .child(classId)
           .child('lesson-files')
           .child(this.lessonItem.id)
-          .child(`${this.uploadFileTitle}${fileExtension}`)
+          .child(`${this.uploadFileTitle}.${fileExtension}`)
         // upload the file to storage
         resourceRef.put(this.uploadFileFile)
           .then(() => {
@@ -616,7 +590,7 @@
               resourcesCollection.doc(this.lessonItem.id).collection('files')
                 .add({
                   link: url,
-                  name: `${this.uploadFileTitle}${fileExtension}`,
+                  name: `${this.uploadFileTitle}.${fileExtension}`,
                   type: this.activeFileType,
                 }).then(() => {
                   this.uploadFileTitle = ''
