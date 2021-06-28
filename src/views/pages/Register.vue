@@ -484,19 +484,31 @@
                         </v-card-flex>
                       </v-col>
                       <v-col>
-                        <v-avatar
-                          size="150"
+                        <input
+                          ref="file"
+                          class="d-none"
+                          type="file"
+                          @change="onChange"
                         >
-                          <img
-                            src="@/assets/avatars/1.png"
+                        <div slot="activator">
+                          <v-avatar
+                            size="150px"
+                            class="grey lighten-3 mb-3"
                           >
-                        </v-avatar>
+                            <v-img
+                              v-if="image"
+                              :src="image"
+                              height="100%"
+                              width="100%"
+                            />
+                          </v-avatar>
+                        </div>
                         <v-btn
                           class="btn1 mt-3 mx-4"
                           color="grey darken-2"
                           width="150px"
                           height="35px"
-                          @click="uploadImage"
+                          @click="$refs.file.click()"
                         >
                           Upload an image
                         </v-btn>
@@ -547,7 +559,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
   import Vue from 'vue'
   export default Vue.extend({
     name: 'PagesRegister',
@@ -555,9 +567,7 @@
     data: () => ({
       steps: 4,
       e1: 1,
-      avatar: null,
-      saving: false,
-      saved: false,
+      image: null,
     }),
     watch: {
       steps (val) {
@@ -580,6 +590,14 @@
         } else {
           this.e1 = n - 1
         }
+      },
+      onChange (val) {
+        console.log(val)
+        const value = val.target.files[0]
+
+        if (!value) return (this.image = null)
+
+        this.image = URL.createObjectURL(value)
       },
     },
   })
