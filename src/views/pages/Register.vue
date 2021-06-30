@@ -30,7 +30,7 @@
               alt-labels
               class="elevation-0"
             >
-              <v-stepper-header>
+              <v-stepper-header class="mb-3">
                 <v-stepper-step
                   :complete="e1 > 1"
                   step="1"
