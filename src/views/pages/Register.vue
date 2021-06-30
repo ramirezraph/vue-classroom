@@ -501,12 +501,11 @@
   background: rgb(41, 57, 209);
   position: absolute;
   width: 20%;
-  max-height: 550px;
-  height: 550px;
-  left: 100px;
+  height: 90%;
+  left: 7rem;
   top: 0px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
 .vcard2{
