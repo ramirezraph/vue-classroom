@@ -159,6 +159,9 @@
                           :disabled="invalid || !agreeTermsCondition"
                           @click="registerEmailPassword()"
                         >
+                          <v-icon left>
+                            mdi-pencil-outline
+                          </v-icon>
                           Register
                         </v-btn>
 
@@ -166,6 +169,9 @@
                           text
                           @click="dialogConfirmCancel = true"
                         >
+                          <v-icon left>
+                            mdi-cancel
+                          </v-icon>
                           Cancel
                         </v-btn>
                       </v-row>
@@ -195,7 +201,7 @@
                           </span>
                           <a
                             href="#"
-                            class="blue--text text--lighten-3 text-decoration-none"
+                            class="accent--text text--lighten-3 text-decoration-none"
                           >Resend verification code</a>
                         </div>
                         <v-text-field
@@ -207,19 +213,28 @@
                         />
                       </v-card-text>
                     </v-card>
-                    <v-row class="flex">
-                      <v-btn
-                        color="primary"
-                        @click="stepper = 3"
-                      >
-                        Verify and Continue
-                      </v-btn>
-
+                    <v-row class="flex ma-0 pa-0">
                       <v-btn
                         text
+                        class="ma-0 pa-0"
+                        min-width="175"
                         @click="stepper = 1"
                       >
+                        <v-icon left>
+                          mdi-arrow-left
+                        </v-icon>
                         Back
+                      </v-btn>
+                      <v-btn
+                        class="ma-0 pa-0 ml-auto"
+                        color="primary"
+                        min-width="200"
+                        @click="stepper = 3"
+                      >
+                        <v-icon left>
+                          mdi-checkbox-marked-circle-outline
+                        </v-icon>
+                        Verify and continue
                       </v-btn>
                     </v-row>
                   </v-stepper-content>
@@ -369,19 +384,28 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-row class="flex">
+                    <v-row class="flex ma-0 pa-0">
                       <v-btn
+                        text
+                        class="ma-0 pa-0"
+                        min-width="175"
+                        @click="stepper = 2"
+                      >
+                        <v-icon left>
+                          mdi-arrow-left
+                        </v-icon>
+                        Back
+                      </v-btn>
+                      <v-btn
+                        class="ma-0 pa-0 ml-auto"
                         color="primary"
                         min-width="200"
                         @click="stepper = 4"
                       >
+                        <v-icon left>
+                          mdi-format-list-checks
+                        </v-icon>
                         Continue
-                      </v-btn>
-                      <v-btn
-                        text
-                        @click="stepper = 2"
-                      >
-                        Back
                       </v-btn>
                     </v-row>
                   </v-stepper-content>
@@ -418,7 +442,7 @@
                           </div>
                         </v-col>
                         <v-col>
-                          <div class="text-center mt-3">
+                          <div class="text-center">
                             <input
                               ref="file"
                               class="d-none"
@@ -440,21 +464,23 @@
                               </v-avatar>
                             </div>
                             <v-btn
-                              class="btn1 mt-3 mx-4"
+                              class="mt-3 ma-auto text-none subtitle-1"
                               color="grey darken-2"
-                              width="150px"
-                              height="35px"
                               @click="$refs.file.click()"
                             >
-                              Upload an image
+                              <v-icon
+                                left
+                              >
+                                mdi-plus
+                              </v-icon>
+                              Upload Photo
                             </v-btn>
 
                             <v-btn
-                              class="btn1"
+                              class="mt-2 text-none subtitle-1"
                               text
+                              min-width="167.83"
                               dark
-                              width="150px"
-                              height="35px"
                               @click="removeSelected()"
                             >
                               Remove
@@ -463,19 +489,28 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-row class="flex">
+                    <v-row class="flex ma-0 pa-0">
                       <v-btn
+                        text
+                        class="ma-0 pa-0"
+                        min-width="175"
+                        @click="stepper = 3"
+                      >
+                        <v-icon left>
+                          mdi-arrow-left
+                        </v-icon>
+                        Back
+                      </v-btn>
+                      <v-btn
+                        class="ma-0 pa-0 ml-auto"
                         color="primary"
                         min-width="200"
                         @click="stepper = 4"
                       >
+                        <v-icon left>
+                          mdi-flag-outline
+                        </v-icon>
                         Finish
-                      </v-btn>
-                      <v-btn
-                        text
-                        @click="stepper = 3"
-                      >
-                        Back
                       </v-btn>
                     </v-row>
                   </v-stepper-content>

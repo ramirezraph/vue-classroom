@@ -32,7 +32,7 @@
             large
             rounded
             width="200"
-            class="secondary white--text mt-12"
+            class="accent white--text mt-12"
             to="pages/login"
           >
             Get Started
