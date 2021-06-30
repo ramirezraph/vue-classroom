@@ -5,7 +5,7 @@
     tag="section"
   >
     <v-card
-      class="vcard1"
+      class="vcard1 ma-0"
       light
       width="100%"
       min-height="650"
@@ -71,6 +71,7 @@
                   <v-card
                     class="py-3 px-6"
                     color="grey"
+                    min-height="300"
                   >
                     <v-card-text>
                       <v-text-field
@@ -134,8 +135,7 @@
                   <v-card
                     class="py-3 px-6 pb-6"
                     color="grey"
-                    min-height="260px"
-                    min-width="550px"
+                    min-height="300"
                   >
                     <v-card-text class="pa-3">
                       <div class="text-start py-6">
@@ -509,7 +509,7 @@
 }
 
 .vcard2{
-  left: 100px;
+  left: 12.5%;
 }
 
 .v-stepper__header{
