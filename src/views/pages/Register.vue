@@ -65,7 +65,7 @@
                   :complete="e1 > 4"
                   step="4"
                 >
-                  Information
+                  Avatar
                 </v-stepper-step>
               </v-stepper-header>
 
@@ -286,13 +286,48 @@
                         class="px-10"
                         md="6"
                       >
-                        <v-text-field
-                          label="Birthdate"
-                          persistent-hint
-                          append-icon="mdi-calendar"
-                          readonly
-                          dark
-                        />
+                        <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          :return-value.sync="date"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template #activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="date"
+                              label="Birthdate"
+                              append-icon="mdi-calendar"
+                              dark
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                            />
+                          </template>
+                          <v-date-picker
+                            v-model="date"
+                            no-title
+                            scrollable
+                          >
+                            <v-spacer />
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="menu = false"
+                            >
+                              Cancel
+                            </v-btn>
+                            <v-btn
+                              text
+                              color="primary"
+                              @click="$refs.menu.save(date)"
+                            >
+                              OK
+                            </v-btn>
+                          </v-date-picker>
+                        </v-menu>
                       </v-col>
                     </v-row>
 
@@ -567,6 +602,8 @@
     data: () => ({
       steps: 4,
       e1: 1,
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      menu: false,
       image: null,
     }),
     watch: {
