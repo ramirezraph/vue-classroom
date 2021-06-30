@@ -39,25 +39,27 @@
 
       <v-spacer />
 
-      <v-btn
-        v-for="(item, i) in items"
-        :key="i"
-        :to="item.to"
-        min-height="48"
-        min-width="40"
-        text
-      >
-        <v-icon
-          :left="$vuetify.breakpoint.mdAndUp"
-          size="20"
-          v-text="item.icon"
-        />
+      <div class="mr-3">
+        <v-btn
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.to"
+          min-height="48"
+          min-width="40"
+          text
+        >
+          <v-icon
+            :left="$vuetify.breakpoint.mdAndUp"
+            size="20"
+            v-text="item.icon"
+          />
 
-        <span
-          class="hidden-sm-and-down ml-1"
-          v-text="item.text"
-        />
-      </v-btn>
+          <span
+            class="hidden-sm-and-down ml-1"
+            v-text="item.text"
+          />
+        </v-btn>
+      </div>
       <v-btn
         to="/pages/login"
         min-height="48"
