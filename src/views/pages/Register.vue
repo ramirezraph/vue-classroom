@@ -69,67 +69,107 @@
 
                 <v-stepper-items>
                   <v-stepper-content step="1">
-                    <v-card
-                      class="py-3 px-6"
-                      color="grey"
-                      min-height="300"
+                    <validation-observer
+                      ref="observer"
+                      v-slot="{ invalid }"
                     >
-                      <v-card-text>
-                        <v-text-field
-                          label="Email"
-                          prepend-icon="mdi-email-outline"
-                          dark
-                          color="white"
-                        />
-                        <v-text-field
-                          class="mt-0"
-                          label="Password"
-                          prepend-icon="mdi-lock-outline"
-                          dark
-                          color="white"
-                        />
-                        <v-text-field
-                          class="mt-0"
-                          label="Confirm Password"
-                          prepend-icon="mdi-lock-outline"
-                          dark
-                          color="white"
-                        />
-                        <v-checkbox
-                          class="mt-0"
-                          dark
-                          color="primary"
-                        >
-                          <template #label>
-                            <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
-                            <a
-                              class="white--text ml-1"
-                              href="#"
+                      <v-card
+                        class="py-3 px-6"
+                        color="grey"
+                        min-height="300"
+                      >
+                        <v-card-text>
+                          <v-form @submit.prevent="">
+                            <validation-provider
+                              v-slot="{ errors }"
+                              name="Email"
+                              rules="registerPassword_required|email"
                             >
-                              Terms and Conditions
-                            </a>
-                          </template>
-                        </v-checkbox>
-                      </v-card-text>
-                    </v-card>
-                    <v-row
-                      class="flex"
-                    >
-                      <v-btn
-                        min-width="200"
-                        class="primary"
-                        @click="registerEmailPassword()"
-                      >
-                        Register
-                      </v-btn>
+                              <v-text-field
+                                v-model="input_email"
+                                label="Email"
+                                prepend-icon="mdi-email-outline"
+                                dark
+                                color="white"
+                                :error-messages="errors"
+                              />
+                            </validation-provider>
 
-                      <v-btn
-                        text
-                        @click="dialogConfirmCancel = true"
+                            <validation-provider
+                              v-slot="{ errors }"
+                              name="Password"
+                              rules="registerPassword_required|registerPassword_min:8"
+                            >
+                              <v-text-field
+                                v-model="input_password"
+                                label="Password"
+                                prepend-icon="mdi-lock-outline"
+                                :error-messages="errors"
+                                :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                                :type="showPassword ? 'text' : 'password'"
+                                dark
+                                color="white"
+                                @click:append="showPassword = !showPassword"
+                              />
+                            </validation-provider>
+                            <validation-provider
+                              v-slot="{ errors }"
+                              name="Confirm Password"
+                              rules="registerPassword_required|registerPassword_min:8"
+                            >
+                              <v-text-field
+                                v-model="input_confirmPassword"
+                                prepend-icon="mdi-lock-outline"
+                                label="Confirm Password"
+                                :error-messages="errors"
+                                :append-icon="showConfirmPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                                :type="showConfirmPassword ? 'text' : 'password'"
+                                dark
+                                color="white"
+                                @click:append="showConfirmPassword = !showConfirmPassword"
+                              />
+                            </validation-provider>
+
+                            <v-checkbox
+                              v-model="agreeTermsCondition"
+                              class="mt-6"
+                              dark
+                              color="primary"
+                              type="checkbox"
+                            >
+                              <template #label>
+                                <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
+                                <a
+                                  class="white--text ml-1"
+                                  href="#"
+                                >
+                                  Terms and Conditions
+                                </a>
+                              </template>
+                            </v-checkbox>
+                          </v-form>
+                        </v-card-text>
+                      </v-card>
+                      <v-row
+                        class="flex"
                       >
-                        Cancel
-                      </v-btn>
-                    </v-row>
+                        <v-btn
+                          min-width="200"
+                          class="primary"
+                          :disabled="invalid || !agreeTermsCondition"
+                          @click="registerEmailPassword()"
+                        >
+                          Register
+                        </v-btn>
+
+                        <v-btn
+                          text
+                          @click="dialogConfirmCancel = true"
+                        >
+                          Cancel
+                        </v-btn>
+                      </v-row>
+                    </validation-observer>
                   </v-stepper-content>
 
                   <v-stepper-content step="2">
@@ -446,6 +486,13 @@
         </v-row>
       </v-card>
     </v-slide-y-transition>
+
+    <classic-dialog
+      :v-model="classicDialog"
+      :title="classicDialogTitle"
+      :text="classicDialogText"
+      @close="classicDialog = false"
+    />
     <confirm-dialog
       :model="dialogConfirmCancel"
       title="Cancel Registration"
@@ -456,12 +503,26 @@
 </template>
 
 <script lang="ts">
-
+  import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
+  import { min, required } from 'vee-validate/dist/rules'
   import Vue from 'vue'
+
+  extend('registerPassword_required', {
+    ...required,
+    message: '{_field_} is required.',
+  })
+
+  extend('registerPassword_min', {
+    ...min,
+    message: '{_field_} too short.',
+  })
 
   export default Vue.extend({
     name: 'PagesRegister',
-    components: {},
+    components: {
+      ValidationObserver,
+      ValidationProvider,
+    },
     data () {
       return {
         steps: 4,
@@ -485,6 +546,18 @@
         ],
 
         dialogConfirmCancel: false,
+
+        classicDialog: false,
+        classicDialogTitle: '',
+        classicDialogText: '',
+
+        input_email: '',
+        input_password: '',
+        input_confirmPassword: '',
+        agreeTermsCondition: false,
+
+        showPassword: false,
+        showConfirmPassword: false,
       }
     },
     computed: {
@@ -524,7 +597,6 @@
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onImageUpload (val: any) {
-        console.log(val)
         const value = val.target.files[0]
 
         if (!value) return (this.selectedImage = '')
@@ -543,6 +615,21 @@
         this.avatarClass = 'grey lighten-2'
       },
       registerEmailPassword (): void {
+        if (!this.agreeTermsCondition) {
+          console.log('you didn\'t agree')
+          return
+        }
+
+        if (this.input_password !== this.input_confirmPassword) {
+          this.classicDialogTitle = 'Register Failed'
+          this.classicDialogText = 'Password do not match.'
+          this.classicDialog = true
+          return
+        }
+
+        // register auth
+
+        // success
         this.stepper = 2
       },
       cancelRegistration (response: boolean): void {
