@@ -27,13 +27,13 @@
                 </h1>
               </div>
               <v-stepper
-                v-model="e1"
+                v-model="stepper"
                 alt-labels
                 class="elevation-0"
               >
                 <v-stepper-header class="mb-3">
                   <v-stepper-step
-                    :complete="e1 > 1"
+                    :complete="stepper > 1"
                     step="1"
                   >
                     Register
@@ -42,7 +42,7 @@
                   <v-divider />
 
                   <v-stepper-step
-                    :complete="e1 > 2"
+                    :complete="stepper > 2"
                     step="2"
                   >
                     Confirmation
@@ -51,7 +51,7 @@
                   <v-divider />
 
                   <v-stepper-step
-                    :complete="e1 > 3"
+                    :complete="stepper > 3"
                     step="3"
                   >
                     Information
@@ -60,7 +60,7 @@
                   <v-divider />
 
                   <v-stepper-step
-                    :complete="e1 > 4"
+                    :complete="stepper > 4"
                     step="4"
                   >
                     Avatar
@@ -98,7 +98,7 @@
                         <v-checkbox
                           class="mt-0"
                           dark
-                          color="secondary"
+                          color="primary"
                         >
                           <template #label>
                             <span class="white--text text-no-wrap">I agree to the&nbsp;</span>
@@ -118,14 +118,14 @@
                       <v-btn
                         min-width="200"
                         class="primary"
-                        @click="e1 = 2"
+                        @click="registerEmailPassword()"
                       >
-                        Continue
+                        Register
                       </v-btn>
 
                       <v-btn
                         text
-                        @click="e1 = 1"
+                        @click="dialogConfirmCancel = true"
                       >
                         Cancel
                       </v-btn>
@@ -170,16 +170,16 @@
                     <v-row class="flex">
                       <v-btn
                         color="primary"
-                        @click="e1 = 3"
+                        @click="stepper = 3"
                       >
                         Verify and Continue
                       </v-btn>
 
                       <v-btn
                         text
-                        @click="e1 = 1"
+                        @click="stepper = 1"
                       >
-                        Cancel
+                        Back
                       </v-btn>
                     </v-row>
                   </v-stepper-content>
@@ -333,15 +333,15 @@
                       <v-btn
                         color="primary"
                         min-width="200"
-                        @click="e1 = 4"
+                        @click="stepper = 4"
                       >
                         Continue
                       </v-btn>
                       <v-btn
                         text
-                        @click="e1 = 2"
+                        @click="stepper = 2"
                       >
-                        Cancel
+                        Back
                       </v-btn>
                     </v-row>
                   </v-stepper-content>
@@ -359,18 +359,19 @@
                         >
                           <div class="flex flex-wrap text-left">
                             <v-btn
-                              v-for="(item, index) in 9"
+                              v-for="(item, index) in avatarChoices"
                               :key="index"
                               icon
                               class="pa-2"
                               width="auto"
                               height="auto"
+                              @click="chooseAvatar(item)"
                             >
                               <v-avatar
                                 size="70"
                               >
                                 <img
-                                  src="@/assets/avatars/1.png"
+                                  :src="require(`@/assets/avatars/${item}`)"
                                 >
                               </v-avatar>
                             </v-btn>
@@ -382,16 +383,17 @@
                               ref="file"
                               class="d-none"
                               type="file"
-                              @change="onChange"
+                              @change="onImageUpload"
                             >
                             <div slot="activator">
                               <v-avatar
                                 size="150px"
-                                class="grey lighten-3 mb-3"
+                                class="mb-3"
+                                :class="avatarClass"
                               >
                                 <v-img
-                                  v-if="image"
-                                  :src="image"
+                                  v-if="true"
+                                  :src="visibleAvatar"
                                   height="100%"
                                   width="100%"
                                 />
@@ -413,6 +415,7 @@
                               dark
                               width="150px"
                               height="35px"
+                              @click="removeSelected()"
                             >
                               Remove
                             </v-btn>
@@ -424,15 +427,15 @@
                       <v-btn
                         color="primary"
                         min-width="200"
-                        @click="e1 = 4"
+                        @click="stepper = 4"
                       >
                         Finish
                       </v-btn>
                       <v-btn
                         text
-                        @click="e1 = 3"
+                        @click="stepper = 3"
                       >
-                        Cancel
+                        Back
                       </v-btn>
                     </v-row>
                   </v-stepper-content>
@@ -443,50 +446,111 @@
         </v-row>
       </v-card>
     </v-slide-y-transition>
+    <confirm-dialog
+      :model="dialogConfirmCancel"
+      title="Cancel Registration"
+      text="Are you sure you want to cancel?"
+      @goto-response="cancelRegistration"
+    />
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
+
   import Vue from 'vue'
+
   export default Vue.extend({
     name: 'PagesRegister',
     components: {},
-    data: () => ({
-      steps: 4,
-      e1: 1,
-      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      menu: false,
-      image: null,
-    }),
+    data () {
+      return {
+        steps: 4,
+        stepper: 1,
+        date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        menu: false,
+        selectedImage: '',
+        selectedAvatar: '',
+        avatarClass: 'grey lighten-2',
+
+        avatarChoices: [
+          'male-1.png',
+          'male-2.png',
+          'male-3.png',
+          'male-4.png',
+          'male-5.png',
+          'female-1.png',
+          'female-2.png',
+          'female-3.png',
+          'female-4.png',
+        ],
+
+        dialogConfirmCancel: false,
+      }
+    },
+    computed: {
+      visibleAvatar (): string {
+        if (this.selectedImage) {
+          return this.selectedImage
+        }
+
+        if (this.selectedAvatar && this.selectedImage === '') {
+          return require('@/assets/avatars/' + this.selectedAvatar)
+        }
+
+        return ''
+      },
+    },
     watch: {
       steps (val) {
-        if (this.e1 > val) {
-          this.e1 = val
+        if (this.stepper > val) {
+          this.stepper = val
         }
       },
     },
     methods: {
       nextStep (n) {
         if (n === this.steps) {
-          this.e1 = 1
+          this.stepper = 1
         } else {
-          this.e1 = n + 1
+          this.stepper = n + 1
         }
       },
       previousStep (n) {
         if (n === this.steps) {
-          this.e1 = 1
+          this.stepper = 1
         } else {
-          this.e1 = n - 1
+          this.stepper = n - 1
         }
       },
-      onChange (val) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onImageUpload (val: any) {
         console.log(val)
         const value = val.target.files[0]
 
-        if (!value) return (this.image = null)
+        if (!value) return (this.selectedImage = '')
 
-        this.image = URL.createObjectURL(value)
+        this.avatarClass = 'grey lighten-2'
+        this.selectedImage = URL.createObjectURL(value)
+      },
+      chooseAvatar (item: string): void {
+        this.avatarClass = 'transparent'
+        this.selectedImage = ''
+        this.selectedAvatar = item
+      },
+      removeSelected (): void {
+        this.selectedImage = ''
+        this.selectedAvatar = ''
+        this.avatarClass = 'grey lighten-2'
+      },
+      registerEmailPassword (): void {
+        this.stepper = 2
+      },
+      cancelRegistration (response: boolean): void {
+        if (response) {
+          this.$router.replace('/pages')
+        } else {
+          this.dialogConfirmCancel = false
+        }
       },
     },
   })

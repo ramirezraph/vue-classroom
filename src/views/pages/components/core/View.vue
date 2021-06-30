@@ -53,7 +53,7 @@
       srcs: {
         '/pages/services': 'lock.jpg',
         '/pages/support': 'pricing.jpg',
-        '/pages/register': 'register.jpg',
+        '/pages/register': 'bg-school-building.jpg',
         '/pages/login': 'bg-classroom.jpg',
       },
     }),
