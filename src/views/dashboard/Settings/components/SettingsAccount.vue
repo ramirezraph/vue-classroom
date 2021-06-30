@@ -660,6 +660,7 @@
     },
     watch: {
       menuBirthdate (val) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         val && setTimeout(() => ((this.$refs.picker as any).activePicker = 'YEAR'))
       },
     },
@@ -679,6 +680,7 @@
     },
     methods: {
       saveBirthdate (date): void {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this.$refs.menuBirthdate as any).save(date)
       },
       onImageSelect () {
