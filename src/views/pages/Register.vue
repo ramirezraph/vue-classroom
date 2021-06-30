@@ -293,8 +293,8 @@
                             </template>
                             <v-date-picker
                               v-model="date"
-                              no-title
-                              scrollable
+                              :max="new Date().toISOString().substr(0, 10)"
+                              min="1950-01-01"
                             >
                               <v-spacer />
                               <v-btn
