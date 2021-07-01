@@ -248,6 +248,7 @@ export default Vue.extend({
         let fetchPeople: User[] = []
         await classesCollection.doc(this.id).collection('people')
           .onSnapshot(snapshot => {
+            console.log('runs!')
             fetchPeople = []
             snapshot.forEach(doc => {
               if (doc.exists) {

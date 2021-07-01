@@ -30,14 +30,23 @@ export default {
     }
   },
   actions: {
-     fetchClasses ({ commit }, payload: User): void {
+     fetchClasses ({ commit, rootGetters, dispatch }, payload: User): void {
        if (payload) {
-         classesCollection.where('userList', 'array-contains', payload.id)
+
+        let classes: Class[] = []
+
+        const snapshot = rootGetters['snapshots/getClassesSnapshot']
+
+        if (snapshot) {
+          console.log('detaching classes')
+          snapshot(); // detach a listener
+        }
+
+        const unsubscribe = classesCollection.where('userList', 'array-contains', payload.id)
            .onSnapshot(snapshot => {
-             const classes: Class[] = []
+             classes = []
              snapshot.forEach(doc => {
                if (doc.exists) {
-
                 usersCollection.doc(doc.data().ownerId).get().then(userDoc => {
                   if (userDoc.exists) {
                     const teacherName = getFullName(userDoc.data()?.firstName, userDoc.data()?.middleName, userDoc.data()?.lastName)
@@ -58,9 +67,9 @@ export default {
                 })
                }
              })
-
-             commit('SET_CLASSES', classes)
+            commit('SET_CLASSES', classes)
            })
+           dispatch('snapshots/setClassesSnapshot', unsubscribe, { root: true })
        }
     },
     fetchMeetings ({ commit, state }, payload: { currentUser: User }) {
