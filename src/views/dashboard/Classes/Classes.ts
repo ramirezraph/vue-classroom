@@ -37,6 +37,9 @@ export default Vue.extend({
     classes (): Class[] {
       return this.$store.getters['classes/classes']
     },
+    currentUser (): User {
+      return this.$store.getters['user/getCurrentUser']
+    },
   },
   methods: {
     submitJoinClass (): void {
@@ -55,19 +58,23 @@ export default Vue.extend({
         this.loadingBtnJoinClass = false
         return
       }
+
+      // find class
       const data = classesCollection.where('inviteCode', '==', this.join_classCode).get()
         data.then(snapshot => {
           let foundIt = false
           snapshot.forEach(foundClass => {
             foundIt = true
-            const currentUser: User = this.$store.getters['user/getCurrentUser']
+
+            // add to people collection
             classesCollection.doc(foundClass.id).collection('people')
-              .doc(currentUser.id)
+              .doc(this.currentUser.id)
               .set({
                 type: 'Student',
               }).then(() => {
+                // add to userList array
                 classesCollection.doc(foundClass.id).update({
-                  userList: firebase.firestore.FieldValue.arrayUnion(currentUser.id),
+                  userList: firebase.firestore.FieldValue.arrayUnion(this.currentUser.id),
                 }).then(() => {
                   this.join_classCode = ''
                   this.joinClassCardVisible = false
@@ -79,14 +86,14 @@ export default Vue.extend({
                   })
                 })
               }).catch(error => {
-              this.join_classCode = ''
-              this.joinClassCardVisible = false
-              this.$notify({
-                group: 'appWideNotification',
-                title: 'Join Class Failed.',
-                text: error.message,
-                type: 'error',
-              })
+                this.join_classCode = ''
+                this.joinClassCardVisible = false
+                this.$notify({
+                  group: 'appWideNotification',
+                  title: 'Join Class Failed.',
+                  text: error.message,
+                  type: 'error',
+                })
               })
           })
 

@@ -2,7 +2,6 @@ import { Unit } from './Unit'
 
 export class Class {
     // list of user id's
-    public userList?: string[] = []
     public units?: Unit[] = []
 
   // eslint-disable-next-line no-useless-constructor

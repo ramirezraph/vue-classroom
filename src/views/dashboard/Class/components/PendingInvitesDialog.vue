@@ -149,26 +149,29 @@
         // remove from pending invites list
         classesCollection.doc(this.activeClass.id).update({
           pendingInvites: firebase.firestore.FieldValue.arrayRemove(user.id),
-        }).catch(error => {
-          this.$notify({
-            group: 'appWideNotification',
-            title: 'Failed',
-            text: error.message,
-            type: 'error',
-          })
-        })
-
-        // remove notification
-        notificationsCollection.doc(user.id).collection('items').where('classId', '==', this.activeClass.id).get()
-          .then(snapshot => {
-            snapshot.forEach(doc => {
-              if (doc.exists) {
-                notificationsCollection.doc(user.id).collection('items').doc(doc.id).delete().then(() => {
-                  this.pendingInvites.splice(index, 1)
-                })
-              }
+        }).then(() => {
+          // remove notification
+          notificationsCollection.doc(user.id).collection('items').where('classId', '==', this.activeClass.id).where('type', '==', 'ClassInvite')
+            .get()
+            .then(snapshot => {
+              snapshot.forEach(doc => {
+                if (doc.exists) {
+                  notificationsCollection.doc(user.id).collection('items').doc(doc.id).delete().then(() => {
+                    console.log(index)
+                    this.pendingInvites.splice(index, 1)
+                  })
+                }
+              })
+            }).catch(error => {
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Failed',
+                text: error.message,
+                type: 'error',
+              })
             })
-          }).catch(error => {
+        })
+          .catch(error => {
             this.$notify({
               group: 'appWideNotification',
               title: 'Failed',
