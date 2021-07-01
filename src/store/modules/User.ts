@@ -76,7 +76,8 @@ export default {
           })
       })
     },
-    userSignOut ({ commit }) {
+    userSignOut ({ commit, dispatch }) {
+      dispatch('classes/clearClasses', null, { root:true })
       commit('SET_CURRENT_USER', null)
     },
     userSignUpEmailAndPassword ({ commit }, payload: { email: string, password: string }) {

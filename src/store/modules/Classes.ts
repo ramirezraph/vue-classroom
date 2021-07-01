@@ -27,50 +27,57 @@ export default {
     },
     FETCH_ALL_MEETINGS (state, payload: { meetings: Meeting[] }) {
       state.meetings = payload.meetings
-    }
+    },
+    CLEAR_CLASSES (state) {
+      state.classes = []
+    },
   },
   actions: {
-     fetchClasses ({ commit, rootGetters, dispatch }, payload: User): void {
-       if (payload) {
+      clearClasses ({ commit }) {
+        console.log('clear classes');
+        commit('CLEAR_CLASSES')
+      },
+      fetchClasses ({ commit, rootGetters, dispatch }, payload: User): void {
+        if (payload) {
 
-        let classes: Class[] = []
+          let classes: Class[] = []
 
-        const snapshot = rootGetters['snapshots/getClassesSnapshot']
+          const snapshot = rootGetters['snapshots/getClassesSnapshot']
 
-        if (snapshot) {
-          console.log('detaching classes')
-          snapshot(); // detach a listener
+          if (snapshot) {
+            console.log('detaching classes')
+            snapshot(); // detach a listener
+          }
+
+          const unsubscribe = classesCollection.where('userList', 'array-contains', payload.id)
+            .onSnapshot(snapshot => {
+              classes = []
+              snapshot.forEach(doc => {
+                if (doc.exists) {
+                  usersCollection.doc(doc.data().ownerId).get().then(userDoc => {
+                    if (userDoc.exists) {
+                      const teacherName = getFullName(userDoc.data()?.firstName, userDoc.data()?.middleName, userDoc.data()?.lastName)
+
+                      const generatedClass = new Class(
+                        doc.id,
+                        doc.data().title,
+                        doc.data().description,
+                        doc.data().code,
+                        teacherName,
+                        doc.data().imageSource,
+                        doc.data().color,
+                        doc.data().ownerId,
+                        doc.data().inviteCode,
+                      )
+                      classes.push(generatedClass)
+                    }
+                  })
+                }
+              })
+                commit('SET_CLASSES', classes)
+            })
+            dispatch('snapshots/setClassesSnapshot', unsubscribe, { root: true })
         }
-
-        const unsubscribe = classesCollection.where('userList', 'array-contains', payload.id)
-           .onSnapshot(snapshot => {
-             classes = []
-             snapshot.forEach(doc => {
-               if (doc.exists) {
-                usersCollection.doc(doc.data().ownerId).get().then(userDoc => {
-                  if (userDoc.exists) {
-                    const teacherName = getFullName(userDoc.data()?.firstName, userDoc.data()?.middleName, userDoc.data()?.lastName)
-
-                    const generatedClass = new Class(
-                      doc.id,
-                      doc.data().title,
-                      doc.data().description,
-                      doc.data().code,
-                      teacherName,
-                      doc.data().imageSource,
-                      doc.data().color,
-                      doc.data().ownerId,
-                      doc.data().inviteCode,
-                    )
-                    classes.push(generatedClass)
-                  }
-                })
-               }
-             })
-              commit('SET_CLASSES', classes)
-           })
-           dispatch('snapshots/setClassesSnapshot', unsubscribe, { root: true })
-       }
     },
     // All meetings
     fetchAllMeetings ({ commit, state, rootGetters, dispatch }, payload: { currentUser: User }) {
