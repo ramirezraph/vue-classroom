@@ -7,6 +7,7 @@ import ClassPeople from './components/ClassPeople.vue'
 import ClassClasswork from './components/ClassClasswork.vue'
 import ClassLiveLecture from './components/ClassLiveLecture.vue'
 import AccordionUnitItem from './components/AccordionUnitItem.vue'
+import ClassSettingsGeneral from './components/ClassSettingsGeneral.vue'
 import { Unit } from '@/model/Unit'
 import { Post } from '@/model/Post'
 import { classesCollection, lecturesCollection, usersCollection } from '@/fb'
@@ -50,6 +51,7 @@ export default Vue.extend({
     ValidationObserver,
     ViewContent,
     CreateClassDialog,
+    ClassSettingsGeneral,
   },
   props: {
     id: { // from router params
@@ -90,6 +92,10 @@ export default Vue.extend({
       dialogEditClass: false,
       destroyClassDialog: false,
       selectedClassTeacher: {} as User,
+
+      // class settings
+      dialogGeneralClassSettings: false,
+      destroyGeneralClassSettingsDialog: false,
     }
   },
   computed: {
@@ -388,6 +394,17 @@ export default Vue.extend({
       this.$store.dispatch('class/setActiveClass', { classId: this.id })
       setTimeout(() => {
         this.destroyClassDialog = true
+      }, 1000)
+    },
+    openGeneralClassSettings (): void {
+      this.dialogGeneralClassSettings = true
+      this.destroyGeneralClassSettingsDialog = false
+    },
+    closeGeneralClassSettings (): void {
+      this.dialogGeneralClassSettings = false
+      this.$store.dispatch('class/setActiveClass', { classId: this.id })
+      setTimeout(() => {
+        this.destroyGeneralClassSettingsDialog = true
       }, 1000)
     },
     getSelectedClassOwner (ownerId: string): User {
