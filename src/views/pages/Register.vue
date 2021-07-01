@@ -88,6 +88,7 @@
                               <v-text-field
                                 v-model="input_email"
                                 label="Email"
+                                type="email"
                                 prepend-icon="mdi-email-outline"
                                 dark
                                 color="white"
@@ -157,6 +158,7 @@
                             class="primary"
                             :disabled="invalid || !agreeTermsCondition"
                             type="submit"
+                            :loading="loadingRegisterEmailPassword"
                           >
                             <v-icon left>
                               mdi-pencil-outline
@@ -501,6 +503,7 @@
                             color="primary"
                             min-width="200"
                             :disabled="invalid"
+                            :loading="loadingRegisterInformation"
                             type="submit"
                           >
                             <v-icon left>
@@ -609,6 +612,7 @@
                         color="primary"
                         min-width="200"
                         :disabled="!enableFinish"
+                        :loading="loadingRegisterFinish"
                         @click="finishRegistration()"
                       >
                         <v-icon left>
@@ -642,6 +646,7 @@
 </template>
 
 <script lang="ts">
+  import { firebaseAuth, usersCollection } from '@/fb'
   import { extend, ValidationObserver, ValidationProvider } from 'vee-validate'
   import { min, required } from 'vee-validate/dist/rules'
   import Vue from 'vue'
@@ -671,6 +676,10 @@
         classicDialog: false,
         classicDialogTitle: '',
         classicDialogText: '',
+
+        loadingRegisterEmailPassword: false,
+        loadingRegisterInformation: false,
+        loadingRegisterFinish: false,
 
         // Register
 
@@ -705,6 +714,7 @@
         // Avatar
         selectedImage: '',
         selectedAvatar: '',
+        image: null,
         avatarClass: 'grey lighten-2',
 
         avatarChoices: [
@@ -755,6 +765,7 @@
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onImageUpload (val: any) {
         const value = val.target.files[0]
+        this.image = value
 
         if (!value) return (this.selectedImage = '')
 
@@ -764,30 +775,80 @@
       chooseAvatar (item: string): void {
         this.avatarClass = 'transparent'
         this.selectedImage = ''
+        this.image = null
         this.selectedAvatar = item
       },
       removeSelected (): void {
         this.selectedImage = ''
         this.selectedAvatar = ''
+        this.image = null
         this.avatarClass = 'grey lighten-2'
       },
-      registerEmailPassword (): void {
-        if (!this.agreeTermsCondition) {
-          console.log('you didn\'t agree')
-          return
-        }
+      async registerEmailPassword () {
+        this.loadingRegisterEmailPassword = true
 
-        if (this.input_password !== this.input_confirmPassword) {
+        if (this.input_password.trim() !== this.input_confirmPassword.trim()) {
           this.classicDialogTitle = 'Register Failed'
           this.classicDialogText = 'Password do not match.'
           this.classicDialog = true
+          this.loadingRegisterEmailPassword = false
           return
         }
 
-        // register auth
+        if (!this.input_email.trim() || !this.input_confirmPassword.trim()) return
 
-        // success
-        this.stepper = 2
+        const email = this.input_email.trim()
+        const password = this.input_confirmPassword.trim()
+
+        // register auth
+        await this.$store.dispatch('user/userSignUpEmailAndPassword', {
+          email: email,
+          password: password,
+        }).then(() => {
+          // success
+          this.stepper = 2
+        }).catch((error) => {
+          this.checkIfUserIsAlreadyRegistering(email, password).then((isRegistering) => {
+            if (isRegistering) {
+              this.stepper = 2
+            } else {
+              this.classicDialogTitle = 'Register Failed'
+              this.classicDialogText = 'The email address is already in use by another account.'
+              this.classicDialog = true
+            }
+          }).catch(() => {
+            this.classicDialogTitle = 'Register Failed'
+            this.classicDialogText = error.message
+            this.classicDialog = true
+          })
+        }).finally(() => {
+          this.loadingRegisterEmailPassword = false
+        })
+      },
+      checkIfUserIsAlreadyRegistering (email: string, password: string) {
+        return new Promise<boolean>((resolve, reject) => {
+          usersCollection.where('email', '==', email).where('accountStatus', '==', 'registering').get()
+            .then(snapshot => {
+              if (snapshot.empty) {
+                resolve(false)
+              }
+              snapshot.forEach(doc => {
+                if (doc.exists) {
+                  // check if password is right
+                  this.$store.dispatch('user/userSignIn', { email: email, password: password }).then(() => {
+                    // success
+                    firebaseAuth.signOut()
+                    resolve(true)
+                  }).catch((err) => {
+                    reject(err)
+                  })
+                }
+              })
+            })
+            .catch(error => {
+              reject(error)
+            })
+        })
       },
       verifyEmail (code: string): void {
         console.log('verified', code)
@@ -796,10 +857,54 @@
         this.stepper = 3
       },
       submitInformation (): void {
-        this.stepper = 4
+        this.loadingRegisterInformation = true
+        this.$store.dispatch('user/userAddInformation', {
+          email: this.input_email,
+          firstName: this.input_firstName,
+          middleName: this.input_middleName,
+          lastName: this.input_lastName,
+          birthdate: this.date,
+          phoneNumber: this.input_phoneNumber,
+          homeAddress: this.input_homeAddress,
+          school: this.input_school,
+          course: this.input_course,
+          section: this.input_section,
+          studentNumber: this.input_studentNumber,
+        }).then(() => {
+          // success
+          this.stepper = 4
+        }).catch(error => {
+          this.classicDialogTitle = 'Setup Failed'
+          this.classicDialogText = error.message
+          this.classicDialog = true
+        }).finally(() => {
+          this.loadingRegisterInformation = false
+        })
       },
       finishRegistration (): void {
-        console.log('finish registration')
+        this.loadingRegisterFinish = true
+
+        this.$store.dispatch('user/userFinishRegister', {
+          email: this.input_email,
+          image: this.image,
+          avatar: this.selectedAvatar,
+        }).then(() => {
+          // success
+          this.$store.dispatch('user/userSignIn', { email: this.input_email, password: this.input_confirmPassword })
+            .then(() => {
+              this.$router.push('/')
+            }).catch((signInError) => {
+              this.classicDialogTitle = 'Register Failed'
+              this.classicDialogText = signInError.message
+              this.classicDialog = true
+            })
+        }).catch(error => {
+          this.classicDialogTitle = 'Setup Failed'
+          this.classicDialogText = error.message
+          this.classicDialog = true
+        }).finally(() => {
+          this.loadingRegisterFinish = false
+        })
       },
       cancelRegistration (response: boolean): void {
         if (response) {

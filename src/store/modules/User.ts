@@ -1,5 +1,5 @@
 import { User } from "@/model/User";
-import {firebaseAuth, notificationsCollection, usersCollection} from "@/fb";
+import {firebaseAuth, notificationsCollection, storageRef, usersCollection} from "@/fb";
 import firebase from "firebase";
 import UserCredential = firebase.auth.UserCredential;
 import { AssignmentNotification, ClassInviteNotification, ClassInviteResultNotification, RegularNotification, UserNotification } from "@/model/UserNotification";
@@ -54,6 +54,7 @@ export default {
              user.studentNumber = doc.data()?.studentNumber
              user.course = doc.data()?.course
              user.section = doc.data()?.section
+
              commit('SET_CURRENT_USER', user)
              dispatch('classes/fetchClasses', user, { root: true })
              setTimeout(() => {
@@ -78,30 +79,120 @@ export default {
     userSignOut ({ commit }) {
       commit('SET_CURRENT_USER', null)
     },
-    userRegister ({ commit }, payload: {
-      user: {
-        firstName: string,
-        middleName: string,
-        lastName: string,
-        email: string,
-        birthdate: string
-      }, password: string }) {
+    userSignUpEmailAndPassword ({ commit }, payload: { email: string, password: string }) {
       return new Promise<void>((resolve, reject) => {
-        firebaseAuth.createUserWithEmailAndPassword(payload.user.email, payload.password)
+        firebaseAuth.createUserWithEmailAndPassword(payload.email, payload.password)
           .then((userCredential: UserCredential) => {
             usersCollection.doc(userCredential.user?.uid)
               .set({
-                firstName: payload.user.firstName,
-                middleName: payload.user.middleName,
-                lastName: payload.user.lastName,
-                imgProfile: 'https://firebasestorage.googleapis.com/v0/b/lorem-classroom.appspot.com/o/users%2Fdefault_profile.jpg?alt=media&token=47adcd7a-be7b-4067-9d57-a0b173a91bd5',
-                email: payload.user.email,
-                birthdate: payload.user.birthdate,
+                email: payload.email,
+                accountStatus: 'registering'
               }).then(() => {
-              resolve()
-            })
+                firebaseAuth.signOut()
+                resolve()
+              }).catch(fireStoreError => {
+                console.log('this', fireStoreError);
+              })
           }).catch((error) => {
             reject(error)
+        })
+      })
+    },
+    userAddInformation ({ commit }, payload: {
+      email: string,
+      firstName: string,
+      middleName: string,
+      lastName: string,
+      birthdate: string,
+      phoneNumber: string,
+      homeAddress?: string,
+      school?: string,
+      course?: string,
+      section?: string,
+      studentNumber?: string,
+    }) {
+      return new Promise<void>((resolve, reject) => {
+        usersCollection.where('email', '==', payload.email).get().then(snapshot => {
+          snapshot.forEach(doc => {
+            if (doc.exists) {
+              doc.ref.set({
+                firstName: payload.firstName,
+                middleName: payload.middleName,
+                lastName: payload.lastName,
+                birthdate: payload.birthdate,
+                phoneNumber: payload.phoneNumber,
+                homeAddress: payload.homeAddress,
+                school: payload.school,
+                course: payload.course,
+                section: payload.section,
+                studentNumber: payload.studentNumber
+              }, { merge: true }).then(() => {
+                resolve()
+              }).catch(setError => {
+                reject(setError)
+              })
+            }
+          })
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    userFinishRegister ({ commit }, payload: {
+      email: string,
+      image: any,
+      avatar?: string,
+    }) {
+      return new Promise<void>((resolve, reject) => {
+
+        usersCollection.where('email', '==', payload.email).get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            if (doc.exists) {
+              if (payload.image) {
+                const profileStorageRef = storageRef.child('users').child(doc.id).child('profile')
+                profileStorageRef.put(payload.image).then(() => {
+                  profileStorageRef.getDownloadURL().then(url => {
+                    usersCollection.doc(doc.id).set({
+                      imgProfile: url,
+                    }, { merge: true }).then(() => {
+                      usersCollection.doc(doc.id).update({
+                        accountStatus: firebase.firestore.FieldValue.delete()
+                      }).then(() => {
+                        resolve()
+                      })
+                    })
+                  })
+                }).catch(profileStorageRefError => {
+                  reject(profileStorageRefError)
+                })
+              }
+
+              if (payload.avatar) {
+                console.log('user selected an avatar');
+
+                storageRef.storage.refFromURL(`gs://lorem-classroom.appspot.com/users/avatars/${payload.avatar}`).getDownloadURL()
+                .then(url => {
+                  usersCollection.doc(doc.id).set({
+                    imgProfile: url,
+                  }, { merge: true }).then(() => {
+                    usersCollection.doc(doc.id).update({
+                      accountStatus: firebase.firestore.FieldValue.delete()
+                    }).then(() => {
+                      resolve()
+                    })
+                  }).catch((usersCollectionError) => {
+                    reject(usersCollectionError)
+                  })
+                })
+                .catch(storageRefError => {
+                  reject(storageRefError)
+                })
+              }
+            }
+          })
+        }).catch(usersCollectionError => {
+          reject(usersCollectionError)
         })
       })
     },
