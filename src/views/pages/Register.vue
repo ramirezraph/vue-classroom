@@ -73,17 +73,17 @@
                       ref="observer"
                       v-slot="{ invalid }"
                     >
-                      <v-card
-                        class="py-3 px-6"
-                        color="grey"
-                        min-height="300"
-                      >
-                        <v-card-text>
-                          <v-form @submit.prevent="">
+                      <v-form @submit.prevent="registerEmailPassword()">
+                        <v-card
+                          class="py-3 px-6"
+                          color="grey"
+                          min-height="300"
+                        >
+                          <v-card-text>
                             <validation-provider
                               v-slot="{ errors }"
                               name="Email"
-                              rules="registerPassword_required|email"
+                              rules="register_required|email"
                             >
                               <v-text-field
                                 v-model="input_email"
@@ -98,7 +98,7 @@
                             <validation-provider
                               v-slot="{ errors }"
                               name="Password"
-                              rules="registerPassword_required|registerPassword_min:8"
+                              rules="register_required|registerPassword_min:8"
                             >
                               <v-text-field
                                 v-model="input_password"
@@ -115,7 +115,7 @@
                             <validation-provider
                               v-slot="{ errors }"
                               name="Confirm Password"
-                              rules="registerPassword_required|registerPassword_min:8"
+                              rules="register_required|registerPassword_min:8"
                             >
                               <v-text-field
                                 v-model="input_confirmPassword"
@@ -147,267 +147,370 @@
                                 </a>
                               </template>
                             </v-checkbox>
-                          </v-form>
-                        </v-card-text>
-                      </v-card>
-                      <v-row
-                        class="flex"
-                      >
-                        <v-btn
-                          min-width="200"
-                          class="primary"
-                          :disabled="invalid || !agreeTermsCondition"
-                          @click="registerEmailPassword()"
+                          </v-card-text>
+                        </v-card>
+                        <v-row
+                          class="flex"
                         >
-                          <v-icon left>
-                            mdi-pencil-outline
-                          </v-icon>
-                          Register
-                        </v-btn>
+                          <v-btn
+                            min-width="200"
+                            class="primary"
+                            :disabled="invalid || !agreeTermsCondition"
+                            type="submit"
+                          >
+                            <v-icon left>
+                              mdi-pencil-outline
+                            </v-icon>
+                            Register
+                          </v-btn>
 
-                        <v-btn
-                          text
-                          @click="dialogConfirmCancel = true"
-                        >
-                          <v-icon left>
-                            mdi-cancel
-                          </v-icon>
-                          Cancel
-                        </v-btn>
-                      </v-row>
+                          <v-btn
+                            text
+                            @click="dialogConfirmCancel = true"
+                          >
+                            <v-icon left>
+                              mdi-cancel
+                            </v-icon>
+                            Cancel
+                          </v-btn>
+                        </v-row>
+                      </v-form>
                     </validation-observer>
                   </v-stepper-content>
 
                   <v-stepper-content step="2">
-                    <v-card
-                      class="py-3 px-6 pb-6"
-                      color="grey"
-                      min-height="300"
+                    <validation-observer
+                      ref="observer"
+                      v-slot="{ invalid }"
                     >
-                      <v-card-text class="pa-3">
-                        <div class="text-start py-6">
-                          <h1 class="white--text display-2 small">
-                            Verify your email to continue signing up
-                          </h1>
-                        </div>
-                        <div class="text-start caption">
-                          <p class="white--text">
-                            Hello, World!
-                          </p>
-                          <span class="white--text small">
-                            To verify that you are the owner
-                            <span class="white--text small font-weight-bold">sample@gmail.com,</span>
-                            please check your email and enter the verification code that we just sent.&nbsp;
-                          </span>
-                          <a
-                            href="#"
-                            class="accent--text text--lighten-3 text-decoration-none"
-                          >Resend verification code</a>
-                        </div>
-                        <v-text-field
-                          color="white"
-                          label="Enter the code here"
-                          prepend-icon="mdi-email-outline"
-                          class="mt-6"
-                          dark
-                        />
-                      </v-card-text>
-                    </v-card>
-                    <v-row class="flex ma-0 pa-0">
-                      <v-btn
-                        text
-                        class="ma-0 pa-0"
-                        min-width="175"
-                        @click="stepper = 1"
-                      >
-                        <v-icon left>
-                          mdi-arrow-left
-                        </v-icon>
-                        Back
-                      </v-btn>
-                      <v-btn
-                        class="ma-0 pa-0 ml-auto"
-                        color="primary"
-                        min-width="200"
-                        @click="stepper = 3"
-                      >
-                        <v-icon left>
-                          mdi-checkbox-marked-circle-outline
-                        </v-icon>
-                        Verify and continue
-                      </v-btn>
-                    </v-row>
+                      <v-form @submit.prevent="verifyEmail(input_verificationCode)">
+                        <v-card
+                          class="py-3 px-6 pb-6"
+                          color="grey"
+                          min-height="300"
+                        >
+                          <v-card-text class="pa-3">
+                            <div class="text-start py-6">
+                              <h1 class="white--text display-2 small">
+                                Verify your email to continue signing up
+                              </h1>
+                            </div>
+                            <div class="text-start caption">
+                              <p class="white--text">
+                                Hello, World!
+                              </p>
+                              <span class="white--text small">
+                                To verify that you are the owner
+                                <span class="white--text small font-weight-bold">sample@gmail.com,</span>
+                                please check your email and enter the verification code that we just sent.&nbsp;
+                              </span>
+                              <a
+                                href="#"
+                                class="accent--text text--lighten-3 text-decoration-none"
+                              >Resend verification code</a>
+                            </div>
+                            <validation-provider
+                              v-slot="{ errors }"
+                              name="Verification Code"
+                              rules="register_required"
+                            >
+                              <v-text-field
+                                v-model="input_verificationCode"
+                                color="white"
+                                label="Enter the code here"
+                                prepend-icon="mdi-email-outline"
+                                class="mt-6"
+                                :error-messages="errors"
+                                dark
+                              />
+                            </validation-provider>
+                          </v-card-text>
+                        </v-card>
+                        <v-row class="flex ma-0 pa-0">
+                          <v-btn
+                            text
+                            class="ma-0 pa-0"
+                            min-width="175"
+                            @click="stepper = 1"
+                          >
+                            <v-icon left>
+                              mdi-arrow-left
+                            </v-icon>
+                            Back
+                          </v-btn>
+                          <v-btn
+                            class="ma-0 pa-0 ml-auto"
+                            color="primary"
+                            min-width="200"
+                            :disabled="invalid"
+                            type="submit"
+                          >
+                            <v-icon left>
+                              mdi-checkbox-marked-circle-outline
+                            </v-icon>
+                            Verify and continue
+                          </v-btn>
+                        </v-row>
+                      </v-form>
+                    </validation-observer>
                   </v-stepper-content>
 
                   <v-stepper-content step="3">
-                    <v-card
-                      class="py-2"
-                      color="grey"
+                    <validation-observer
+                      ref="observer"
+                      v-slot="{ invalid }"
                     >
-                      <v-row no-gutters>
-                        <v-col
-                          class="px-10"
-                          md="6"
+                      <v-form @submit.prevent="submitInformation()">
+                        <v-card
+                          class="py-2"
+                          color="grey"
                         >
-                          <v-text-field
-                            label="First Name"
-                            dark
-                            color="white"
-                          />
-                        </v-col>
-
-                        <v-col
-                          class="pr-10"
-                          md="6"
-                        >
-                          <v-text-field
-                            label="School/ University"
-                            dark
-                            color="white"
-                          />
-                        </v-col>
-                      </v-row>
-
-                      <v-row no-gutters>
-                        <v-col
-                          class="px-10"
-                          md="6"
-                        >
-                          <v-text-field
-                            label="Middle Name"
-                            dark
-                            color="white"
-                          />
-                        </v-col>
-
-                        <v-col
-                          class="pr-10"
-                          md="6"
-                        >
-                          <v-text-field
-                            label="Student Number"
-                            color="white"
-
-                            dark
-                          />
-                        </v-col>
-                      </v-row>
-
-                      <v-row no-gutters>
-                        <v-col
-                          class="px-10"
-                          md="6"
-                        >
-                          <v-text-field
-                            label="Last Name"
-                            color="white"
-
-                            dark
-                          />
-                        </v-col>
-
-                        <v-col
-                          class="pr-10"
-                          md="6"
-                        >
-                          <v-text-field
-                            label="Course &amp; Section"
-                            color="white"
-
-                            dark
-                          />
-                        </v-col>
-                      </v-row>
-
-                      <v-row no-gutters>
-                        <v-col
-                          class="px-10"
-                          md="6"
-                        >
-                          <v-menu
-                            ref="menu"
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            :return-value.sync="date"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-6"
                           >
-                            <template #activator="{ on, attrs }">
-                              <v-text-field
-                                v-model="date"
-                                label="Birthdate"
-                                append-icon="mdi-calendar"
-                                dark
-                                readonly
-                                color="white"
-
-                                v-bind="attrs"
-                                v-on="on"
-                              />
-                            </template>
-                            <v-date-picker
-                              v-model="date"
-                              :max="new Date().toISOString().substr(0, 10)"
-                              min="1950-01-01"
+                            <v-col
+                              md="6"
                             >
-                              <v-spacer />
-                              <v-btn
-                                text
-                                color="primary"
-                                @click="menu = false"
+                              <validation-provider
+                                v-slot="{ errors }"
+                                name="First Name"
+                                rules="register_required"
                               >
-                                Cancel
-                              </v-btn>
-                              <v-btn
-                                text
-                                color="primary"
-                                @click="$refs.menu.save(date)"
-                              >
-                                OK
-                              </v-btn>
-                            </v-date-picker>
-                          </v-menu>
-                        </v-col>
-                      </v-row>
+                                <v-text-field
+                                  v-model="input_firstName"
+                                  label="* First Name"
+                                  dark
+                                  color="white"
+                                  :error-messages="errors"
+                                  class="mx-2"
+                                />
+                              </validation-provider>
+                            </v-col>
 
-                      <v-row no-gutters>
-                        <v-col
-                          class="px-10"
-                          md="12"
-                        >
-                          <v-text-field
-                            label="Home Address"
-                            dark
-                            color="white"
-                          />
-                        </v-col>
-                      </v-row>
-                    </v-card>
-                    <v-row class="flex ma-0 pa-0">
-                      <v-btn
-                        text
-                        class="ma-0 pa-0"
-                        min-width="175"
-                        @click="stepper = 2"
-                      >
-                        <v-icon left>
-                          mdi-arrow-left
-                        </v-icon>
-                        Back
-                      </v-btn>
-                      <v-btn
-                        class="ma-0 pa-0 ml-auto"
-                        color="primary"
-                        min-width="200"
-                        @click="stepper = 4"
-                      >
-                        <v-icon left>
-                          mdi-format-list-checks
-                        </v-icon>
-                        Continue
-                      </v-btn>
-                    </v-row>
+                            <v-col
+                              md="6"
+                            >
+                              <validation-provider
+                                v-slot="{ errors }"
+                                name="Middle Name"
+                                rules="register_required"
+                              >
+                                <v-text-field
+                                  v-model="input_middleName"
+                                  label="* Middle Name"
+                                  dark
+                                  color="white"
+                                  :error-messages="errors"
+                                  class="mx-2"
+                                />
+                              </validation-provider>
+                            </v-col>
+                          </v-row>
+
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-6 mt-n3"
+                          >
+                            <v-col
+                              md="6"
+                            >
+                              <validation-provider
+                                v-slot="{ errors }"
+                                name="Last Name"
+                                rules="register_required"
+                              >
+                                <v-text-field
+                                  v-model="input_lastName"
+                                  label="* Last Name"
+                                  dark
+                                  color="white"
+                                  :error-messages="errors"
+                                  class="mx-2"
+                                />
+                              </validation-provider>
+                            </v-col>
+                          </v-row>
+
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-8"
+                          >
+                            <v-col
+                              md="6"
+                            >
+                              <v-menu
+                                ref="menuBirthdate"
+                                v-model="menuBirthdate"
+                                :close-on-content-click="false"
+                                :return-value.sync="date"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
+                              >
+                                <template #activator="{ on, attrs }">
+                                  <validation-provider
+                                    v-slot="{ errors }"
+                                    name="Birthdate"
+                                    rules="register_required"
+                                  >
+                                    <v-text-field
+                                      v-model="date"
+                                      label="* Birthdate"
+                                      append-icon="mdi-calendar"
+                                      dark
+                                      readonly
+                                      class="mr-2"
+                                      :error-messages="errors"
+                                      color="white"
+                                      v-bind="attrs"
+                                      v-on="on"
+                                    />
+                                  </validation-provider>
+                                </template>
+                                <v-date-picker
+                                  v-model="date"
+                                  :max="new Date().toISOString().substr(0, 10)"
+                                  min="1950-01-01"
+                                >
+                                  <v-spacer />
+                                  <v-btn
+                                    text
+                                    color="primary"
+                                    @click="menuBirthdate = false"
+                                  >
+                                    Cancel
+                                  </v-btn>
+                                  <v-btn
+                                    text
+                                    color="primary"
+                                    @click="$refs.menuBirthdate.save(date)"
+                                  >
+                                    OK
+                                  </v-btn>
+                                </v-date-picker>
+                              </v-menu>
+                            </v-col>
+                          </v-row>
+
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-6 mt-n3"
+                          >
+                            <v-col
+                              md="6"
+                            >
+                              <validation-provider
+                                v-slot="{ errors }"
+                                name="Phone Number"
+                                rules="register_required"
+                              >
+                                <v-text-field
+                                  v-model="input_phoneNumber"
+                                  label="* Phone Number"
+                                  dark
+                                  color="white"
+                                  :error-messages="errors"
+                                  class="mx-2"
+                                />
+                              </validation-provider>
+                            </v-col>
+                          </v-row>
+
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-6 mt-n3"
+                          >
+                            <v-col
+                              md="12"
+                            >
+                              <v-text-field
+                                label="Home Address"
+                                dark
+                                color="white"
+                                class="mx-2"
+                              />
+                            </v-col>
+                          </v-row>
+
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-6 mt-n3"
+                          >
+                            <v-col
+                              md="6"
+                            >
+                              <v-text-field
+                                label="School"
+                                dark
+                                color="white"
+                                class="mx-2"
+                              />
+                            </v-col>
+                            <v-col
+                              md="6"
+                            >
+                              <v-text-field
+                                label="Course"
+                                dark
+                                color="white"
+                                class="mx-2"
+                              />
+                            </v-col>
+                          </v-row>
+                          <v-row
+                            no-gutters
+                            class="ma-0 pa-0 px-6 mt-n3"
+                          >
+                            <v-col
+                              md="6"
+                            >
+                              <v-text-field
+                                label="Section"
+                                dark
+                                color="white"
+                                class="mx-2"
+                              />
+                            </v-col>
+                            <v-col
+                              md="6"
+                            >
+                              <v-text-field
+                                label="Student Number / ID"
+                                dark
+                                color="white"
+                                class="mx-2"
+                              />
+                            </v-col>
+                          </v-row>
+                        </v-card>
+                        <v-row class="flex ma-0 pa-0">
+                          <v-btn
+                            text
+                            class="ma-0 pa-0"
+                            min-width="175"
+                            @click="stepper = 2"
+                          >
+                            <v-icon left>
+                              mdi-arrow-left
+                            </v-icon>
+                            Back
+                          </v-btn>
+                          <v-btn
+                            class="ma-0 pa-0 ml-auto"
+                            color="primary"
+                            min-width="200"
+                            :disabled="invalid"
+                            type="submit"
+                          >
+                            <v-icon left>
+                              mdi-format-list-checks
+                            </v-icon>
+                            Continue
+                          </v-btn>
+                        </v-row>
+                      </v-form>
+                    </validation-observer>
                   </v-stepper-content>
                   <v-stepper-content step="4">
                     <v-card
@@ -505,7 +608,8 @@
                         class="ma-0 pa-0 ml-auto"
                         color="primary"
                         min-width="200"
-                        @click="stepper = 4"
+                        :disabled="!enableFinish"
+                        @click="finishRegistration()"
                       >
                         <v-icon left>
                           mdi-flag-outline
@@ -542,7 +646,7 @@
   import { min, required } from 'vee-validate/dist/rules'
   import Vue from 'vue'
 
-  extend('registerPassword_required', {
+  extend('register_required', {
     ...required,
     message: '{_field_} is required.',
   })
@@ -562,8 +666,43 @@
       return {
         steps: 4,
         stepper: 1,
-        date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-        menu: false,
+        dialogConfirmCancel: false,
+
+        classicDialog: false,
+        classicDialogTitle: '',
+        classicDialogText: '',
+
+        // Register
+
+        input_email: '',
+        input_password: '',
+        input_confirmPassword: '',
+        agreeTermsCondition: false,
+
+        showPassword: false,
+        showConfirmPassword: false,
+
+        // Confirmation
+
+        input_verificationCode: '',
+
+        // Information
+
+        input_firstName: '',
+        input_middleName: '',
+        input_lastName: '',
+        input_phoneNumber: '',
+        input_homeAddress: '',
+        input_school: '',
+        input_course: '',
+        input_section: '',
+        input_studentNumber: '',
+
+        date: null,
+        // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+        menuBirthdate: false,
+
+        // Avatar
         selectedImage: '',
         selectedAvatar: '',
         avatarClass: 'grey lighten-2',
@@ -579,20 +718,6 @@
           'female-3.png',
           'female-4.png',
         ],
-
-        dialogConfirmCancel: false,
-
-        classicDialog: false,
-        classicDialogTitle: '',
-        classicDialogText: '',
-
-        input_email: '',
-        input_password: '',
-        input_confirmPassword: '',
-        agreeTermsCondition: false,
-
-        showPassword: false,
-        showConfirmPassword: false,
       }
     },
     computed: {
@@ -607,6 +732,17 @@
 
         return ''
       },
+      enableFinish (): boolean {
+        if (this.selectedImage) {
+          return true
+        }
+
+        if (this.selectedAvatar) {
+          return true
+        }
+
+        return false
+      },
     },
     watch: {
       steps (val) {
@@ -616,20 +752,6 @@
       },
     },
     methods: {
-      nextStep (n) {
-        if (n === this.steps) {
-          this.stepper = 1
-        } else {
-          this.stepper = n + 1
-        }
-      },
-      previousStep (n) {
-        if (n === this.steps) {
-          this.stepper = 1
-        } else {
-          this.stepper = n - 1
-        }
-      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onImageUpload (val: any) {
         const value = val.target.files[0]
@@ -666,6 +788,18 @@
 
         // success
         this.stepper = 2
+      },
+      verifyEmail (code: string): void {
+        console.log('verified', code)
+
+        // success
+        this.stepper = 3
+      },
+      submitInformation (): void {
+        this.stepper = 4
+      },
+      finishRegistration (): void {
+        console.log('finish registration')
       },
       cancelRegistration (response: boolean): void {
         if (response) {
