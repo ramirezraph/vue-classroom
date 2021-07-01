@@ -202,10 +202,6 @@
         const list = this.people.filter(p => p.userType === UserType.Student)
         return list.sort((a, b) => (a.lastName > b.lastName) ? 1 : -1)
       },
-      classId (): string {
-        const path = this.$route.path.split('/')
-        return path[path.length - 1]
-      },
       selectedClass (): Class {
         return this.$store.getters['class/getActiveClass']
       },
@@ -216,13 +212,13 @@
         this.remove_userName = userName
         this.dialogConfirmRemovePerson = true
       },
-      confirmRemovePerson (response: boolean): void {
+      async confirmRemovePerson (response: boolean) {
         if (response) {
-          classesCollection.doc(this.classId).collection('people')
+          await classesCollection.doc(this.selectedClass.id).collection('people')
             .doc(this.remove_userId)
             .delete()
             .then(() => {
-              classesCollection.doc(this.classId).update({
+              classesCollection.doc(this.selectedClass.id).update({
                 userList: firebase.firestore.FieldValue.arrayRemove(this.remove_userId),
               }).then(() => {
                 this.$notify({
