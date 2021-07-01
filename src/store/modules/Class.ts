@@ -12,8 +12,6 @@ export default {
       lessonId: String,
       file: ClassFile
     },
-    fileCommentSnapshotUnsubscribe: null,
-
   },
   getters: {
     getActiveClass(state): Class {
@@ -22,9 +20,6 @@ export default {
     getActiveFile(state): { lessonId: String, file: ClassFile } {
       return state.activeFile
     },
-    getCommentSnapshot(state) {
-      return state.fileCommentSnapshotUnsubscribe
-    }
   },
   mutations: {
     SET_ACTIVE_CLASS (state, payload: { newActiveClass: Class }) {
@@ -33,9 +28,6 @@ export default {
     SET_ACTIVE_FILE (state, payload: { lessonId: String, file: ClassFile }) {
       state.activeFile = payload
     },
-    SET_COMMENT_SNAPSHOT (state, payload) {
-      state.fileCommentSnapshotUnsubscribe = payload
-    }
   },
   actions: {
     setActiveClass({ commit, rootGetters }, payload: { classId: String }) {
@@ -45,11 +37,12 @@ export default {
         commit('SET_ACTIVE_CLASS', { newActiveClass: selectedClass })
       }
     },
-    setActiveFile({ commit, getters }, payload: { lessonId: String, file: ClassFile }) {
+    setActiveFile({ commit, rootGetters, dispatch }, payload: { lessonId: String, file: ClassFile }) {
 
-      const snapshot = getters['fileCommentSnapshotUnsubscribe']
+      const snapshot = rootGetters['snapshots/getFileCommentSnapshot']
 
       if (snapshot) {
+        console.log('detaching file comment snapshot');
         snapshot() // detach a listener
       }
 
@@ -73,7 +66,7 @@ export default {
              payload.file.comments = fetchComm
           })
 
-      commit('SET_COMMENT_SNAPSHOT', unsubscribe)
+      dispatch('snapshots/setFileCommentSnapshot', unsubscribe, { root: true })
       commit('SET_ACTIVE_FILE', { lessonId: payload.lessonId, file: payload.file })
     },
   },

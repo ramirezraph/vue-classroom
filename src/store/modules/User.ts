@@ -58,7 +58,7 @@ export default {
              commit('SET_CURRENT_USER', user)
              dispatch('classes/fetchClasses', user, { root: true })
              setTimeout(() => {
-               dispatch('classes/fetchMeetings', { currentUser: user }, { root: true })
+               dispatch('classes/fetchAllMeetings', { currentUser: user }, { root: true })
              }, 1000)
              dispatch('clearNotification')
              dispatch('fetchNotifications')
@@ -76,7 +76,8 @@ export default {
           })
       })
     },
-    userSignOut ({ commit }) {
+    userSignOut ({ commit, dispatch }) {
+      dispatch('classes/clearClasses', null, { root:true })
       commit('SET_CURRENT_USER', null)
     },
     userSignUpEmailAndPassword ({ commit }, payload: { email: string, password: string }) {
@@ -196,9 +197,7 @@ export default {
         })
       })
     },
-    fetchNotifications ({ commit, getters }) {
-
-      let unsubscribe
+    fetchNotifications ({ commit, getters, rootGetters, dispatch }) {
 
       let notifications: Array<UserNotification> = []
 
@@ -206,13 +205,13 @@ export default {
 
       if (currentUser) {
 
-        const snapshot = getters['getNotificationsSnapshotUnsubscribe']
+        const snapshot = rootGetters['snapshots/getPushNotificationSnapshot']
 
         if (snapshot) {
           snapshot() // detach a listener
         }
 
-        unsubscribe = notificationsCollection.doc(currentUser.id)
+        const unsubscribe = notificationsCollection.doc(currentUser.id)
         .collection('items')
         .orderBy('date', 'desc')
         .onSnapshot(notifSnapshot => {
@@ -266,7 +265,7 @@ export default {
                 return
             }
           })
-          commit('SET_NOTIFICATIONS_SNAPSHOT', unsubscribe)
+          dispatch('snapshots/setPushNotificationSnapshot', unsubscribe, { root: true })
           commit('SET_NOTIFICATIONS', notifications)
         })
       }

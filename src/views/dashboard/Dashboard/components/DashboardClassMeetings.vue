@@ -64,7 +64,7 @@
     },
     computed: {
       classMeetings (): Meeting[] {
-        return this.$store.getters['classes/meetings']
+        return this.$store.getters['classes/getAllMeetings']
       },
     },
   })

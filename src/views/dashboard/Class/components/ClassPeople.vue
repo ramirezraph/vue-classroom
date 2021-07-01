@@ -255,6 +255,8 @@
 
         this.sendInviteLoading = true
 
+        let countdown = selectedUsers.length
+
         selectedUsers.forEach(user => {
           notificationsCollection.doc(user.id).collection('items').add({
             userId: this.$store.getters['user/getCurrentUser'].id,
@@ -268,12 +270,15 @@
               classesCollection.doc(this.selectedClass.id).update({
                 pendingInvites: firebase.firestore.FieldValue.arrayUnion(user.id),
               }).then(() => {
-                this.$notify({
-                  group: 'appWideNotification',
-                  title: 'Success',
-                  text: 'Class invitation sent.',
-                  type: 'success',
-                })
+                countdown--
+                if (countdown <= 0) {
+                  this.$notify({
+                    group: 'appWideNotification',
+                    title: 'Success',
+                    text: 'Class invitation sent.',
+                    type: 'success',
+                  })
+                }
               })
             })
             .catch(error => {
