@@ -214,7 +214,7 @@
                   >
                     <template #prepend>
                       <v-avatar
-                        color="blue"
+                        color="transparent"
                         size="40"
                         class="mt-n2"
                       >
