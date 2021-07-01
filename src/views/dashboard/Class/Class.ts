@@ -195,8 +195,15 @@ export default Vue.extend({
     async fetchUnits () {
       this.unitDataLoading = true
       try {
+        const snapshot = this.$store.getters['snapshots/getUnitsSnapshot']
+
+        if (snapshot) {
+          console.log('detaching units listener')
+          snapshot() // detach a listener
+        }
+
         let fetchUnit: Unit[] = []
-        await classesCollection.doc(this.id).collection('units').orderBy('number')
+        const unsubscribe = await classesCollection.doc(this.id).collection('units').orderBy('number')
           .onSnapshot(snapshot => {
             fetchUnit = []
             snapshot.forEach(doc => {
@@ -210,6 +217,7 @@ export default Vue.extend({
               fetchUnit.push(unit)
             })
             this.units = fetchUnit
+            this.$store.dispatch('snapshots/setUnitsSnapshot', unsubscribe)
           })
       } finally {
         this.unitDataLoading = false
@@ -217,10 +225,17 @@ export default Vue.extend({
     },
     async fetchDiscussions () {
       try {
+        const snapshot = this.$store.getters['snapshots/getDiscussionsSnapshot']
+
+        if (snapshot) {
+          console.log('detaching discussions listener')
+          snapshot() // detach a listener
+        }
+
         let fetchDiscussions: Post[] = []
 
         // paginate
-        await classesCollection.doc(this.id).collection('discussions')
+        const unsubscribe = await classesCollection.doc(this.id).collection('discussions')
           .orderBy('time', 'desc')
           .limit(this.numberOfPostLimit).onSnapshot(snapshot => {
             fetchDiscussions = []
@@ -238,6 +253,7 @@ export default Vue.extend({
               }
             })
             this.discussions = fetchDiscussions
+            this.$store.dispatch('snapshots/setDiscussionsSnapshot', unsubscribe)
           })
       } finally {
         this.unitDataLoading = false
@@ -245,10 +261,16 @@ export default Vue.extend({
     },
     async fetchPeople () {
       try {
+        const snapshot = this.$store.getters['snapshots/getPeopleSnapshot']
+
+        if (snapshot) {
+          console.log('detaching people listener')
+          snapshot() // detach a listener
+        }
+
         let fetchPeople: User[] = []
-        await classesCollection.doc(this.id).collection('people')
+        const unsubscribe = await classesCollection.doc(this.id).collection('people')
           .onSnapshot(snapshot => {
-            console.log('runs!')
             fetchPeople = []
             snapshot.forEach(doc => {
               if (doc.exists) {
@@ -272,13 +294,21 @@ export default Vue.extend({
               }
             })
             this.people = fetchPeople
+            this.$store.dispatch('snapshots/setPeopleSnapshot', unsubscribe)
           })
       } finally {
         this.unitDataLoading = false
       }
     },
     async fetchLectures () {
-      await lecturesCollection.where('classId', '==', this.id)
+      const snapshot = this.$store.getters['snapshots/getMeetingsSnapshot']
+
+      if (snapshot) {
+        console.log('detaching meetings listener')
+        snapshot() // detach a listener
+      }
+
+      const subscribe = await lecturesCollection.where('classId', '==', this.id)
         .onSnapshot(snapshot => {
           const lectures: Meeting[] = []
           snapshot.forEach(meet => {
@@ -301,6 +331,7 @@ export default Vue.extend({
             }
           })
           this.meetings = lectures
+          this.$store.dispatch('snapshots/setMeetingsSnapshot', subscribe)
         })
     },
     toggleAddNewUnit (): void {

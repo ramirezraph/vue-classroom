@@ -196,9 +196,7 @@ export default {
         })
       })
     },
-    fetchNotifications ({ commit, getters }) {
-
-      let unsubscribe
+    fetchNotifications ({ commit, getters, rootGetters, dispatch }) {
 
       let notifications: Array<UserNotification> = []
 
@@ -206,13 +204,13 @@ export default {
 
       if (currentUser) {
 
-        const snapshot = getters['getNotificationsSnapshotUnsubscribe']
+        const snapshot = rootGetters['snapshots/getPushNotificationSnapshot']
 
         if (snapshot) {
           snapshot() // detach a listener
         }
 
-        unsubscribe = notificationsCollection.doc(currentUser.id)
+        const unsubscribe = notificationsCollection.doc(currentUser.id)
         .collection('items')
         .orderBy('date', 'desc')
         .onSnapshot(notifSnapshot => {
@@ -266,7 +264,7 @@ export default {
                 return
             }
           })
-          commit('SET_NOTIFICATIONS_SNAPSHOT', unsubscribe)
+          dispatch('snapshots/setPushNotificationSnapshot', unsubscribe, { root: true })
           commit('SET_NOTIFICATIONS', notifications)
         })
       }

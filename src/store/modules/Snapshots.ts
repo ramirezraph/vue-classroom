@@ -9,6 +9,10 @@ export default {
     lessonsSnapshot: null,
     discussionsSnapshot: null,
     meetingsSnapshot: null,
+
+    fileCommentSnapshot: null,
+
+    pushNotificationSnapshot: null,
   },
   getters: {
     getPeopleSnapshot (state) {
@@ -28,6 +32,12 @@ export default {
     },
     getMeetingsSnapshot (state) {
       return state.meetingsSnapshot
+    },
+    getFileCommentSnapshot(state) {
+      return state.fileCommentSnapshot
+    },
+    getPushNotificationSnapshot(state) {
+      return state.pushNotificationSnapshot
     },
   },
   mutations: {
@@ -49,6 +59,12 @@ export default {
     SET_MEETINGS_SNAPSHOT (state, payload) {
       state.meetingsSnapshot = payload
     },
+    SET_COMMENT_SNAPSHOT (state, payload) {
+      state.fileCommentSnapshot = payload
+    },
+    SET_PUSH_NOTIFICATION_SNAPSHOT (state, payload) {
+      state.pushNotificationSnapshot = payload
+    },
   },
   actions: {
     setClassesSnapshot ({ commit }, payload) {
@@ -58,6 +74,30 @@ export default {
     setPeopleSnapshot ({ commit }, payload) {
       console.log('set people snapshot');
       commit('SET_PEOPLE_SNAPSHOT', payload)
-    }
+    },
+    setUnitsSnapshot ({ commit }, payload) {
+      console.log('set units snapshot');
+      commit('SET_UNITS_SNAPSHOT', payload)
+    },
+    setLessonsSnapshot ({ commit }, payload) {
+      console.log('set lessons snapshot');
+      commit('SET_LESSONS_SNAPSHOT', payload)
+    },
+    setDiscussionsSnapshot ({ commit }, payload) {
+      console.log('set discussions snapshot');
+      commit('SET_DISCUSSIONS_SNAPSHOT', payload)
+    },
+    setMeetingsSnapshot ({ commit }, payload) {
+      console.log('set meetings snapshot');
+      commit('SET_MEETINGS_SNAPSHOT', payload)
+    },
+    setFileCommentSnapshot ({ commit }, payload) {
+      console.log('set file comment snapshot');
+      commit('SET_COMMENT_SNAPSHOT', payload)
+    },
+    setPushNotificationSnapshot({ commit }, payload) {
+      console.log('set push notif snapshot');
+      commit('SET_PUSH_NOTIFICATION_SNAPSHOT', payload)
+    },
   },
 }
