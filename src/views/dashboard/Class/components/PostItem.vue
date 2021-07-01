@@ -6,9 +6,7 @@
     <v-card-title>
       <div class="d-flex">
         <div>
-          <v-avatar
-            style="border: 1px solid lightgray"
-          >
+          <v-avatar>
             <img
               :src="userProfile"
               alt="John"
@@ -156,7 +154,6 @@
               <v-col cols="2">
                 <v-avatar
                   class="ml-n3 ml-sm-3 mt-1"
-                  style="border: 1px solid lightgray"
                 >
                   <img
                     :src="currentUser.profile"

@@ -16,7 +16,7 @@
       <v-list-item-avatar
         v-else-if="item.avatar"
         class="align-self-center"
-        color="grey"
+        color="transparent"
       >
         <v-img :src="item.imageSrc" />
       </v-list-item-avatar>

@@ -12,7 +12,6 @@
             <div>
               <v-avatar
                 size="128"
-                style="border: 1px solid lightgray"
               >
                 <img
                   :src="displayProfile"

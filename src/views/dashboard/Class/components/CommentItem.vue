@@ -6,9 +6,7 @@
     <div
       class="pa-3"
     >
-      <v-avatar
-        style="border: 1px solid lightgray"
-      >
+      <v-avatar>
         <img
           :src="userProfile"
           alt="John"
