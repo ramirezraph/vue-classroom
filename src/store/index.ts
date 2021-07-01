@@ -5,6 +5,7 @@ import User from "@/store/modules/User";
 import Class from '@/store/modules/Class';
 
 import createPersistedState from 'vuex-persistedstate'
+import Snapshots from './modules/Snapshots';
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ const store = new Vuex.Store({
     classes: Classes,
     user: User,
     class: Class,
+    snapshots: Snapshots,
   },
   state: {
     // barColor: 'rgba(47, 47, 43, .8), rgba(0, 0, 0, .8)',

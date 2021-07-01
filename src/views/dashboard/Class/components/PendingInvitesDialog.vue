@@ -157,7 +157,6 @@
               snapshot.forEach(doc => {
                 if (doc.exists) {
                   notificationsCollection.doc(user.id).collection('items').doc(doc.id).delete().then(() => {
-                    console.log(index)
                     this.pendingInvites.splice(index, 1)
                   })
                 }
