@@ -33,8 +33,9 @@ export default {
     },
   },
   actions: {
-      clearClasses ({ commit }) {
+      clearClasses ({ commit, dispatch }) {
         console.log('clear classes');
+        dispatch('snapshots/setClassesSnapshot', null, { root: true })
         commit('CLEAR_CLASSES')
       },
       fetchClasses ({ commit, rootGetters, dispatch }, payload: User): void {
