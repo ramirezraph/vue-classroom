@@ -58,7 +58,7 @@ export default {
              commit('SET_CURRENT_USER', user)
              dispatch('classes/fetchClasses', user, { root: true })
              setTimeout(() => {
-               dispatch('classes/fetchMeetings', { currentUser: user }, { root: true })
+               dispatch('classes/fetchAllMeetings', { currentUser: user }, { root: true })
              }, 1000)
              dispatch('clearNotification')
              dispatch('fetchNotifications')

@@ -13,6 +13,7 @@ export default {
     fileCommentSnapshot: null,
 
     pushNotificationSnapshot: null,
+    allMeetingsSnapshot: null,
   },
   getters: {
     getPeopleSnapshot (state) {
@@ -39,6 +40,9 @@ export default {
     getPushNotificationSnapshot(state) {
       return state.pushNotificationSnapshot
     },
+    getAllMeetingsSnapshot (state) {
+      return state.allMeetingsSnapshot
+    },
   },
   mutations: {
     SET_PEOPLE_SNAPSHOT (state, payload) {
@@ -64,6 +68,9 @@ export default {
     },
     SET_PUSH_NOTIFICATION_SNAPSHOT (state, payload) {
       state.pushNotificationSnapshot = payload
+    },
+    SET_ALL_MEETINGS_SNAPSHOT (state, payload) {
+      state.allMeetingsSnapshot = payload
     },
   },
   actions: {
@@ -98,6 +105,10 @@ export default {
     setPushNotificationSnapshot({ commit }, payload) {
       console.log('set push notif snapshot');
       commit('SET_PUSH_NOTIFICATION_SNAPSHOT', payload)
+    },
+    setAllMeetingsSnapshot ({ commit }, payload) {
+      console.log('set all meetings snapshot');
+      commit('SET_ALL_MEETINGS_SNAPSHOT', payload)
     },
   },
 }

@@ -17,7 +17,7 @@ export default {
     getClass: (state) => (id) => {
       return state.classes.find(c => c.id === id)
     },
-    meetings (state): Meeting[] {
+    getAllMeetings (state): Meeting[] {
       return state.meetings
     },
   },
@@ -25,7 +25,7 @@ export default {
     SET_CLASSES (state, payload: Class[]): void {
       state.classes = payload
     },
-    FETCH_MEETINGS (state, payload: { meetings: Meeting[] }) {
+    FETCH_ALL_MEETINGS (state, payload: { meetings: Meeting[] }) {
       state.meetings = payload.meetings
     }
   },
@@ -67,14 +67,23 @@ export default {
                 })
                }
              })
-            commit('SET_CLASSES', classes)
+              commit('SET_CLASSES', classes)
            })
            dispatch('snapshots/setClassesSnapshot', unsubscribe, { root: true })
        }
     },
-    fetchMeetings ({ commit, state }, payload: { currentUser: User }) {
+    // All meetings
+    fetchAllMeetings ({ commit, state, rootGetters, dispatch }, payload: { currentUser: User }) {
        if (payload) {
-         lecturesCollection.orderBy('date').onSnapshot(snapshot => {
+
+        const snapshot = rootGetters['snapshots/getAllMeetingsSnapshot']
+
+        if (snapshot) {
+          console.log('detaching all meetings snapshot')
+          snapshot(); // detach a listener
+        }
+
+         const unsubscribe = lecturesCollection.orderBy('date').onSnapshot(snapshot => {
            const meetings: Meeting[] = []
            snapshot.forEach(meet => {
              state.classes.forEach(c => {
@@ -96,7 +105,8 @@ export default {
              })
            })
 
-           commit('FETCH_MEETINGS', { meetings: meetings })
+           dispatch('snapshots/setAllMeetingsSnapshot', unsubscribe, { root: true })
+           commit('FETCH_ALL_MEETINGS', { meetings: meetings })
          })
        }
     }
