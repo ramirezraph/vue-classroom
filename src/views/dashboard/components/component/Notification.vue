@@ -16,7 +16,7 @@
       </div>
       <div>
         <v-card-title class="text-h4 pt-4 d-flex">
-          <span>{{ fullName }}</span>
+          <span class="mr-3">{{ fullName }}</span>
         </v-card-title>
         <v-card-text class="subtitle-1">
           <div v-if="type === 'Regular'">
@@ -35,6 +35,9 @@
             Accepted your request to join the class: <br>
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
+          <span class="caption grey--text">
+            {{ displayDate }}
+          </span>
         </v-card-text>
       </div>
     </div>
@@ -74,6 +77,7 @@
   import firebase from 'firebase'
   import { Class } from '@/model/Class'
   import { User } from '@/model/User'
+  import moment from 'moment'
 
   export default Vue.extend({
     props: {
@@ -90,6 +94,8 @@
         classCode: '',
 
         requiresClassInfo: false,
+
+        displayDate: null,
       }
     },
     computed: {
@@ -123,6 +129,12 @@
           }
         })
       }
+
+      // date now
+      // const dateToday = moment()
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.displayDate = moment(this.notification.date.toDate()).fromNow()
     },
     methods: {
       inviteAccept (): void {

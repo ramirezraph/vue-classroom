@@ -165,17 +165,18 @@
 </template>
 
 <script lang="ts">
-  import Vue, { PropType } from 'vue'
+  import { PropType } from 'vue'
   import PostItem from './PostItem.vue'
   import { Post } from '@/model/Post'
   import { User } from '@/model/User'
   import firebase from 'firebase'
   import { classesCollection } from '@/fb'
   import EditPostDialog from './EditPostDialog.vue'
+  import SendNotification from '@/plugins/SendNotification'
   // eslint-disable-next-line no-undef
   import Timestamp = firebase.firestore.Timestamp;
 
-  export default Vue.extend({
+  export default SendNotification.extend({
     components: {
       PostItem,
       EditPostDialog,
@@ -228,6 +229,9 @@
         this.post_message = ''
         await classesCollection.doc(classId).collection('discussions')
           .add(newPost)
+          .then(() => {
+            this.sendPostNotification(this.classId, this.user.id)
+          })
           .catch(addError => {
             this.$notify({
               group: 'appWideNotification',
