@@ -253,7 +253,7 @@
     computed: {
       ...mapGetters(['drawer']),
       notifications (): UserNotification[] {
-        return this.$store.getters['user/getNotifications']
+        return this.$store.getters['user/getNotifications'] || []
       },
       unreadNotifications (): number {
         return this.notifications.filter(n => n.read === false).length
