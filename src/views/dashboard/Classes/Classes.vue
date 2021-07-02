@@ -147,6 +147,7 @@
     />
   </v-container>
 </template>
+
 <script src="./Classes.ts" lang="ts"></script>
 
 <style lang="scss">

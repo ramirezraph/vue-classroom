@@ -35,13 +35,10 @@ export default {
   actions: {
       clearClasses ({ commit, dispatch }) {
         console.log('clear classes');
-        dispatch('snapshots/setClassesSnapshot', null, { root: true })
         commit('CLEAR_CLASSES')
       },
       fetchClasses ({ commit, rootGetters, dispatch }, payload: User): void {
         if (payload) {
-
-          let classes: Class[] = []
 
           const snapshot = rootGetters['snapshots/getClassesSnapshot']
 
@@ -52,7 +49,7 @@ export default {
 
           const unsubscribe = classesCollection.where('userList', 'array-contains', payload.id)
             .onSnapshot(snapshot => {
-              classes = []
+              const classes: Class[] = []
               snapshot.forEach(doc => {
                 if (doc.exists) {
                   usersCollection.doc(doc.data().ownerId).get().then(userDoc => {
@@ -75,7 +72,8 @@ export default {
                   })
                 }
               })
-                commit('SET_CLASSES', classes)
+              console.log('snapshot runs for', payload.id);
+              commit('SET_CLASSES', classes)
             })
             dispatch('snapshots/setClassesSnapshot', unsubscribe, { root: true })
         }
@@ -113,9 +111,10 @@ export default {
              })
            })
 
-           dispatch('snapshots/setAllMeetingsSnapshot', unsubscribe, { root: true })
            commit('FETCH_ALL_MEETINGS', { meetings: meetings })
          })
+
+        dispatch('snapshots/setAllMeetingsSnapshot', unsubscribe, { root: true })
        }
     }
   },

@@ -208,6 +208,7 @@ export default {
         const snapshot = rootGetters['snapshots/getPushNotificationSnapshot']
 
         if (snapshot) {
+          console.log('detaching notif');
           snapshot() // detach a listener
         }
 
@@ -265,9 +266,9 @@ export default {
                 return
             }
           })
-          dispatch('snapshots/setPushNotificationSnapshot', unsubscribe, { root: true })
           commit('SET_NOTIFICATIONS', notifications)
         })
+        dispatch('snapshots/setPushNotificationSnapshot', unsubscribe, { root: true })
       }
     },
     clearNotification ({ commit }) {

@@ -85,7 +85,7 @@
                 <span class="caption">General</span>
               </v-card-title>
               <v-card-text class="pa-6 text-none">
-                <span>General Settings</span>
+                <span>-------------------</span>
               </v-card-text>
             </v-card>
           </v-col>
@@ -93,13 +93,45 @@
         <v-row>
           <v-col
             cols="6"
-            class="ma-auto pa-auto"
+            class="ma-auto pa-auto d-flex"
           >
-            <span>Hello, World!</span>
+            <v-btn
+              min-width="200"
+              class="error darken-1 text-none mr-3"
+              @click="dialogConfirm = true"
+            >
+              <v-icon left>
+                mdi-location-exit
+              </v-icon>
+              Leave Class
+            </v-btn>
+            <v-btn
+              class="grey darken-1 text-none mr-3"
+            >
+              <v-icon left>
+                mdi-chat-processing-outline
+              </v-icon>
+              Give Feedback
+            </v-btn>
+
+            <v-btn
+              text
+              min-width="200"
+              class="ml-auto"
+              @click="cancel"
+            >
+              Back to Class
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-text>
     </v-card>
+    <confirm-dialog
+      :model="dialogConfirm"
+      title="Confirm"
+      text="Are you sure you want to leave the class?"
+      @goto-response="leaveClass"
+    />
   </v-dialog>
 </template>
 
@@ -108,6 +140,9 @@
   import { ValidationObserver, ValidationProvider } from 'vee-validate'
   import ClassHeader from '@/views/dashboard/Class/components/ClassHeader.vue'
   import { Class } from '@/model/Class'
+  import { classesCollection } from '@/fb'
+  import firebase from 'firebase'
+  import { User } from '@/model/User'
 
   export default Vue.extend({
     name: 'CreateClassDialog',
@@ -127,7 +162,9 @@
       },
     },
     data () {
-      return {}
+      return {
+        dialogConfirm: false,
+      }
     },
     computed: {
       modelData (): boolean {
@@ -137,6 +174,47 @@
     methods: {
       cancel (): void {
         this.$emit('cancel')
+      },
+      leaveClass (response: boolean): void {
+        if (response) {
+          const activeClass: Class = this.$store.getters['class/getActiveClass']
+          const activeUser: User = this.$store.getters['user/getCurrentUser']
+          classesCollection.doc(activeClass.id).collection('people')
+            .doc(activeUser.id)
+            .delete()
+            .then(() => {
+              classesCollection.doc(activeClass.id).update({
+                userList: firebase.firestore.FieldValue.arrayRemove(activeUser.id),
+              }).then(() => {
+                this.$router.replace('/classes').then(() => {
+                  this.$notify({
+                    group: 'appWideNotification',
+                    title: 'Leave Success',
+                    text: 'Leave the class successfully.',
+                    type: 'success',
+                  })
+                })
+              }).catch(errorOnArray => {
+                this.$notify({
+                  group: 'appWideNotification',
+                  title: 'Leave Failed',
+                  text: errorOnArray.message,
+                  type: 'error',
+                })
+              })
+            }).catch(error => {
+              this.$notify({
+                group: 'appWideNotification',
+                title: 'Leave Failed',
+                text: error.message,
+                type: 'error',
+              })
+            }).finally(() => {
+              this.dialogConfirm = false
+            })
+        }
+
+        this.dialogConfirm = false
       },
     },
   })
