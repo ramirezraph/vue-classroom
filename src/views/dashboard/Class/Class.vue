@@ -336,7 +336,7 @@
               value="livelecture"
             >
               <class-live-lecture
-                :meetings="meetings"
+                :meetings="filteredClassMeetings"
                 :has-edit-access="hasEditAccess"
                 @filter-meetings="setFilterForLectures"
               />

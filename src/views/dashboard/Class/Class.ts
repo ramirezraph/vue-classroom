@@ -141,6 +141,27 @@ export default Vue.extend({
 
       return hasAccess
     },
+    filteredClassMeetings (): Meeting[] {
+      switch (this.filterForMeetings) {
+        case 'all':
+          return this.meetings
+        case 'today':
+          return this.meetings.filter(meeting => {
+            const startOfToday = moment().startOf('day').toDate()
+            const endOfToday = moment().add(1, 'days').endOf('day').toDate()
+            const meetingDate = meeting.date.toDate()
+            return (meetingDate >= startOfToday && meetingDate <= endOfToday)
+          })
+        case 'thisWeek':
+          return this.meetings.filter(meeting => {
+            const firstDayOfWeek = moment().day('Sunday').startOf('day').toDate()
+            const lastDayOfWeek = moment().day('Saturday').endOf('day').toDate()
+            const meetingDate = meeting.date.toDate()
+            return (meetingDate >= firstDayOfWeek && meetingDate <= lastDayOfWeek)
+          })
+      }
+      return this.meetings
+    },
   },
   watch: {
     '$route' (to) {
@@ -187,6 +208,11 @@ export default Vue.extend({
       console.log('fetch People success on Mounted')
     }).catch(error => {
       console.log('Fetch People Failed on Mounted: ' + error)
+    })
+    this.fetchLectures().then(() => {
+      console.log('fetch Lecture success on Mounted')
+    }).catch(error => {
+      console.log('Fetch Lecture Failed on Mounted: ' + error)
     })
   },
   methods: {
@@ -300,12 +326,9 @@ export default Vue.extend({
     },
     setFilterForLectures (filter: string) {
       this.filterForMeetings = filter
-      this.fetchLectures()
     },
     async fetchLectures () {
       console.log('filtering meetings by', this.filterForMeetings)
-
-      const filter = this.filterForMeetings || 'all'
 
       const snapshot = this.$store.getters['snapshots/getMeetingsSnapshot']
 
@@ -314,8 +337,7 @@ export default Vue.extend({
         snapshot() // detach a listener
       }
 
-      if (filter === 'all') {
-        const subscribe = await lecturesCollection
+      const subscribe = await lecturesCollection
         .where('classId', '==', this.id)
         .orderBy('date')
         .onSnapshot(snapshot => {
@@ -342,73 +364,6 @@ export default Vue.extend({
           this.meetings = lectures
         })
         this.$store.dispatch('snapshots/setMeetingsSnapshot', subscribe)
-      } else if (filter === 'today') {
-        const startOfToday = moment().startOf('day').toDate()
-        const endOfToday = moment().add(1, 'days').endOf('day').toDate()
-
-        const subscribe = await lecturesCollection
-        .where('classId', '==', this.id)
-        .where('date', '>=', startOfToday)
-        .where('date', '<=', endOfToday)
-        .orderBy('date')
-        .onSnapshot(snapshot => {
-          const lectures: Meeting[] = []
-          snapshot.forEach(meet => {
-            if (meet.exists) {
-              const generatedMeeting = new Meeting(
-                meet.id,
-                meet.data()?.teacherId,
-                meet.data()?.classId,
-                meet.data()?.title,
-                meet.data()?.description,
-                meet.data()?.date,
-                meet.data()?.timeEnd,
-                meet.data()?.timeStart,
-                meet.data()?.link,
-                meet.data()?.dateCreated,
-              )
-              generatedMeeting.isClosed = meet.data()?.isClosed
-
-              lectures.push(generatedMeeting)
-            }
-          })
-          this.meetings = lectures
-        })
-        this.$store.dispatch('snapshots/setMeetingsSnapshot', subscribe)
-      } else if (filter === 'thisWeek') {
-        const firstDayOfWeek = moment().day('Sunday').startOf('day').toDate()
-        const lastDayOfWeek = moment().day('Saturday').endOf('day').toDate()
-
-        const subscribe = await lecturesCollection
-        .where('classId', '==', this.id)
-        .where('date', '>=', firstDayOfWeek)
-        .where('date', '<=', lastDayOfWeek)
-        .orderBy('date')
-        .onSnapshot(snapshot => {
-          const lectures: Meeting[] = []
-          snapshot.forEach(meet => {
-            if (meet.exists) {
-              const generatedMeeting = new Meeting(
-                meet.id,
-                meet.data()?.teacherId,
-                meet.data()?.classId,
-                meet.data()?.title,
-                meet.data()?.description,
-                meet.data()?.date,
-                meet.data()?.timeEnd,
-                meet.data()?.timeStart,
-                meet.data()?.link,
-                meet.data()?.dateCreated,
-              )
-              generatedMeeting.isClosed = meet.data()?.isClosed
-
-              lectures.push(generatedMeeting)
-            }
-          })
-          this.meetings = lectures
-        })
-        this.$store.dispatch('snapshots/setMeetingsSnapshot', subscribe)
-      }
     },
     toggleAddNewUnit (): void {
       // NOTE: confirm first

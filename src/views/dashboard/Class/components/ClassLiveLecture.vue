@@ -31,24 +31,27 @@
       >
         <v-chip
           filter
-          active-class="secondary"
-          value="all"
-        >
-          All Meetings
-        </v-chip>
-        <v-chip
-          filter
-          active-class="secondary"
+          active-class="primary"
           value="today"
+          class="px-6"
         >
           Today
         </v-chip>
         <v-chip
           filter
-          active-class="secondary"
+          active-class="primary"
           value="thisWeek"
+          class="px-6"
         >
           This Week
+        </v-chip>
+        <v-chip
+          filter
+          active-class="primary"
+          class="px-6"
+          value="all"
+        >
+          All Meetings
         </v-chip>
       </v-chip-group>
     </v-card-title>
@@ -65,8 +68,18 @@
         v-else
         class="ma-6"
       >
-        <p class="grey--text caption">
-          There is no meeting here.
+        <p
+          class="grey--text subtitle-1"
+        >
+          <span v-if="filterClassMeetings === 'today'">
+            No meeting today.
+          </span>
+          <span v-else-if="filterClassMeetings === 'thisWeek'">
+            No meeting this week.
+          </span>
+          <span v-else-if="filterClassMeetings === 'all'">
+            No meeting found.
+          </span>
         </p>
       </div>
     </v-card-text>

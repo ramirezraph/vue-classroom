@@ -42,7 +42,7 @@
             v-else
             class="px-4 py-6"
           >
-            <span class="caption grey--text">No meeting today.</span>
+            <span class="subtitle-1 grey--text">No meeting today.</span>
           </div>
         </v-tab-item>
         <v-tab-item>
@@ -57,7 +57,7 @@
             v-else
             class="px-4 py-6"
           >
-            <span class="caption grey--text">No meeting this week.</span>
+            <span class="subtitle-1 grey--text">No meeting this week.</span>
           </div>
         </v-tab-item>
         <v-tab-item>
@@ -72,7 +72,7 @@
             v-else
             class="px-4 py-6"
           >
-            <span class="caption grey--text">No meeting found.</span>
+            <span class="subtitle-1 grey--text">No meeting found.</span>
           </div>
         </v-tab-item>
       </v-tabs-items>
