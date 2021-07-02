@@ -5,10 +5,10 @@
     class="mt-0"
   >
     <v-card-title
-      v-if="hasEditAccess"
       class="mt-6"
     >
       <v-btn
+        v-if="hasEditAccess"
         color="primary"
         rounded
         class="ml-5"
@@ -23,10 +23,11 @@
           New Meeting
         </span>
       </v-btn>
-      <v-spacer />
+      <v-spacer v-if="hasEditAccess" />
       <v-chip-group
         v-model="filterClassMeetings"
         mandatory
+        :class="hasEditAccess ? 'px-0' : 'px-4'"
       >
         <v-chip
           filter
