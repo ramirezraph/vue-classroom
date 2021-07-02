@@ -113,7 +113,7 @@
             <v-spacer />
             <v-btn
               dense
-              class="ma-0 pa-0 primary--text text-right"
+              class="text-right ma-0 pa-0 primary--text"
               text
             >
               View All
@@ -173,7 +173,7 @@
         >
           <v-list-item-title v-text="p.title" />
         </app-bar-item>
-        <v-divider class="mb-2 mt-2" />
+        <v-divider class="mt-2 mb-2" />
         <app-bar-item>
           <v-list-item
             class="ma-0 pa-0"

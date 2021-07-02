@@ -3,7 +3,7 @@
     flat
     class="ma-0 pa-0"
   >
-    <div class="d-flex align-start px-3">
+    <div class="px-3 d-flex align-start">
       <div class="pt-5">
         <v-avatar size="48">
           <img
@@ -15,7 +15,7 @@
         </v-avatar>
       </div>
       <div>
-        <v-card-title class="text-h4 pt-4 d-flex">
+        <v-card-title class="pt-4 text-h4 d-flex">
           <span class="mr-3">{{ fullName }}</span>
         </v-card-title>
         <v-card-text class="subtitle-1">
@@ -38,7 +38,7 @@
             </p>
             <v-btn
               text
-              class="primary--text pa-0 justify-start"
+              class="justify-start primary--text pa-0"
               small
               @click="postNotificationClicked(notification.postId, notification.classId)"
             >
@@ -55,7 +55,7 @@
             </p>
             <v-btn
               text
-              class="primary--text pa-0 justify-start"
+              class="justify-start primary--text pa-0"
               small
               @click="postNotificationClicked(notification.postId, notification.classId)"
             >
@@ -91,18 +91,18 @@
     </div>
     <v-card-actions
       v-if="type === 'ClassInvite' && !notification.result"
-      class="ml-16 py-0 pb-3"
+      class="py-0 pb-3 ml-16"
     >
       <v-btn
         color="primary"
         width="150"
-        class="ma-0 ml-1"
+        class="ml-1 ma-0"
         @click="inviteAccept()"
       >
         Accept
       </v-btn>
       <v-btn
-        class="ma-0 ml-3"
+        class="ml-3 ma-0"
         @click="inviteDecline()"
       >
         Decline
@@ -110,7 +110,7 @@
     </v-card-actions>
     <v-card-actions
       v-else-if="notification.result"
-      class="ml-16 py-0 pb-3"
+      class="py-0 pb-3 ml-16"
     >
       <span class="ml-1 caption grey--text">{{ notification.result }}.</span>
     </v-card-actions>
