@@ -42,6 +42,7 @@
       </div>
       <div class="ml-auto">
         <v-btn
+          v-if="!meeting.isClosed"
           color="info"
           small
           class="mr-2 text-none"

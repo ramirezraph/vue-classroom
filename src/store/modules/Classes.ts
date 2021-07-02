@@ -106,6 +106,7 @@ export default {
                    meet.data()?.link,
                    meet.data()?.dateCreated,
                  )
+                 generatedMeeting.isClosed = meet.data()?.isClosed,
                  meetings.push(generatedMeeting)
                }
              })
