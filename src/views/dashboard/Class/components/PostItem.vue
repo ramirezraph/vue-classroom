@@ -192,7 +192,7 @@
 </template>
 
 <script lang="ts">
-  import Vue, { PropType } from 'vue'
+  import { PropType } from 'vue'
   import { Comment, Post } from '@/model/Post'
   import { classesCollection, usersCollection } from '@/fb'
   import { User } from '@/model/User'
@@ -201,10 +201,11 @@
   // eslint-disable-next-line no-undef
 
   import getFullName from '@/plugins/fullname'
+  import SendNotification from '@/plugins/SendNotification'
   // eslint-disable-next-line no-undef
   import Timestamp = firebase.firestore.Timestamp;
 
-  export default Vue.extend({
+  export default SendNotification.extend({
     components: {
       CommentItem,
     },
@@ -321,6 +322,7 @@
           postRef.set({
             numberOfComments: firebase.firestore.FieldValue.increment(1),
           }, { merge: true })
+          this.sendCommentOnPostNotification(this.classId, this.currentUser.id, this.postItem.userId, this.postItem.id)
         }).catch(error => {
           console.log(error.message)
         }).finally(() => {
@@ -381,11 +383,17 @@
     display: inline-block;
     margin-right: 5px;
   }
-  .list-enter-active, .list-leave-active {
-    transition: all 0.5s;
+  .list-enter-active {
+    transition: all 0.5s ease-out;
   }
-  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  .list-leave-active {
+    transition: all 0.5s ease-in;
+  }
+  .list-enter /* .list-leave-active below version 2.1.8 */ {
     opacity: 0;
     transform: translateY(5px);
+  }
+  .list-leave-to {
+    opacity: 0;
   }
 </style>

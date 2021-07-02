@@ -21,38 +21,69 @@
         <v-card-text class="subtitle-1">
           <div
             v-if="type === 'Regular'"
-            v-once
           >
-            <p v-once>
+            <p
+              class="ma-0 pa-0"
+            >
               <span v-html="notification.content" />
             </p>
           </div>
           <div
+            v-else-if="type === 'Post'"
+          >
+            <p
+              class="d-block ma-0 pa-0"
+            >
+              posted in <strong>{{ classCode }}: {{ classTitle }}</strong>.
+            </p>
+            <v-btn
+              text
+              class="primary--text pa-0 justify-start"
+              small
+              @click="postNotificationClicked(notification.postId, notification.classId)"
+            >
+              View Class
+            </v-btn>
+          </div>
+          <div
+            v-else-if="type === 'Comment'"
+          >
+            <p
+              class="d-block ma-0 pa-0"
+            >
+              {{ andNumberOthersText }}commented on your post in <strong>{{ classCode }}: {{ classTitle }}</strong>.
+            </p>
+            <v-btn
+              text
+              class="primary--text pa-0 justify-start"
+              small
+              @click="postNotificationClicked(notification.postId, notification.classId)"
+            >
+              View Class
+            </v-btn>
+          </div>
+          <div
             v-else-if="type === 'Assignment'"
-            v-once
           >
             Posted a new assignment in {{ classCode }}: {{ classTitle }}.
             <br>
             <span
-              v-once
               class="caption grey--text"
             >Due: 5/19/2021, 12:00 AM</span>
           </div>
           <div
             v-else-if="type === 'ClassInvite'"
-            v-once
           >
             Invited you to join the class:
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
           <div
             v-else-if="type === 'ClassInviteResult'"
-            v-once
           >
             Accepted your request to join the class: <br>
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
-          <span class="caption grey--text">
+          <span class="caption grey--text ma-0 pa-0">
             {{ displayDate }}
           </span>
         </v-card-text>
@@ -88,7 +119,7 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { UserNotification, NotificationType, ClassInviteNotification } from '@/model/UserNotification'
+  import { UserNotification, NotificationType, ClassInviteNotification, CommentNotification } from '@/model/UserNotification'
   import { classesCollection, notificationsCollection, usersCollection } from '@/fb'
   import getFullName from '@/plugins/fullname'
   import firebase from 'firebase'
@@ -125,6 +156,19 @@
       currentUser (): User {
         return this.$store.getters['user/getCurrentUser']
       },
+      andNumberOthersText (): string {
+        if (this.type === 'Comment') {
+          const number = (this.notification as CommentNotification).numberOfOtherUser - 1
+          if (number === 0) return ''
+          if (number === 1) {
+            return `and ${number} other `
+          }
+
+          return `and ${number} others `
+        }
+
+        return ''
+      },
     },
     mounted () {
       usersCollection.doc(this.notification.userId).get().then(
@@ -136,7 +180,12 @@
         },
       )
 
-      if (this.type.toString() === 'ClassInvite' || this.type.toString() === 'ClassInviteResult' || this.type.toString() === 'Assignment') {
+      if (
+        this.type.toString() === 'ClassInvite' ||
+        this.type.toString() === 'ClassInviteResult' ||
+        this.type.toString() === 'Assignment' ||
+        this.type.toString() === 'Post' ||
+        this.type.toString() === 'Comment') {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         classesCollection.doc(this.notification?.classId).get().then(doc => {
@@ -148,7 +197,6 @@
       }
 
       // date now
-      // const dateToday = moment()
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       this.displayDate = moment(this.notification.date.toDate()).fromNow()
@@ -285,6 +333,17 @@
               type: 'error',
             })
           })
+      },
+
+      // events
+      postNotificationClicked (postId: string, classId: string): void {
+        const pathToGo = '/classes/' + classId
+        const currentPath = this.$router.currentRoute.path
+
+        if (!(postId || classId)) return
+        if (pathToGo === currentPath) return
+
+        this.$router.replace(pathToGo)
       },
     },
   })

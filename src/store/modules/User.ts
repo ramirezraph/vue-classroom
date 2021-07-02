@@ -2,7 +2,7 @@ import { User } from "@/model/User";
 import {firebaseAuth, notificationsCollection, storageRef, usersCollection} from "@/fb";
 import firebase from "firebase";
 import UserCredential = firebase.auth.UserCredential;
-import { AssignmentNotification, ClassInviteNotification, ClassInviteResultNotification, RegularNotification, UserNotification } from "@/model/UserNotification";
+import { AssignmentNotification, ClassInviteNotification, ClassInviteResultNotification, CommentNotification, PostNotification, RegularNotification, UserNotification } from "@/model/UserNotification";
 
 export default {
   namespaced: true,
@@ -261,12 +261,36 @@ export default {
                   n.data()?.content,
                 ))
                 break
+              case 'Post':
+                notifications.push(new PostNotification(
+                  n.id,
+                  n.data()?.userId,
+                  n.data()?.type,
+                  n.data()?.date,
+                  n.data()?.read,
+                  n.data()?.classId,
+                  n.data()?.postId,
+                ))
+                break
+              case 'Comment':
+                notifications.push(new CommentNotification(
+                  n.id,
+                  n.data()?.userId,
+                  n.data()?.type,
+                  n.data()?.date,
+                  n.data()?.read,
+                  n.data()?.classId,
+                  n.data()?.postId,
+                  n.data()?.numberOfOtherUser,
+                ))
+                break
               default:
                 console.log('Unknown type');
                 return
             }
           })
           commit('SET_NOTIFICATIONS', notifications)
+
         })
         dispatch('snapshots/setPushNotificationSnapshot', unsubscribe, { root: true })
       }

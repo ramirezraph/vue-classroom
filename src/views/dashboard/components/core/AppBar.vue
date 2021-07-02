@@ -69,7 +69,7 @@
       offset-y
       origin="top right"
       transition="scale-transition"
-      :close-on-content-click="false"
+      :close-on-content-click="true"
     >
       <template #activator="{ attrs, on }">
         <v-btn

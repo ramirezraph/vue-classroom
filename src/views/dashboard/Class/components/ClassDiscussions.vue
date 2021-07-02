@@ -229,8 +229,8 @@
         this.post_message = ''
         await classesCollection.doc(classId).collection('discussions')
           .add(newPost)
-          .then(() => {
-            this.sendPostNotification(this.classId, this.user.id)
+          .then((res) => {
+            this.sendPostNotification(this.classId, this.user.id, res.id)
           })
           .catch(addError => {
             this.$notify({
