@@ -140,13 +140,14 @@
                   @close="imgIndex = null"
                 />
 
-                <video-player
+                <video
                   v-else-if="activeFile.file.type === 'Video'"
-                  ref="videoPlayer"
-                  class="video-player-box vjs-big-play-centered full-width"
-                  :options="playerOptions"
-                  :playsinline="true"
-                />
+                  class="fill-height"
+                  width="100%"
+                  controls
+                >
+                  <source :src="activeFile.file.link">
+                </video>
 
                 <object
                   v-else-if="activeFile.file.type === 'Other' && getFileType(activeFile.file) === 'pdf'"
@@ -243,11 +244,6 @@
   import CoolLightBox from 'vue-cool-lightbox'
   import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css'
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  import { videoPlayer } from 'vue-video-player'
-  import 'video.js/dist/video-js.css'
-
   import { Unit } from '@/model/Unit'
 
   import firebase from 'firebase'
@@ -267,7 +263,6 @@
       File,
       CoolLightBox,
       AccordionUnitItem,
-      videoPlayer,
       CommentItem,
     },
     props: {
@@ -293,8 +288,6 @@
         units: [] as Unit[],
 
         dbRef: {} as DocumentReference,
-
-        playerOptions: {},
 
         // for light box
         imgIndex: null,
@@ -323,11 +316,6 @@
       fileComments (): Comment[] {
         return this.activeFile.file.comments
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      player (): any {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return (this.$refs.videoPlayer as any).player
-      },
     },
     watch: {
       '$route.params.id' () {
@@ -338,20 +326,6 @@
         }).catch(error => {
           console.log('Fetch Unit Failed on ViewContent Mounted: ' + error)
         })
-      },
-      'activeFile' () {
-        if (this.activeFile.file.type === 'Video') {
-          // videojs options
-          this.playerOptions = {
-            language: 'en',
-            playbackRates: [0.7, 1.0, 1.5, 2.0],
-            fluid: true,
-            sources: [{
-              type: 'video/mp4',
-              src: this.activeFile.file.link,
-            }],
-          }
-        }
       },
     },
     mounted () {
