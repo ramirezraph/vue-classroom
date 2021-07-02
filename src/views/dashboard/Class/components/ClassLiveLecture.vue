@@ -107,7 +107,6 @@
     },
     watch: {
       'filterClassMeetings' () {
-        console.log('ey', this.filterClassMeetings)
         this.$emit('filter-meetings', this.filterClassMeetings)
       },
     },

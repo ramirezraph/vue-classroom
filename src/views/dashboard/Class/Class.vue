@@ -338,7 +338,7 @@
               <class-live-lecture
                 :meetings="meetings"
                 :has-edit-access="hasEditAccess"
-                @filter-meetings="fetchLectures"
+                @filter-meetings="setFilterForLectures"
               />
             </v-tab-item>
           </v-tabs-items>

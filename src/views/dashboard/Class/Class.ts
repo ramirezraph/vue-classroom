@@ -97,6 +97,8 @@ export default Vue.extend({
       // class settings
       dialogGeneralClassSettings: false,
       destroyGeneralClassSettingsDialog: false,
+
+      filterForMeetings: 'all',
     }
   },
   computed: {
@@ -161,7 +163,7 @@ export default Vue.extend({
       }).catch(error => {
         console.log('Fetch People Failed on Watch: ' + error)
       })
-      this.fetchLectures('all').then(() => {
+      this.fetchLectures().then(() => {
         console.log('fetch Lecture success on watch')
       }).catch(error => {
         console.log('Fetch Lecture Failed on Watch: ' + error)
@@ -296,8 +298,14 @@ export default Vue.extend({
         this.unitDataLoading = false
       }
     },
-    async fetchLectures (filter: string) {
-      console.log('filtering meetings by', filter)
+    setFilterForLectures (filter: string) {
+      this.filterForMeetings = filter
+      this.fetchLectures()
+    },
+    async fetchLectures () {
+      console.log('filtering meetings by', this.filterForMeetings)
+
+      const filter = this.filterForMeetings || 'all'
 
       const snapshot = this.$store.getters['snapshots/getMeetingsSnapshot']
 
