@@ -4,11 +4,14 @@
     outlined
     class="mt-0"
   >
-    <v-card-title v-if="hasEditAccess">
+    <v-card-title
+      v-if="hasEditAccess"
+      class="mt-6"
+    >
       <v-btn
         color="primary"
         rounded
-        class="mt-4 ml-5"
+        class="ml-5"
         @click="createLiveLectureDialog = true"
       >
         <v-icon left>
@@ -20,6 +23,33 @@
           New Meeting
         </span>
       </v-btn>
+      <v-spacer />
+      <v-chip-group
+        v-model="filterClassMeetings"
+        mandatory
+      >
+        <v-chip
+          filter
+          active-class="secondary"
+          value="all"
+        >
+          All Meetings
+        </v-chip>
+        <v-chip
+          filter
+          active-class="secondary"
+          value="today"
+        >
+          Today
+        </v-chip>
+        <v-chip
+          filter
+          active-class="secondary"
+          value="thisWeek"
+        >
+          This Week
+        </v-chip>
+      </v-chip-group>
     </v-card-title>
     <v-card-text>
       <div v-if="meetings.length > 0">
@@ -72,8 +102,16 @@
     data () {
       return {
         createLiveLectureDialog: false,
+        filterClassMeetings: 0,
       }
     },
+    watch: {
+      'filterClassMeetings' () {
+        console.log('ey', this.filterClassMeetings)
+        this.$emit('filter-meetings', this.filterClassMeetings)
+      },
+    },
+    methods: {},
   })
 </script>
 

@@ -13,11 +13,11 @@
     <span class="caption grey--text">
       {{ gcName }}
     </span>
-    <div class="d-flex mt-3 pb-6">
+    <div class="pb-6 mt-3 d-flex">
       <div>
         <v-chip
           color="primary"
-          class="time-chips white--text px-6 mr-2"
+          class="px-6 mr-2 time-chips white--text"
         >
           <v-icon
             left
@@ -29,7 +29,7 @@
         </v-chip>
         <v-chip
           color="error"
-          class="time-chips white--text px-6 mr-2"
+          class="px-6 mr-2 time-chips white--text"
         >
           <v-icon
             left
@@ -44,7 +44,7 @@
         <v-btn
           color="info"
           small
-          class="text-none mr-2"
+          class="mr-2 text-none"
           width="110"
           depressed
           tile
@@ -55,7 +55,7 @@
         <v-btn
           color="grey darken-3"
           small
-          class="text-none mr-2"
+          class="mr-2 text-none"
           depressed
           tile
           width="110"

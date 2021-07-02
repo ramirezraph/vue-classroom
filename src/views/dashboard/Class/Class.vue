@@ -205,7 +205,7 @@
                       </validation-provider>
                       <v-btn
                         type="submit"
-                        class="info mr-2"
+                        class="mr-2 info"
                         :disabled="invalid"
                       >
                         Submit
@@ -338,6 +338,7 @@
               <class-live-lecture
                 :meetings="meetings"
                 :has-edit-access="hasEditAccess"
+                @filter-meetings="fetchLectures"
               />
             </v-tab-item>
           </v-tabs-items>
