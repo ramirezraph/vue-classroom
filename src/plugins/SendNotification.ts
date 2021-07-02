@@ -35,7 +35,7 @@ export default Vue.extend({
                 type: NotificationType.Regular,
                 read: false,
                 date: firebase.firestore.Timestamp.now(),
-                content: `posted on ${classCode}: ${classTitle}.`,
+                content: `posted on <strong>${classCode}: ${classTitle}</strong>.`,
               }).then(() => {
                 console.log('notification sent for ' + userId)
               })

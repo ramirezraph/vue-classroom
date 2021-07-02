@@ -69,6 +69,7 @@
       offset-y
       origin="top right"
       transition="scale-transition"
+      :close-on-content-click="false"
     >
       <template #activator="{ attrs, on }">
         <v-btn
@@ -243,7 +244,9 @@
         profile: [
           { title: 'Profile', route: '/settings/account' },
           { title: 'Settings', route: '/settings/general' },
+
         ],
+        notificationMenu: false,
       }
     },
 
@@ -269,6 +272,7 @@
         })
       },
       readNotifications (): void {
+        this.notificationMenu = true
         const currentUser: User = this.$store.getters['user/getCurrentUser']
         this.$store.dispatch('user/fetchNotifications')
 

@@ -19,19 +19,36 @@
           <span class="mr-3">{{ fullName }}</span>
         </v-card-title>
         <v-card-text class="subtitle-1">
-          <div v-if="type === 'Regular'">
-            {{ notification.content }}
+          <div
+            v-if="type === 'Regular'"
+            v-once
+          >
+            <p v-once>
+              <span v-html="notification.content" />
+            </p>
           </div>
-          <div v-else-if="type === 'Assignment'">
+          <div
+            v-else-if="type === 'Assignment'"
+            v-once
+          >
             Posted a new assignment in {{ classCode }}: {{ classTitle }}.
             <br>
-            <span class="caption grey--text">Due: 5/19/2021, 12:00 AM</span>
+            <span
+              v-once
+              class="caption grey--text"
+            >Due: 5/19/2021, 12:00 AM</span>
           </div>
-          <div v-else-if="type === 'ClassInvite'">
+          <div
+            v-else-if="type === 'ClassInvite'"
+            v-once
+          >
             Invited you to join the class:
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
-          <div v-else-if="type === 'ClassInviteResult'">
+          <div
+            v-else-if="type === 'ClassInviteResult'"
+            v-once
+          >
             Accepted your request to join the class: <br>
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
