@@ -4,7 +4,7 @@
     outlined
     class="mt-0"
   >
-    <v-card-title>
+    <v-card-title v-if="hasEditAccess">
       <v-btn
         color="primary"
         rounded
