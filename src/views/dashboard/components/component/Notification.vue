@@ -3,7 +3,7 @@
     flat
     class="ma-0 pa-0"
   >
-    <div class="d-flex align-start px-3">
+    <div class="px-3 d-flex align-start">
       <div class="pt-5">
         <v-avatar size="48">
           <img
@@ -15,43 +15,94 @@
         </v-avatar>
       </div>
       <div>
-        <v-card-title class="text-h4 pt-4 d-flex">
-          <span>{{ fullName }}</span>
+        <v-card-title class="pt-4 text-h4 d-flex">
+          <span class="mr-3">{{ fullName }}</span>
         </v-card-title>
         <v-card-text class="subtitle-1">
-          <div v-if="type === 'Regular'">
-            {{ notification.content }}
+          <div
+            v-if="type === 'Regular'"
+          >
+            <p
+              class="ma-0 pa-0"
+            >
+              <span v-html="notification.content" />
+            </p>
           </div>
-          <div v-else-if="type === 'Assignment'">
+          <div
+            v-else-if="type === 'Post'"
+          >
+            <p
+              class="d-block ma-0 pa-0"
+            >
+              posted in <strong>{{ classCode }}: {{ classTitle }}</strong>.
+            </p>
+            <v-btn
+              text
+              class="justify-start primary--text pa-0"
+              small
+              @click="postNotificationClicked(notification.postId, notification.classId)"
+            >
+              View Class
+            </v-btn>
+          </div>
+          <div
+            v-else-if="type === 'Comment'"
+          >
+            <p
+              class="d-block ma-0 pa-0"
+            >
+              {{ andNumberOthersText }}commented on your post in <strong>{{ classCode }}: {{ classTitle }}</strong>.
+            </p>
+            <v-btn
+              text
+              class="justify-start primary--text pa-0"
+              small
+              @click="postNotificationClicked(notification.postId, notification.classId)"
+            >
+              View Class
+            </v-btn>
+          </div>
+          <div
+            v-else-if="type === 'Assignment'"
+          >
             Posted a new assignment in {{ classCode }}: {{ classTitle }}.
             <br>
-            <span class="caption grey--text">Due: 5/19/2021, 12:00 AM</span>
+            <span
+              class="caption grey--text"
+            >Due: 5/19/2021, 12:00 AM</span>
           </div>
-          <div v-else-if="type === 'ClassInvite'">
+          <div
+            v-else-if="type === 'ClassInvite'"
+          >
             Invited you to join the class:
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
-          <div v-else-if="type === 'ClassInviteResult'">
+          <div
+            v-else-if="type === 'ClassInviteResult'"
+          >
             Accepted your request to join the class: <br>
             <strong>{{ classCode }}: {{ classTitle }}</strong>.
           </div>
+          <span class="caption grey--text ma-0 pa-0">
+            {{ displayDate }}
+          </span>
         </v-card-text>
       </div>
     </div>
     <v-card-actions
       v-if="type === 'ClassInvite' && !notification.result"
-      class="ml-16 py-0 pb-3"
+      class="py-0 pb-3 ml-16"
     >
       <v-btn
         color="primary"
         width="150"
-        class="ma-0 ml-1"
+        class="ml-1 ma-0"
         @click="inviteAccept()"
       >
         Accept
       </v-btn>
       <v-btn
-        class="ma-0 ml-3"
+        class="ml-3 ma-0"
         @click="inviteDecline()"
       >
         Decline
@@ -59,7 +110,7 @@
     </v-card-actions>
     <v-card-actions
       v-else-if="notification.result"
-      class="ml-16 py-0 pb-3"
+      class="py-0 pb-3 ml-16"
     >
       <span class="ml-1 caption grey--text">{{ notification.result }}.</span>
     </v-card-actions>
@@ -68,12 +119,13 @@
 
 <script lang="ts">
   import Vue, { PropType } from 'vue'
-  import { UserNotification, NotificationType, ClassInviteNotification } from '@/model/UserNotification'
+  import { UserNotification, NotificationType, ClassInviteNotification, CommentNotification } from '@/model/UserNotification'
   import { classesCollection, notificationsCollection, usersCollection } from '@/fb'
   import getFullName from '@/plugins/fullname'
   import firebase from 'firebase'
   import { Class } from '@/model/Class'
   import { User } from '@/model/User'
+  import moment from 'moment'
 
   export default Vue.extend({
     props: {
@@ -90,6 +142,8 @@
         classCode: '',
 
         requiresClassInfo: false,
+
+        displayDate: null,
       }
     },
     computed: {
@@ -102,6 +156,19 @@
       currentUser (): User {
         return this.$store.getters['user/getCurrentUser']
       },
+      andNumberOthersText (): string {
+        if (this.type === 'Comment') {
+          const number = (this.notification as CommentNotification).numberOfOtherUser - 1
+          if (number === 0) return ''
+          if (number === 1) {
+            return `and ${number} other `
+          }
+
+          return `and ${number} others `
+        }
+
+        return ''
+      },
     },
     mounted () {
       usersCollection.doc(this.notification.userId).get().then(
@@ -113,7 +180,12 @@
         },
       )
 
-      if (this.type.toString() === 'ClassInvite' || this.type.toString() === 'ClassInviteResult' || this.type.toString() === 'Assignment') {
+      if (
+        this.type.toString() === 'ClassInvite' ||
+        this.type.toString() === 'ClassInviteResult' ||
+        this.type.toString() === 'Assignment' ||
+        this.type.toString() === 'Post' ||
+        this.type.toString() === 'Comment') {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         classesCollection.doc(this.notification?.classId).get().then(doc => {
@@ -123,6 +195,11 @@
           }
         })
       }
+
+      // date now
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.displayDate = moment(this.notification.date.toDate()).fromNow()
     },
     methods: {
       inviteAccept (): void {
@@ -256,6 +333,17 @@
               type: 'error',
             })
           })
+      },
+
+      // events
+      postNotificationClicked (postId: string, classId: string): void {
+        const pathToGo = '/classes/' + classId
+        const currentPath = this.$router.currentRoute.path
+
+        if (!(postId || classId)) return
+        if (pathToGo === currentPath) return
+
+        this.$router.replace(pathToGo)
       },
     },
   })

@@ -4,13 +4,13 @@
     class="mt-n8"
   >
     <v-card
-      class="px-6 pb-3 pt-1"
+      class="px-6 pt-1 pb-3"
       elevation="2"
     >
       <v-card
         outlined
       >
-        <v-card-title class="body-1 pa-2 pl-4 grey--text">
+        <v-card-title class="pl-4 body-1 pa-2 grey--text">
           Post a message
         </v-card-title>
         <v-divider />
@@ -76,6 +76,7 @@
                 color="primary"
                 min-width="150"
                 :loading="postLoading"
+                :disabled="!(post_message.length > 0)"
                 @click="postDiscussion"
               >
                 Post
@@ -165,17 +166,18 @@
 </template>
 
 <script lang="ts">
-  import Vue, { PropType } from 'vue'
+  import { PropType } from 'vue'
   import PostItem from './PostItem.vue'
   import { Post } from '@/model/Post'
   import { User } from '@/model/User'
   import firebase from 'firebase'
   import { classesCollection } from '@/fb'
   import EditPostDialog from './EditPostDialog.vue'
+  import SendNotification from '@/plugins/SendNotification'
   // eslint-disable-next-line no-undef
   import Timestamp = firebase.firestore.Timestamp;
 
-  export default Vue.extend({
+  export default SendNotification.extend({
     components: {
       PostItem,
       EditPostDialog,
@@ -228,6 +230,9 @@
         this.post_message = ''
         await classesCollection.doc(classId).collection('discussions')
           .add(newPost)
+          .then((res) => {
+            this.sendPostNotification(this.classId, this.user.id, res.id)
+          })
           .catch(addError => {
             this.$notify({
               group: 'appWideNotification',

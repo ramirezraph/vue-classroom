@@ -253,8 +253,8 @@ export default Vue.extend({
               }
             })
             this.discussions = fetchDiscussions
-            this.$store.dispatch('snapshots/setDiscussionsSnapshot', unsubscribe)
           })
+          this.$store.dispatch('snapshots/setDiscussionsSnapshot', unsubscribe)
       } finally {
         this.unitDataLoading = false
       }

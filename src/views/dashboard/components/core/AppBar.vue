@@ -69,6 +69,7 @@
       offset-y
       origin="top right"
       transition="scale-transition"
+      :close-on-content-click="true"
     >
       <template #activator="{ attrs, on }">
         <v-btn
@@ -112,7 +113,7 @@
             <v-spacer />
             <v-btn
               dense
-              class="ma-0 pa-0 primary--text text-right"
+              class="text-right ma-0 pa-0 primary--text"
               text
             >
               View All
@@ -172,7 +173,7 @@
         >
           <v-list-item-title v-text="p.title" />
         </app-bar-item>
-        <v-divider class="mb-2 mt-2" />
+        <v-divider class="mt-2 mb-2" />
         <app-bar-item>
           <v-list-item
             class="ma-0 pa-0"
@@ -243,14 +244,16 @@
         profile: [
           { title: 'Profile', route: '/settings/account' },
           { title: 'Settings', route: '/settings/general' },
+
         ],
+        notificationMenu: false,
       }
     },
 
     computed: {
       ...mapGetters(['drawer']),
       notifications (): UserNotification[] {
-        return this.$store.getters['user/getNotifications']
+        return this.$store.getters['user/getNotifications'] || []
       },
       unreadNotifications (): number {
         return this.notifications.filter(n => n.read === false).length
@@ -269,7 +272,9 @@
         })
       },
       readNotifications (): void {
+        this.notificationMenu = true
         const currentUser: User = this.$store.getters['user/getCurrentUser']
+        this.$store.dispatch('user/fetchNotifications')
 
         if (this.unreadNotifications <= 0) return
 
@@ -294,5 +299,25 @@
     &::before {
       opacity: 0;
     }
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $color-primary;
   }
 </style>
