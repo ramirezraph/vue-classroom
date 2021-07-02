@@ -247,6 +247,9 @@
                       text: 'You have joined the class successfully.',
                       type: 'success',
                     })
+                    setTimeout(() => {
+                      this.$store.dispatch('classes/fetchAllMeetings', { currentUser: this.currentUser })
+                    }, 1000)
                   }).catch(error => {
                     // error adding on people collection
                     this.$notify({

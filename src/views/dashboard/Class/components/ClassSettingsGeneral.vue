@@ -97,7 +97,7 @@
           >
             <v-btn
               min-width="200"
-              class="error darken-1 text-none mr-3"
+              class="mr-3 error darken-1 text-none"
               @click="dialogConfirm = true"
             >
               <v-icon left>
@@ -106,7 +106,7 @@
               Leave Class
             </v-btn>
             <v-btn
-              class="grey darken-1 text-none mr-3"
+              class="mr-3 grey darken-1 text-none"
             >
               <v-icon left>
                 mdi-chat-processing-outline
@@ -170,6 +170,9 @@
       modelData (): boolean {
         return this.vModel
       },
+      currentUser (): User {
+        return this.$store.getters['user/getCurrentUser']
+      },
     },
     methods: {
       cancel (): void {
@@ -178,13 +181,12 @@
       leaveClass (response: boolean): void {
         if (response) {
           const activeClass: Class = this.$store.getters['class/getActiveClass']
-          const activeUser: User = this.$store.getters['user/getCurrentUser']
           classesCollection.doc(activeClass.id).collection('people')
-            .doc(activeUser.id)
+            .doc(this.currentUser.id)
             .delete()
             .then(() => {
               classesCollection.doc(activeClass.id).update({
-                userList: firebase.firestore.FieldValue.arrayRemove(activeUser.id),
+                userList: firebase.firestore.FieldValue.arrayRemove(this.currentUser.id),
               }).then(() => {
                 this.$router.replace('/classes').then(() => {
                   this.$notify({
@@ -193,6 +195,7 @@
                     text: 'Leave the class successfully.',
                     type: 'success',
                   })
+                  this.$store.dispatch('classes/fetchAllMeetings', { currentUser: this.currentUser })
                 })
               }).catch(errorOnArray => {
                 this.$notify({

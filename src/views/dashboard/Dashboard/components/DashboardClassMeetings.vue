@@ -2,7 +2,7 @@
   <v-card
     elevation="2"
     outlined
-    class="ma-0 py-6"
+    class="py-6 ma-0"
   >
     <v-card-title class="primary--text">
       <div class="d-flex align-center">
@@ -31,11 +31,49 @@
     <v-card-text>
       <v-tabs-items v-model="activeTab">
         <v-tab-item>
-          <class-meeting-item
-            v-for="meeting in classMeetings"
-            :key="meeting.id"
-            :meeting="meeting"
-          />
+          <div v-if="classMeetingsToday.length > 0">
+            <class-meeting-item
+              v-for="meeting in classMeetingsToday"
+              :key="meeting.id"
+              :meeting="meeting"
+            />
+          </div>
+          <div
+            v-else
+            class="px-4 py-6"
+          >
+            <span class="subtitle-1 grey--text">No meeting today.</span>
+          </div>
+        </v-tab-item>
+        <v-tab-item>
+          <div v-if="classMeetingsThisWeek.length > 0">
+            <class-meeting-item
+              v-for="meeting in classMeetingsThisWeek"
+              :key="meeting.id"
+              :meeting="meeting"
+            />
+          </div>
+          <div
+            v-else
+            class="px-4 py-6"
+          >
+            <span class="subtitle-1 grey--text">No meeting this week.</span>
+          </div>
+        </v-tab-item>
+        <v-tab-item>
+          <div v-if="classMeetings.length > 0">
+            <class-meeting-item
+              v-for="meeting in classMeetings"
+              :key="meeting.id"
+              :meeting="meeting"
+            />
+          </div>
+          <div
+            v-else
+            class="px-4 py-6"
+          >
+            <span class="subtitle-1 grey--text">No meeting found.</span>
+          </div>
         </v-tab-item>
       </v-tabs-items>
     </v-card-text>
@@ -46,6 +84,7 @@
   import Vue from 'vue'
   import ClassMeetingItem from './ClassMeetingItem.vue'
   import { Meeting } from '@/model/Meeting'
+  import moment from 'moment'
 
   export default Vue.extend({
     name: 'ClassMeetings',
@@ -56,15 +95,35 @@
       return {
         activeTab: 'All Meetings',
         tabs: [
-          'All Meetings',
           'Today',
           'This Week',
+          'All Meetings',
         ],
       }
     },
     computed: {
       classMeetings (): Meeting[] {
-        return this.$store.getters['classes/getAllMeetings']
+        return this.$store.getters['classes/getAllMeetings'] || []
+      },
+      classMeetingsToday (): Meeting[] {
+        const filteredMeetings = this.classMeetings.filter(meeting => {
+          const startOfToday = moment().startOf('day').toDate()
+          const endOfToday = moment().add(1, 'days').endOf('day').toDate()
+          const meetingDate = meeting.date.toDate()
+          return (meetingDate >= startOfToday && meetingDate <= endOfToday)
+        })
+
+        return filteredMeetings
+      },
+      classMeetingsThisWeek (): Meeting[] {
+        const filteredMeetings = this.classMeetings.filter(meeting => {
+          const firstDayOfWeek = moment().day('Sunday').startOf('day').toDate()
+          const lastDayOfWeek = moment().day('Saturday').endOf('day').toDate()
+          const meetingDate = meeting.date.toDate()
+          return (meetingDate >= firstDayOfWeek && meetingDate <= lastDayOfWeek)
+        })
+
+        return filteredMeetings
       },
     },
   })

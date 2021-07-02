@@ -84,6 +84,9 @@ export default Vue.extend({
                     text: 'You have enrolled successfully.',
                     type: 'success',
                   })
+                  setTimeout(() => {
+                    this.$store.dispatch('classes/fetchAllMeetings', { currentUser: this.currentUser })
+                  }, 1000)
                 })
               }).catch(error => {
                 this.join_classCode = ''

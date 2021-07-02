@@ -19,6 +19,7 @@ import { User, UserType } from '@/model/User'
 import ViewContent from './components/ViewContent.vue'
 import CreateClassDialog from '@/views/dashboard/Classes/components/CreateClassDialog.vue'
 import { Meeting } from '@/model/Meeting'
+import moment from 'moment'
 import DocumentReference = firebase.firestore.DocumentReference;
 
 extend('required', {
@@ -96,6 +97,8 @@ export default Vue.extend({
       // class settings
       dialogGeneralClassSettings: false,
       destroyGeneralClassSettingsDialog: false,
+
+      filterForMeetings: 'all',
     }
   },
   computed: {
@@ -137,6 +140,27 @@ export default Vue.extend({
       }
 
       return hasAccess
+    },
+    filteredClassMeetings (): Meeting[] {
+      switch (this.filterForMeetings) {
+        case 'all':
+          return this.meetings
+        case 'today':
+          return this.meetings.filter(meeting => {
+            const startOfToday = moment().startOf('day').toDate()
+            const endOfToday = moment().add(1, 'days').endOf('day').toDate()
+            const meetingDate = meeting.date.toDate()
+            return (meetingDate >= startOfToday && meetingDate <= endOfToday)
+          })
+        case 'thisWeek':
+          return this.meetings.filter(meeting => {
+            const firstDayOfWeek = moment().day('Sunday').startOf('day').toDate()
+            const lastDayOfWeek = moment().day('Saturday').endOf('day').toDate()
+            const meetingDate = meeting.date.toDate()
+            return (meetingDate >= firstDayOfWeek && meetingDate <= lastDayOfWeek)
+          })
+      }
+      return this.meetings
     },
   },
   watch: {
@@ -300,7 +324,12 @@ export default Vue.extend({
         this.unitDataLoading = false
       }
     },
+    setFilterForLectures (filter: string) {
+      this.filterForMeetings = filter
+    },
     async fetchLectures () {
+      console.log('filtering meetings by', this.filterForMeetings)
+
       const snapshot = this.$store.getters['snapshots/getMeetingsSnapshot']
 
       if (snapshot) {
@@ -308,7 +337,9 @@ export default Vue.extend({
         snapshot() // detach a listener
       }
 
-      const subscribe = await lecturesCollection.where('classId', '==', this.id)
+      const subscribe = await lecturesCollection
+        .where('classId', '==', this.id)
+        .orderBy('date')
         .onSnapshot(snapshot => {
           const lectures: Meeting[] = []
           snapshot.forEach(meet => {
@@ -331,8 +362,8 @@ export default Vue.extend({
             }
           })
           this.meetings = lectures
-          this.$store.dispatch('snapshots/setMeetingsSnapshot', subscribe)
         })
+        this.$store.dispatch('snapshots/setMeetingsSnapshot', subscribe)
     },
     toggleAddNewUnit (): void {
       // NOTE: confirm first

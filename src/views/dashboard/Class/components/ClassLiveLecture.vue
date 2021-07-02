@@ -4,11 +4,14 @@
     outlined
     class="mt-0"
   >
-    <v-card-title v-if="hasEditAccess">
+    <v-card-title
+      class="mt-6"
+    >
       <v-btn
+        v-if="hasEditAccess"
         color="primary"
         rounded
-        class="mt-4 ml-5"
+        class="ml-5"
         @click="createLiveLectureDialog = true"
       >
         <v-icon left>
@@ -20,6 +23,37 @@
           New Meeting
         </span>
       </v-btn>
+      <v-spacer v-if="hasEditAccess" />
+      <v-chip-group
+        v-model="filterClassMeetings"
+        mandatory
+        :class="hasEditAccess ? 'px-0' : 'px-4'"
+      >
+        <v-chip
+          filter
+          active-class="primary"
+          value="today"
+          class="px-6"
+        >
+          Today
+        </v-chip>
+        <v-chip
+          filter
+          active-class="primary"
+          value="thisWeek"
+          class="px-6"
+        >
+          This Week
+        </v-chip>
+        <v-chip
+          filter
+          active-class="primary"
+          class="px-6"
+          value="all"
+        >
+          All Meetings
+        </v-chip>
+      </v-chip-group>
     </v-card-title>
     <v-card-text>
       <div v-if="meetings.length > 0">
@@ -34,8 +68,18 @@
         v-else
         class="ma-6"
       >
-        <p class="grey--text caption">
-          There is no meeting here.
+        <p
+          class="grey--text subtitle-1"
+        >
+          <span v-if="filterClassMeetings === 'today'">
+            No meeting today.
+          </span>
+          <span v-else-if="filterClassMeetings === 'thisWeek'">
+            No meeting this week.
+          </span>
+          <span v-else-if="filterClassMeetings === 'all'">
+            No meeting found.
+          </span>
         </p>
       </div>
     </v-card-text>
@@ -72,8 +116,15 @@
     data () {
       return {
         createLiveLectureDialog: false,
+        filterClassMeetings: 0,
       }
     },
+    watch: {
+      'filterClassMeetings' () {
+        this.$emit('filter-meetings', this.filterClassMeetings)
+      },
+    },
+    methods: {},
   })
 </script>
 
