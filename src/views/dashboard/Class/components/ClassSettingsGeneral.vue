@@ -189,13 +189,13 @@
                 userList: firebase.firestore.FieldValue.arrayRemove(this.currentUser.id),
               }).then(() => {
                 this.$router.replace('/classes').then(() => {
-                  this.$store.dispatch('classes/fetchAllMeetings', this.currentUser)
                   this.$notify({
                     group: 'appWideNotification',
                     title: 'Leave Success',
                     text: 'Leave the class successfully.',
                     type: 'success',
                   })
+                  this.$store.dispatch('classes/fetchAllMeetings', { currentUser: this.currentUser })
                 })
               }).catch(errorOnArray => {
                 this.$notify({

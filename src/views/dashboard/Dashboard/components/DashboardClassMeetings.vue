@@ -103,7 +103,7 @@
     },
     computed: {
       classMeetings (): Meeting[] {
-        return this.$store.getters['classes/getAllMeetings']
+        return this.$store.getters['classes/getAllMeetings'] || []
       },
       classMeetingsToday (): Meeting[] {
         const filteredMeetings = this.classMeetings.filter(meeting => {

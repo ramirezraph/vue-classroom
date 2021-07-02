@@ -33,7 +33,7 @@ export default {
     },
   },
   actions: {
-      clearClasses ({ commit, dispatch }) {
+      clearClasses ({ commit }) {
         console.log('clear classes');
         commit('CLEAR_CLASSES')
       },
@@ -79,7 +79,7 @@ export default {
         }
     },
     // All meetings
-    fetchAllMeetings ({ commit, state, rootGetters, dispatch }, payload: { currentUser: User }) {
+    fetchAllMeetings ({ commit, rootGetters, dispatch }, payload: { currentUser: User }) {
        if (payload) {
 
         const snapshot = rootGetters['snapshots/getAllMeetingsSnapshot']
@@ -89,11 +89,24 @@ export default {
           snapshot(); // detach a listener
         }
 
-         const unsubscribe = lecturesCollection.orderBy('date').onSnapshot(snapshot => {
-           const meetings: Meeting[] = []
-           snapshot.forEach(meet => {
-             state.classes.forEach(c => {
-               if (meet.data().classId === c.id) {
+        // get all class ids
+        const classIds: string[] = []
+
+        classesCollection.where('userList', 'array-contains', payload.currentUser.id).get().then(snapshot => {
+          snapshot.forEach(classDoc => {
+            classIds.push(classDoc.id)
+          })
+        }).then(() => {
+
+          console.log(classIds);
+
+          const unsubscribe = lecturesCollection
+          .orderBy('date')
+          .where('classId', 'in', classIds)
+          .onSnapshot(snapshot => {
+            const meetings: Meeting[] = []
+            snapshot.forEach(meet => {
+               if (meet.exists) {
                  const generatedMeeting = new Meeting(
                    meet.id,
                    meet.data()?.teacherId,
@@ -109,14 +122,12 @@ export default {
                  generatedMeeting.isClosed = meet.data()?.isClosed,
                  meetings.push(generatedMeeting)
                }
-             })
-           })
-
-           commit('FETCH_ALL_MEETINGS', { meetings: meetings })
-         })
-
-        dispatch('snapshots/setAllMeetingsSnapshot', unsubscribe, { root: true })
-       }
+            })
+            commit('FETCH_ALL_MEETINGS', { meetings: meetings })
+          })
+         dispatch('snapshots/setAllMeetingsSnapshot', unsubscribe, { root: true })
+        })
     }
+  }
   },
 }
