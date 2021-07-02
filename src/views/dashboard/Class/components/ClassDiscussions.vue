@@ -4,13 +4,13 @@
     class="mt-n8"
   >
     <v-card
-      class="px-6 pb-3 pt-1"
+      class="px-6 pt-1 pb-3"
       elevation="2"
     >
       <v-card
         outlined
       >
-        <v-card-title class="body-1 pa-2 pl-4 grey--text">
+        <v-card-title class="pl-4 body-1 pa-2 grey--text">
           Post a message
         </v-card-title>
         <v-divider />
@@ -76,6 +76,7 @@
                 color="primary"
                 min-width="150"
                 :loading="postLoading"
+                :disabled="!(post_message.length > 0)"
                 @click="postDiscussion"
               >
                 Post
