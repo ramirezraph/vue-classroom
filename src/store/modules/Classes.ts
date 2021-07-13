@@ -100,6 +100,9 @@ export default {
 
           console.log(classIds);
 
+
+          if (classIds.length <= 0) return
+
           const unsubscribe = lecturesCollection
           .orderBy('date')
           .where('classId', 'in', classIds)
